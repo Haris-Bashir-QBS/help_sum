@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+<always_applied_workspace_rules description="These are workspace-level rules that the agent must always follow.">
+- **Custom Text**: Always use custom text widgets (e.g., `CustomText`) for displaying text, if available and appropriate, to maintain consistent styling and behavior.
+- **App Texts**: For all string literals, always utilize existing definitions within the `AppTexts` class (or similar constant files) to ensure consistency and facilitate future internationalization. If a string is not defined and is likely to be reused, create a new entry for it in the `AppTexts` class.
+- **App Palette**: For all color definitions, always use the colors specified in the `AppPalette` class (or similar constant files) to maintain consistent branding and enable easier theme management.
+- **Your Widgets**: Always prioritize using custom widgets (e.g., `CustomButton`, `ClickableTextPair`, `CustomTextFormField`, `AnimatedSlideFade`) over standard Flutter widgets when their functionality, styling, and design align with the requirements. Actively look for opportunities to leverage existing custom components.
+
+</always_applied_workspace_rules>
