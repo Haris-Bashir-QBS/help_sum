@@ -83,10 +83,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildIllustration() {
     return GestureDetector(
       onTap: _fillMockDetails,
-      child: Image.asset(
-        AppAssets.authIllustrationIcon,
-        height: 200.h,
-      ),
+      child: Image.asset(AppAssets.authIllustrationIcon, height: 200.h),
     );
   }
 
@@ -121,10 +118,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildLoginButton() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 48.w),
-      child: CustomButton(
-        text: AppTexts.login,
-        onPressed: _login,
-      ),
+      child: CustomButton(text: AppTexts.login, onPressed: _login),
     );
   }
 
@@ -138,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  /// Login Method 
+  /// Login Method
   void _login() {
     if (_formKey.currentState!.validate()) {
       // Process data
@@ -154,4 +148,4 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController.text = 'Test@123';
     debugPrint('Dummy values filled for login');
   }
-} 
+}

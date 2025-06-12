@@ -29,11 +29,13 @@ class CustomTextFormField extends StatefulWidget {
   final Color? focusedBorderColor;
   final Color? errorBorderColor;
   final int? maxLines;
+  final TextStyle? customHintStyle;
 
   const CustomTextFormField({
     super.key,
     this.label,
     this.prefixIconColor,
+    this.customHintStyle,
     this.hint,
     this.isPassword = false,
     this.isOutlinedBorder = true,
@@ -132,7 +134,9 @@ class CustomTextFormFieldState extends State<CustomTextFormField> {
       contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
       errorMaxLines: 3,
       fillColor: widget.fillColor ?? AppPalette.lightGreyColor,
-      hintStyle: TextStyle(color: AppPalette.hintColor, fontSize: 14.sp),
+      hintStyle:
+          widget.customHintStyle ??
+          TextStyle(color: AppPalette.hintColor, fontSize: 14.sp),
       prefixIcon:
           widget.prefixIcon != null
               ? Icon(
@@ -144,7 +148,9 @@ class CustomTextFormFieldState extends State<CustomTextFormField> {
           widget.isPassword ? _passwordVisibilityIcon() : widget.suffixIcon,
       border: _border(widget.borderColor),
       enabledBorder: _border(widget.borderColor),
-      focusedBorder: _border(widget.focusedBorderColor ?? AppPalette.darkGreyColor),
+      focusedBorder: _border(
+        widget.focusedBorderColor ?? AppPalette.darkGreyColor,
+      ),
       errorBorder: _border(widget.errorBorderColor ?? Colors.red),
       focusedErrorBorder: _border(widget.errorBorderColor ?? Colors.red),
       disabledBorder: _border(widget.borderColor ?? AppPalette.lightGreyColor),

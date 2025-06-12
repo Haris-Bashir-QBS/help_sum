@@ -19,18 +19,22 @@ class AppTexts {
 
   // OTP Verification Page
   static const String verificationCode = 'Verification Code';
-  static const String enterVerificationCode = 'Enter the verification code sent';
+  static const String enterVerificationCode =
+      'Enter the verification code sent';
   static const String resendCode = 'Resend Code';
   static const String seconds = 'sec';
   static const String verify = 'Verify';
 
   // Onboarding Screen
   static const String qualityServiceTitle = 'Quality Service';
-  static const String qualityServiceDescription = 'Get quality and professional service right to your doorsteps.';
+  static const String qualityServiceDescription =
+      'Get quality and professional service right to your doorsteps.';
   static const String workFasterTitle = 'Work faster';
-  static const String workFasterDescription = 'Get more hands on board to help you do work faster and cleaner.';
+  static const String workFasterDescription =
+      'Get more hands on board to help you do work faster and cleaner.';
   static const String getEmployedTitle = 'Get employed';
-  static const String getEmployedDescription = 'Get discovered right from home and get paid for what you love doing';
+  static const String getEmployedDescription =
+      'Get discovered right from home and get paid for what you love doing';
   static const String skip = 'Skip';
   static const String getStarted = 'Get Started';
 
@@ -39,7 +43,7 @@ class AppTexts {
   static const String categories = 'Categories';
   static const String profile = 'Profile';
   static const String homeScreen = 'Home screen';
-  static const String searchHint = 'Search';
+  static const String searchHint = 'Search...';
   static const String recommendedForYou = 'Recommended for you';
   static const String officeWorkers = 'Office workers';
   static const String education = 'Education';
@@ -69,12 +73,15 @@ class AppTexts {
   static const String kiloMeter = 'Kilo-Meter';
   static const String finishJobs = 'Finish Jobs';
   static const String aboutThisMerchant = 'About this merchant';
-  static const String merchantDescription = 'I am a mechanic who fixes vehicles and replaces their parts for customers. My duties include repairing the vehicle\'s mechanical components and performing maintenance work on them as well.';
+  static const String merchantDescription =
+      'I am a mechanic who fixes vehicles and replaces their parts for customers. My duties include repairing the vehicle\'s mechanical components and performing maintenance work on them as well.';
   static const String ratingsAndReviews = 'Ratings and Reviews';
   static const String zuhaibAhmed = 'Zuhaib Ahmed';
-  static const String zuhaibReview = 'He is an outstanding artisan with speed in delivery of his quality service. Kind and hardworking man.';
+  static const String zuhaibReview =
+      'He is an outstanding artisan with speed in delivery of his quality service. Kind and hardworking man.';
   static const String usman = 'Usman';
-  static const String usmanReview = 'He is an outstanding artisan with speed in delivery of his quality service. Kind and hardworking man.';
+  static const String usmanReview =
+      'He is an outstanding artisan with speed in delivery of his quality service. Kind and hardworking man.';
   static const String next = 'Next';
   static const String reviews = 'Reviews';
   static const String aboutMerchant = 'About Merchant';
@@ -82,8 +89,10 @@ class AppTexts {
   static const String sendMessage = 'Send Message';
   static const String bookNow = 'Book Now';
 
-  static const String loremIpsumShort = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
-  static const String loremIpsumLong = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.';
+  static const String loremIpsumShort =
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+  static const String loremIpsumLong =
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.';
 
   // Payment Related Texts
   static const String selectPaymentMethod = 'Select Payment Method';
@@ -130,4 +139,7 @@ class AppTexts {
   static const String editBasicInformation = 'Edit Basic Information';
   static const String editContactInformation = 'Edit Contact Information';
   static const String saveChanges = 'Save Changes';
-} 
+  static const String date = 'Date';
+  static const String time = 'Time';
+  static const String addYourSkill = 'Add your skill';
+}

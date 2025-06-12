@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/core/router/app_router.dart';
@@ -12,7 +13,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -22,6 +22,14 @@ class MyApp extends StatelessWidget {
       builder: (_, child) {
         return MaterialApp.router(
           title: AppTexts.appTitle,
+          theme: ThemeData(
+            primarySwatch: AppPalette.whiteSwatch,
+            iconTheme: IconThemeData(color: AppPalette.blackColor),
+            useMaterial3: false,
+            appBarTheme: AppBarTheme(elevation: 0),
+            scaffoldBackgroundColor: Colors.white,
+            brightness: Brightness.light,
+          ),
           debugShowCheckedModeBanner: false,
           routerConfig: appRouter,
           builder: (context, child) {
@@ -41,6 +49,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-

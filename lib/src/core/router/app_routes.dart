@@ -9,9 +9,11 @@ class AppRoutes {
   static const String changePassword = 'change_password';
   static const String verifyOtp = 'verify_otp';
   static const String onboarding = 'onboarding';
+  static const String selectSkill = 'select_skill';
   static const String mainNavigation = 'main_navigation';
   static const String allCategoriesListing = 'all_categories_listing';
-  static const String allServiceProvidersListing = 'all_service_providers_listing';
+  static const String allServiceProvidersListing =
+      'all_service_providers_listing';
   static const String merchantProfile = 'merchant-profile';
 
   //============================== Payment ==============================

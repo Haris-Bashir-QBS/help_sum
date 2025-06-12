@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
+import 'package:help_sum/src/core/enums/job_status.dart';
+import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/merchant/domain/models/service_provider_model.dart';
-
 
 class AppStaticData {
   static const List<OnboardingSlideData> onboardingSlides = [
@@ -39,7 +40,6 @@ class AppStaticData {
     CategoryData(name: AppTexts.technicians, icon: Icons.build),
   ];
 
-
   static const List<ServiceProviderModel> serviceProviders = [
     ServiceProviderModel(
       id: '1',
@@ -48,7 +48,8 @@ class AppStaticData {
       isAvailable: true,
       rating: 4.5,
       reviewsCount: 120,
-      aboutText: 'Experienced electrician with over 10 years of experience in residential and commercial electrical work. Specialized in wiring, installations, and repairs.',
+      aboutText:
+          'Experienced electrician with over 10 years of experience in residential and commercial electrical work. Specialized in wiring, installations, and repairs.',
       profileImages: [
         'https://picsum.photos/800/400?random=1',
         'https://picsum.photos/800/400?random=2',
@@ -59,13 +60,15 @@ class AppStaticData {
         {
           'reviewerName': 'Alice Smith',
           'rating': 5.0,
-          'reviewText': 'Excellent service! Very professional and completed the work quickly.',
+          'reviewText':
+              'Excellent service! Very professional and completed the work quickly.',
           'date': '2 days ago',
         },
         {
           'reviewerName': 'Bob Johnson',
           'rating': 4.0,
-          'reviewText': 'Good work, but a bit expensive. Would recommend for quality work.',
+          'reviewText':
+              'Good work, but a bit expensive. Would recommend for quality work.',
           'date': '1 week ago',
         },
       ],
@@ -83,7 +86,8 @@ class AppStaticData {
       isAvailable: true,
       rating: 4.8,
       reviewsCount: 85,
-      aboutText: 'Professional plumber specializing in emergency repairs and installations. Available 24/7 for urgent plumbing issues.',
+      aboutText:
+          'Professional plumber specializing in emergency repairs and installations. Available 24/7 for urgent plumbing issues.',
       profileImages: [
         'https://picsum.photos/800/400?random=4',
         'https://picsum.photos/800/400?random=5',
@@ -94,7 +98,8 @@ class AppStaticData {
         {
           'reviewerName': 'Charlie Brown',
           'rating': 5.0,
-          'reviewText': 'Saved me from a major water leak! Very responsive and professional.',
+          'reviewText':
+              'Saved me from a major water leak! Very responsive and professional.',
           'date': '1 day ago',
         },
         {
@@ -112,8 +117,52 @@ class AppStaticData {
       completedJobsLabel: 'jobs completed',
     ),
   ];
-}
 
+  static final List<JobModel> dummyJobs = [
+    JobModel(
+      date: "26/07/2022",
+      time: "3:30 pm",
+      customerName: "Ali",
+      serviceName: "Tyre Change",
+      jobStatus: JobStatus.inProgress,
+    ),
+    JobModel(
+      date: "26/07/2022",
+      time: "4:00 pm",
+      customerName: "Hamza",
+      serviceName: "Electronic Repair",
+      jobStatus: JobStatus.ongoing,
+    ),
+    JobModel(
+      date: "27/07/2022",
+      time: "11:00 am",
+      customerName: "Ahmed",
+      serviceName: "Appliance Repair",
+      jobStatus: JobStatus.cancelled,
+    ),
+    JobModel(
+      date: "28/07/2022",
+      time: "1:00 pm",
+      customerName: "Fatima",
+      serviceName: "Tire Change",
+      jobStatus: JobStatus.waitingConfirmation,
+    ),
+    JobModel(
+      date: "28/07/2022",
+      time: "2:00 pm",
+      customerName: "Zain",
+      serviceName: "Refrigerator Repair",
+      jobStatus: JobStatus.waitingPayment,
+    ),
+    JobModel(
+      date: "29/07/2022",
+      time: "10:00 am",
+      customerName: "Sara",
+      serviceName: "AC Service",
+      jobStatus: JobStatus.approved,
+    ),
+  ];
+}
 
 class OnboardingSlideData {
   final String imagePath;
@@ -133,10 +182,5 @@ class CategoryData {
   final String name;
   final IconData icon;
 
-  const CategoryData({
-    required this.name,
-    required this.icon,
-  });
+  const CategoryData({required this.name, required this.icon});
 }
-
-
