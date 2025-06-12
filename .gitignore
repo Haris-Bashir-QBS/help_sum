@@ -1,0 +1,70 @@
+# Flutter/Dart/Pub related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+
+# Build outputs
+build/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/.symlinks/
+ios/Pods/
+ios/Runner.xcworkspace/
+macos/Flutter/ephemeral/
+macos/Pods/
+macos/Runner.xcworkspace/
+web/.dart_tool/
+
+# Symbolic links
+.symlinks/
+
+# Obsolete files
+*.lock
+
+# IntelliJ related
+.idea/
+*.iml
+
+# VS Code related
+.vscode/
+
+# Xcode related
+xcuserdata/
+DerivedData/
+*.xcworkspace
+
+# Android related
+*.apk
+*.aab
+*.keystore
+android/.gradle/
+android/app/debug/
+android/app/profile/
+android/app/release/
+android/local.properties
+android/.idea/
+
+# macOS related
+*.DS_Store
+
+# Windows related
+windows/Flutter/ephemeral/
+windows/.vs/
+windows/build/
+
+# Linux related
+linux/flutter/ephemeral/
+linux/build/
+
+# Web build
+web/build/
+
+# Coverage
+coverage/
+
+# Firebase/Crashlytics
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
