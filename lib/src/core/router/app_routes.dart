@@ -21,6 +21,7 @@ class AppRoutes {
   static const String cardDetails = 'card-details';
   static const String paymentConfirmation = 'payment-confirmation';
   static const String paymentResult = 'payment-result';
+  static const String rateScreen = 'rate-screen';
 
   // Profile Routes
   static const String account = 'account';

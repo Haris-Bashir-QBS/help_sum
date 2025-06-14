@@ -22,7 +22,7 @@ class AppPalette {
   static const Color blackColor = Color(0xFF000000);
   static const Color cardColor = Color(0xFFF9F9F9);
   static const Color primaryGreyColor = Color(0xFFf3f7fa);
-
+  static const Color lightBlueColor = Color(0xFFF5F8FF);
   static MaterialColor whiteSwatch = MaterialColor(0xFFFFFFFF, <int, Color>{
     50: Color(0xFFFFFFFF),
     100: Color(0xFFFDFDFD),

@@ -16,10 +16,10 @@ class ProfileDetailsPage extends StatelessWidget {
 
   const ProfileDetailsPage({
     super.key,
-    this.user = const UserModel( 
-      firstName: 'Manahil',
-      lastName: 'Shahid',
-      emailAddress: 'manahil0008@gmail.com',
+    this.user = const UserModel(
+      firstName: 'John',
+      lastName: 'Doe',
+      emailAddress: 'johnDoe0008@gmail.com',
       phoneNumber: '0321-0000000',
       isVerified: false,
     ),
@@ -44,7 +44,7 @@ class ProfileDetailsPage extends StatelessWidget {
               ),
             ),
           ),
-          _buildSignOutButton(),
+          _buildSignOutButton(context),
         ],
       ),
     );
@@ -62,10 +62,7 @@ class ProfileDetailsPage extends StatelessWidget {
         InfoRow(label: AppTexts.lastName, value: user.lastName),
       ],
       onPressed: () {
-        context.pushNamed(
-          AppRoutes.editBasicInfo,
-          extra: user.copyWith(),
-        );
+        context.pushNamed(AppRoutes.editBasicInfo, extra: user.copyWith());
       },
     );
   }
@@ -82,15 +79,12 @@ class ProfileDetailsPage extends StatelessWidget {
         InfoRow(label: AppTexts.phoneNumber, value: user.phoneNumber),
       ],
       onPressed: () {
-        context.pushNamed(
-          AppRoutes.editContactInfo,
-          extra: user.copyWith(),
-        );
+        context.pushNamed(AppRoutes.editContactInfo, extra: user.copyWith());
       },
     );
   }
 
-  Widget _buildSignOutButton() {
+  Widget _buildSignOutButton(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.w),
       child: CustomButton(
@@ -98,9 +92,10 @@ class ProfileDetailsPage extends StatelessWidget {
         textColor: Colors.white,
         color: AppPalette.primaryColor,
         onPressed: () {
+          context.pushNamed(AppRoutes.paymentResult, extra: true);
           debugPrint('Signing out...');
         },
       ),
     );
   }
-} 
+}

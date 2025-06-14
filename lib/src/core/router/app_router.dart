@@ -14,9 +14,9 @@ import 'package:help_sum/src/features/core/common/main_navigation/pages/all_cate
 import 'package:help_sum/src/features/core/common/main_navigation/pages/all_service_providers_listing_page.dart';
 import 'package:help_sum/src/features/core/common/payment/models/card_detail_params.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/card_details_screen.dart';
-import 'package:help_sum/src/features/core/common/payment/screens/payment_confirmation_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/payment_method_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/payment_result_screen.dart';
+import 'package:help_sum/src/features/core/common/payment/screens/rate_merchant_screen.dart';
 import 'package:help_sum/src/features/core/merchant/domain/models/service_provider_model.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/merchant_profile_page.dart';
 import 'package:help_sum/src/features/core/common/profile/pages/profile_details_page.dart';
@@ -25,7 +25,7 @@ import 'package:help_sum/src/features/core/common/profile/pages/edit_contact_inf
 import 'package:help_sum/src/features/core/common/profile/models/user_model.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/${AppRoutes.selectSkill}',
+  initialLocation: '/${AppRoutes.mainNavigation}',
   navigatorKey: SessionManager.navigatorKey,
   observers: [UnFocusOnNavigateObserver()],
   routes: [
@@ -44,8 +44,8 @@ final GoRouter appRouter = GoRouter(
     // Payment routes
     _paymentMethod(),
     _cardDetails(),
-    _paymentConfirmation(),
     _paymentResult(),
+    _rateScreen(),
     // Profile routes
     _account(),
     _editBasicInfo(),
@@ -229,25 +229,22 @@ GoRoute _cardDetails() {
   );
 }
 
-GoRoute _paymentConfirmation() {
-  return GoRoute(
-    path: AppRoutes.paymentConfirmation,
-    name: AppRoutes.paymentConfirmation,
-    builder: (context, state) {
-      final params = state.extra as CardDetailParams;
-      return PaymentConfirmationScreen(params: params);
-    },
-  );
-}
-
 GoRoute _paymentResult() {
   return GoRoute(
-    path: AppRoutes.paymentResult,
+    path: "/${AppRoutes.paymentResult}",
     name: AppRoutes.paymentResult,
     builder: (context, state) {
       final isSuccess = state.extra as bool;
       return PaymentResultScreen(isSuccess: isSuccess);
     },
+  );
+}
+
+GoRoute _rateScreen() {
+  return GoRoute(
+    path: '/rate-screen',
+    name: AppRoutes.rateScreen,
+    builder: (context, state) => const RateScreen(),
   );
 }
 

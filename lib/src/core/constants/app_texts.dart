@@ -106,14 +106,27 @@ class AppTexts {
   static const String cardHolderName = 'Card Holder Name';
   static const String expiryDate = 'Expiry Date';
   static const String cvv = 'CVV';
+  static const String cvvHint = '';
   static const String payNow = 'Pay Now';
   static const String paymentConfirmation = 'Payment Confirmation';
   static const String paymentAmount = 'Payment Amount';
   static const String paymentResult = 'Payment Result';
   static const String paymentSuccess = 'Payment Successful';
+  static const String successfullyCompleted = 'Successfully Completed';
   static const String paymentFailed = 'Payment Failed';
   static const String tryAgain = 'Try Again';
   static const String backToHome = 'Back to Home';
+  static const String thankYouMessage = 'We are happy that we helped provide quality service. Thank you!';
+
+  // New Card Details Texts
+  static const String accountNumber = 'Account Number';
+  static const String cardNumberHint = 'XXXX XXXX XXXX XXXX';
+  static const String expiryDateHint = 'MM/YY';
+  static const String enterTip = 'Enter Tip';
+  static const String tipHint = '\$10';
+  static const String enterEmail = 'Enter Email';
+  static const String emailHint = 'Manahil00002@gmail.com';
+  static const String done = 'Done';
 
   // Payment Confirmation Screen
   static const String paymentDetails = 'Payment Details';
@@ -124,7 +137,6 @@ class AppTexts {
   // Rate Merchant Screen
   static const String rateMerchant = 'Rate Merchant';
   static const String pleaseGiveReview = 'Please give review';
-  static const String done = 'Done';
 
   // Profile Screens
   static const String account = 'Account';
@@ -142,4 +154,16 @@ class AppTexts {
   static const String date = 'Date';
   static const String time = 'Time';
   static const String addYourSkill = 'Add your skill';
+
+  /// New Texts
+  static const String totalAmount = "Total Amount";
+  static const String payNowWithCard = "Pay Now witn card";
+  static const String makeinstantpayment =
+      "Make instant payment using your bank card";
+
+  static const String ok = 'OK';
+  static const String cancel = 'Cancel';
+  static const String rate = 'Rate';
+  static const String bookAgain = 'Book Again';
+
 }

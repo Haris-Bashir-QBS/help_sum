@@ -60,6 +60,35 @@ class CustomTextFormField extends StatefulWidget {
     this.maxLines = 1,
   });
 
+  const CustomTextFormField.card({
+    super.key,
+    this.label,
+    this.prefixIconColor,
+    this.customHintStyle,
+    required this.hint,
+    this.isPassword = false,
+    this.isOutlinedBorder = true,
+    this.initialValue,
+    this.fillColor = Colors.white,
+    this.focusNode,
+    this.onChanged,
+    this.readOnly,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.rightActionWidget,
+    this.onTap,
+    this.keyboardType = TextInputType.text,
+    this.validator,
+    this.inputFormatters,
+    this.controller,
+    this.borderRadius = const BorderRadius.all(Radius.circular(8)),
+    this.borderColor = Colors.black,
+    this.enabled = true,
+    this.focusedBorderColor = Colors.black,
+    this.errorBorderColor,
+    this.maxLines = 1,
+  });
+
   @override
   CustomTextFormFieldState createState() => CustomTextFormFieldState();
 }
@@ -70,7 +99,7 @@ class CustomTextFormFieldState extends State<CustomTextFormField> {
   InputBorder _border(Color? color) {
     final borderSide = BorderSide(
       color: color ?? AppPalette.lightGreyColor,
-      width: 2,
+      width: 1,
     );
 
     return widget.isOutlinedBorder
@@ -131,8 +160,9 @@ class CustomTextFormFieldState extends State<CustomTextFormField> {
     return InputDecoration(
       hintText: widget.hint,
       filled: true,
-      contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
-      errorMaxLines: 3,
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      errorMaxLines: 2,
+      errorStyle: TextStyle(fontSize: 12.sp, color: AppPalette.errorColor),
       fillColor: widget.fillColor ?? AppPalette.lightGreyColor,
       hintStyle:
           widget.customHintStyle ??

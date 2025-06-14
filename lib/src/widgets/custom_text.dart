@@ -31,11 +31,11 @@ class CustomText extends StatelessWidget {
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color ?? Colors.black,
-        overflow: TextOverflow.ellipsis,
-        decoration: decoration,
-        decorationColor: decorationColor,
+        height: 1.2,
       ),
-      maxLines: maxLines,
+      maxLines: maxLines ?? 1,
+      overflow: TextOverflow.ellipsis,
+      softWrap: true,
     );
   }
 }
