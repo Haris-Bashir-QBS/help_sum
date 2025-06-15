@@ -5,38 +5,36 @@ import 'package:help_sum/src/widgets/custom_text.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final List<Widget>? actions;
-  final Widget? leading;
-  final bool centerTitle;
-  final Color? backgroundColor;
+  final bool? centerTitle;
+  final bool showLeading;
+  final VoidCallback? onBackButtonPressed;
 
-  const CustomAppBar({
-    super.key,
-    required this.title,
-    this.actions,
-    this.leading,
-    this.centerTitle = false,
-    this.backgroundColor,
-  });
+  const CustomAppBar({Key? key, required this.title, 
+  this.centerTitle = true,
+  this.showLeading = true,
+  this.onBackButtonPressed})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: CustomText(text: title, fontSize: 18.sp, fontWeight: FontWeight.w500, color: AppPalette.blackColor),
-      actions: actions,
-      leading: leading ?? IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new, size: 20),
-        onPressed: () => Navigator.of(context).pop(),
+      backgroundColor: AppPalette.backgroundColor,
+      elevation: 0,
+    
+      leading: showLeading?  IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new),
+        color: AppPalette.blackColor,
+        onPressed: onBackButtonPressed ?? () => Navigator.pop(context),
+      ):null,
+      title: CustomText(
+        text: title,
+        fontSize: 20.sp,
+        fontWeight: FontWeight.bold,
       ),
       centerTitle: centerTitle,
-    //  backgroundColor: backgroundColor ?? AppPalette.primaryColor,
-      elevation: 0,
-      toolbarHeight: 60.h,
-      iconTheme: const IconThemeData(color: Colors.black),
-      surfaceTintColor: Colors.transparent,
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(60.h);
-} 
+  Size get preferredSize => Size.fromHeight(50.h);
+}

@@ -1,3 +1,3 @@
-enum AppRole { user, consumer }
+enum AppRole {  consumer,erchant }
 
-AppRole appRole = AppRole.user;
+AppRole appRole = AppRole.consumer;

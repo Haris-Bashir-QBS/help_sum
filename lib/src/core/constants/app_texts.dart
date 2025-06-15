@@ -116,7 +116,8 @@ class AppTexts {
   static const String paymentFailed = 'Payment Failed';
   static const String tryAgain = 'Try Again';
   static const String backToHome = 'Back to Home';
-  static const String thankYouMessage = 'We are happy that we helped provide quality service. Thank you!';
+  static const String thankYouMessage =
+      'We are happy that we helped provide quality service. Thank you!';
 
   // New Card Details Texts
   static const String accountNumber = 'Account Number';
@@ -166,4 +167,69 @@ class AppTexts {
   static const String rate = 'Rate';
   static const String bookAgain = 'Book Again';
 
+  static const String bookings = 'Bookings';
+  static const String jobs = 'Jobs';
+
+  static const String inProgress = "In-Progress";
+  static const String completed = "Completed";
+  static const String waitingConfirmation = "Waiting Confirmation";
+  static const String waitingPayment = "Waiting Payment";
+  static const String cancelled = "Cancelled";
+
+  static const String all = 'All';
+  static const String onGoing = 'On Going';
+  static const String pending = 'Pending';
+  static const String approved = 'Approved';
+  static const String serviceStartTime = 'Service Start Time:';
+  static const String serviceDateAndTime = 'Service Date and Time:';
+  static const String serviceStartsOn = 'Service Starts on:';
+  static const String requestedAt = 'Requested At:';
+  static const String approvedAt = 'Approved on:';
+  static const String rejectedAt = 'Rejected At:';
+  static const String serviceEndsOn = 'Service Ends on:';
+  static const String bookingDetail = 'Booking Detail';
+  static const String contract = 'Contract';
+  static const String jobDetailsUpdates = 'Job details:';
+  static const String reason = 'Reason:';
+  static const String description = 'Description:';
+  static const String lowServiceCharges = 'Low service charges';
+  static const String estimatedWorkTime = 'Estimated work time:';
+  static const String oneToTwoHours = '1-2 hr';
+  static const String twoHundredDollars = '\$ 200';
+  static const String offerDetails = 'Offer details:';
+  static const String estimatedBudget = 'Estimated Budget:';
+  static const String jobDescription = 'Job Description:';
+  static const String pipeRepair = 'Pipe Repair';
+  static const String michael = 'Michael';
+  static const String ratingAndReviews = '4.3 (21 reviews)';
+  static const String serviceLocation = 'Service location:';
+  static const String otherOptions = 'Other Options';
+  static const String cancelJob = "Cancel Job";
+  static const String selectReasonToCancel = "Select Reason to Cancel";
+  static const String areYouSureToCancelThisJob =
+      "Are you sure to cancel this job due to following reason?";
+  static const String yes = "Yes";
+  static const String no = "No";
+
+  static const List<String> cancelJobReasons = [
+    "Unsatisfied with Merchant",
+    "High Service Charges",
+    "Long Service Time",
+    "Scheduling Issues",
+    "Merchant Updated Details",
+    "Other",
+  ];
+
+  static const String continuee = "Continue";
+  static const String actionCompletedSuccessfully =
+      "Action completed successfully";
+  static const String tryAgainLater = "Try again later";
+  static const String success = "Success";
+  static const String somethingWentWrong = "Something went wrong";
+
+  static const String totalServiceTime = 'Total Service Time:';
+  static const String threeHours = '3 hr';
+
+  static const String jobImages = 'Job Images';
+  static const String address = 'Address';
 }

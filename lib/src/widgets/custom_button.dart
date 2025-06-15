@@ -48,17 +48,16 @@ class CustomButton extends StatelessWidget {
     this.iconColor,
     this.isKeyboardDismissOnClick = true,
   }) : isBorder = true,
-       borderColor = null,
+       borderColor = AppPalette.greyColor,
        color = Colors.white,
-       textColor =
-           null, 
+       textColor = null,
        gradient = null;
 
   @override
   Widget build(BuildContext context) {
     final effectiveTextColor =
         textColor ??
-        (color == Colors.white ? context.primaryColor : AppPalette.darkGreyColor);
+        (color == Colors.white ? Colors.black : AppPalette.darkGreyColor);
     final effectiveBorderColor =
         borderColor ?? (isBorder! ? context.primaryColor : Colors.transparent);
 
@@ -75,7 +74,9 @@ class CustomButton extends StatelessWidget {
                   ? Border.all(color: effectiveBorderColor, width: 1.5)
                   : null,
           color:
-              isLoading ? Colors.grey.withAlpha(100): color ?? AppPalette.greyColor,
+              isLoading
+                  ? Colors.grey.withAlpha(100)
+                  : color ?? AppPalette.greyColor,
         ),
         child: Material(
           color: Colors.transparent,
@@ -120,6 +121,7 @@ class CustomButton extends StatelessWidget {
   }
 
   Widget _titleWidget(Color effectiveTextColor) {
+    print("Color is ${effectiveTextColor.hashCode}");
     return Align(
       alignment: Alignment.center,
       child:

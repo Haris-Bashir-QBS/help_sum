@@ -6,6 +6,25 @@ import 'package:help_sum/src/features/core/common/main_navigation/domain/model/j
 import 'package:help_sum/src/features/core/merchant/domain/models/service_provider_model.dart';
 
 class AppStaticData {
+  const AppStaticData._();
+  static List<String> consumerAppbarTitles = [
+    AppTexts.bookings,
+    AppTexts.categories,
+    AppTexts.profile,
+  ];
+  static List<String> merchantAppBarTitles = [AppTexts.jobs, "", ""];
+
+  static const List<String> jobStatusTabs = [
+    AppTexts.all,
+    AppTexts.completed,
+    AppTexts.inProgress,
+    AppTexts.pending,
+    AppTexts.approved,
+    AppTexts.waitingConfirmation,
+    AppTexts.waitingPayment,
+    AppTexts.cancelled,
+  ];
+
   static const List<OnboardingSlideData> onboardingSlides = [
     OnboardingSlideData(
       imagePath: AppAssets.onboarding1,
@@ -124,42 +143,56 @@ class AppStaticData {
       time: "3:30 pm",
       customerName: "Ali",
       serviceName: "Tyre Change",
-      jobStatus: JobStatus.inProgress,
+      status: JobStatus.inProgress,
     ),
     JobModel(
       date: "26/07/2022",
       time: "4:00 pm",
       customerName: "Hamza",
       serviceName: "Electronic Repair",
-      jobStatus: JobStatus.ongoing,
+      status: JobStatus.ongoing,
     ),
     JobModel(
       date: "27/07/2022",
       time: "11:00 am",
       customerName: "Ahmed",
       serviceName: "Appliance Repair",
-      jobStatus: JobStatus.cancelled,
+      status: JobStatus.cancelled,
+    ),
+    JobModel(
+      date: "27/07/2022",
+      time: "11:00 am",
+      customerName: "Ahmed",
+      serviceName: "Appliance Repair",
+      status: JobStatus.pending,
     ),
     JobModel(
       date: "28/07/2022",
       time: "1:00 pm",
       customerName: "Fatima",
       serviceName: "Tire Change",
-      jobStatus: JobStatus.waitingConfirmation,
+      status: JobStatus.waitingConfirmation,
     ),
     JobModel(
       date: "28/07/2022",
       time: "2:00 pm",
       customerName: "Zain",
       serviceName: "Refrigerator Repair",
-      jobStatus: JobStatus.waitingPayment,
+      status: JobStatus.waitingPayment,
     ),
     JobModel(
       date: "29/07/2022",
       time: "10:00 am",
       customerName: "Sara",
       serviceName: "AC Service",
-      jobStatus: JobStatus.approved,
+      status: JobStatus.approved,
+    ),
+    JobModel(
+      date: "29/07/2022",
+      time: "10:00 am",
+      customerName: "Sara",
+      serviceName: "AC Service",
+      status: JobStatus.completed,
     ),
   ];
 }

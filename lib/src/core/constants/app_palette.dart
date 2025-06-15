@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class AppPalette {
   AppPalette._();
   static const Color primaryColor = Color(0xFF2F73FD);
-  static const Color hintColor = Color(0xFF909090);
-  static const Color lightGreyColor = Color(0xFFF1F1F1);
-  static const Color greyColor = Color(0xFFDCDCDC);
+  static const Color hintColor = Color(0xFF666666);
+  static const Color lightGreyColor = Color(0xFFF5F5F5);
+  static const Color greyColor = Color(0xFF979797);
   static const Color fillColor = Color(0xFFF3F3F3);
   static const Color darkGreyColor = Color(0xFF848484);
-  static const Color orangeColor = Color(0xFFFF8E01);
+  static const Color orangeColor = Color(0xFFFFC680);
   static const Color extraLightGreyColor = Color(0xFFF7F7F7);
   static const Color starColor = Color(0xFFFFC107);
   static const Color secondaryColor = Color(0xFF9EFFAD);
@@ -17,12 +17,14 @@ class AppPalette {
   static const Color successColor = Color(0xFF28A745);
   static const Color warningColor = Color(0xFFFFC107);
   static const Color infoColor = Color(0xFF17A2B8);
-  static const Color backgroundColor = Color(0xFFF8F9FA);
+  static const Color backgroundColor = Colors.white;
   static const Color whiteColor = Color(0xFFFFFFFF);
   static const Color blackColor = Color(0xFF000000);
   static const Color cardColor = Color(0xFFF9F9F9);
   static const Color primaryGreyColor = Color(0xFFf3f7fa);
   static const Color lightBlueColor = Color(0xFFF5F8FF);
+  static const Color greenColor = Color(0xFFAFFFA8);
+  static const Color redColor = Color(0xFFFF0000);
   static MaterialColor whiteSwatch = MaterialColor(0xFFFFFFFF, <int, Color>{
     50: Color(0xFFFFFFFF),
     100: Color(0xFFFDFDFD),

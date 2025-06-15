@@ -5,13 +5,13 @@ class JobModel {
   final String time;
   final String customerName;
   final String serviceName;
-  final JobStatus jobStatus;
+  final JobStatus status;
 
   JobModel({
     required this.date,
     required this.time,
     required this.customerName,
     required this.serviceName,
-    required this.jobStatus,
+    required this.status,
   });
 }

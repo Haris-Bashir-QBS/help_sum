@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class TimelinePainter extends CustomPainter {

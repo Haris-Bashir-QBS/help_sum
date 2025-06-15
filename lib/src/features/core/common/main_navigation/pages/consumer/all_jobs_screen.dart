@@ -185,19 +185,19 @@ class _AllJobsScreenState extends State<AllJobsScreen> {
                         blurRadius: 5,
                       ),
                     ],
-                    color: getJobColor(jobs[i].jobStatus),
+                    color: getJobColor(jobs[i].status),
                     borderRadius: BorderRadius.circular(
                       AppDimensions.appBorderRadius,
                     ),
                   ),
                   child: CustomText(
                     color:
-                        jobs[i].jobStatus == JobStatus.cancelled
+                        jobs[i].status == JobStatus.cancelled
                             ? AppPalette.backgroundColor
                             : null,
                     fontWeight: FontWeight.bold,
                     fontSize: 13.sp,
-                    text: getJobString(jobs[i].jobStatus),
+                    text: getJobString(jobs[i].status),
                   ),
                 ),
               ),
@@ -216,6 +216,7 @@ class _AllJobsScreenState extends State<AllJobsScreen> {
       case JobStatus.inProgress:
         return "In-Progress";
       case JobStatus.approved:
+      case JobStatus.completed:
         return "Completed";
       case JobStatus.waitingConfirmation:
         return "Waiting Confirmation";
@@ -223,6 +224,10 @@ class _AllJobsScreenState extends State<AllJobsScreen> {
         return "Waiting Payment";
       case JobStatus.cancelled:
         return "Cancelled";
+      case JobStatus.all:
+        return AppTexts.all;
+      case JobStatus.pending:
+        return AppTexts.pending;
     }
   }
 
@@ -230,15 +235,18 @@ class _AllJobsScreenState extends State<AllJobsScreen> {
     switch (job) {
       case JobStatus.ongoing:
       case JobStatus.inProgress:
+      case JobStatus.pending:
         return Color(0xFFFFC680);
-
       case JobStatus.approved:
+      case JobStatus.completed:
         return Color(0xFFAFFFA8);
       case JobStatus.waitingConfirmation:
       case JobStatus.waitingPayment:
         return Color(0xFFFFC680);
       case JobStatus.cancelled:
         return Color(0xFFFF0000);
+      case JobStatus.all:
+        return Colors.transparent;
     }
   }
 
@@ -255,20 +263,20 @@ class _AllJobsScreenState extends State<AllJobsScreen> {
           case 2:
             jobs =
                 AppStaticData.dummyJobs
-                    .where((e) => e.jobStatus == JobStatus.inProgress)
+                    .where((e) => e.status == JobStatus.inProgress)
                     .toList();
 
             break;
           case 3:
             jobs =
                 AppStaticData.dummyJobs
-                    .where((e) => e.jobStatus == JobStatus.approved)
+                    .where((e) => e.status == JobStatus.approved)
                     .toList();
             break;
           case 4:
             jobs =
                 AppStaticData.dummyJobs
-                    .where((e) => e.jobStatus == JobStatus.waitingConfirmation)
+                    .where((e) => e.status == JobStatus.waitingConfirmation)
                     .toList();
 
             break;
@@ -276,7 +284,7 @@ class _AllJobsScreenState extends State<AllJobsScreen> {
           case 5:
             jobs =
                 AppStaticData.dummyJobs
-                    .where((e) => e.jobStatus == JobStatus.waitingPayment)
+                    .where((e) => e.status == JobStatus.waitingPayment)
                     .toList();
 
             break;
@@ -284,7 +292,7 @@ class _AllJobsScreenState extends State<AllJobsScreen> {
           case 6:
             jobs =
                 AppStaticData.dummyJobs
-                    .where((e) => e.jobStatus == JobStatus.cancelled)
+                    .where((e) => e.status == JobStatus.cancelled)
                     .toList();
 
             break;

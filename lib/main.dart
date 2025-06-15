@@ -29,6 +29,11 @@ class MyApp extends StatelessWidget {
             appBarTheme: AppBarTheme(elevation: 0),
             scaffoldBackgroundColor: Colors.white,
             brightness: Brightness.light,
+            dividerTheme: DividerThemeData(
+              color: AppPalette.greyColor,
+              space: 24,
+              thickness: 0.8,
+            ),
           ),
           debugShowCheckedModeBanner: false,
           routerConfig: appRouter,

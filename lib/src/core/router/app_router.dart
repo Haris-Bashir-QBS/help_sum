@@ -9,10 +9,10 @@ import 'package:help_sum/src/features/auth/presentation/pages/signup_page.dart';
 import 'package:help_sum/src/features/core/common/intro/spash/pages/splash_page.dart';
 import 'package:help_sum/src/features/auth/presentation/pages/otp_verification_page.dart';
 import 'package:help_sum/src/features/core/common/intro/onboarding/pages/onboarding_page.dart';
+import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/main_navigation_page.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/all_categories_listing_page.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/all_service_providers_listing_page.dart';
-import 'package:help_sum/src/features/core/common/payment/models/card_detail_params.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/card_details_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/payment_method_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/payment_result_screen.dart';
@@ -23,6 +23,8 @@ import 'package:help_sum/src/features/core/common/profile/pages/profile_details_
 import 'package:help_sum/src/features/core/common/profile/pages/edit_basic_info_screen.dart';
 import 'package:help_sum/src/features/core/common/profile/pages/edit_contact_info_screen.dart';
 import 'package:help_sum/src/features/core/common/profile/models/user_model.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/booking_detail_page.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/other_options_page.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/${AppRoutes.mainNavigation}',
@@ -41,6 +43,7 @@ final GoRouter appRouter = GoRouter(
     _allCategoriesListing(),
     _allServiceProvidersListing(),
     _merchantProfile(),
+    _bookingDetail(),
     // Payment routes
     _paymentMethod(),
     _cardDetails(),
@@ -50,6 +53,7 @@ final GoRouter appRouter = GoRouter(
     _account(),
     _editBasicInfo(),
     _editContactInfo(),
+    _otherOptions(),
   ],
 );
 
@@ -213,6 +217,19 @@ GoRoute _merchantProfile() {
   );
 }
 
+GoRoute _bookingDetail() {
+  return GoRoute(
+    path: '/booking-detail',
+    name: AppRoutes.bookingDetail,
+    builder: (context, state) {
+      final Map<String, dynamic> extras = state.extra as Map<String, dynamic>;
+      final JobModel job = extras['job'];
+      final String? tabName = extras['tabName'];
+      return BookingDetailPage(job: job, tabName: tabName);
+    },
+  );
+}
+
 GoRoute _paymentMethod() {
   return GoRoute(
     path: '/payment-method',
@@ -278,5 +295,13 @@ GoRoute _editContactInfo() {
       final user = state.extra as UserModel;
       return EditContactInfoScreen(user: user);
     },
+  );
+}
+
+GoRoute _otherOptions() {
+  return GoRoute(
+    path: '/other-options',
+    name: AppRoutes.otherOptions,
+    builder: (context, state) => const OtherOptionsPage(),
   );
 }
