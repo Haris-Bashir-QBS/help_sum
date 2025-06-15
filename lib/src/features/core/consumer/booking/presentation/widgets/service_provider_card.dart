@@ -1,106 +1,112 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:help_sum/src/core/constants/app_dimensions.dart';
-import 'package:help_sum/src/core/constants/app_palette.dart';
-import 'package:help_sum/src/widgets/custom_text.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:go_router/go_router.dart';
+// import 'package:help_sum/src/core/constants/app_dimensions.dart';
+// import 'package:help_sum/src/core/constants/app_palette.dart';
+// import 'package:help_sum/src/widgets/custom_text.dart';
+// import 'package:help_sum/src/core/constants/asset_paths.dart';
+// import 'package:help_sum/src/core/router/app_routes.dart';
 
-class ServiceProviderCard extends StatelessWidget {
-  final String title;
-  final String reviews;
-  final VoidCallback onTap;
+// class ServiceProviderCard extends StatelessWidget {
+//   final String merchantName;
+//   final String profession;
+//   final String rating;
+//   final String distance;
+//   final String imageUrl;
 
-  const ServiceProviderCard({
-    super.key,
-    required this.title,
-    required this.reviews,
-    required this.onTap,
-  });
+//   const ServiceProviderCard({
+//     super.key,
+//     required this.merchantName,
+//     required this.profession,
+//     required this.rating,
+//     required this.distance,
+//     required this.imageUrl,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          const EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingAllSides,
-          ).r,
-      child: Container(
-        padding: EdgeInsets.all(AppDimensions.paddingAllSides.r),
-        decoration: BoxDecoration(
-          color: AppPalette.backgroundColor,
-          borderRadius: BorderRadius.circular(AppDimensions.appBorderRadius.r),
-          boxShadow: [
-            BoxShadow(
-              color: AppPalette.greyColor.withOpacity(0.3),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // Image
-            CircleAvatar(
-              radius: 30.r,
-              backgroundImage: const NetworkImage(
-                'https://picsum.photos/200',
-              ), // Placeholder image
-            ),
-            10.horizontalSpace,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomText(
-                    text: title,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  5.verticalSpace,
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        color: AppPalette.orangeColor,
-                        size: 16.sp,
-                      ),
-                      5.horizontalSpace,
-                      CustomText(
-                        text: reviews,
-                        fontSize: 14.sp,
-                        color: AppPalette.hintColor,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            // Chat and Map icons
-            Row(
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.chat_bubble_outline,
-                    color: AppPalette.blackColor,
-                  ),
-                  onPressed: () {
-                    // TODO: Implement chat functionality
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.location_on_outlined,
-                    color: AppPalette.blackColor,
-                  ),
-                  onPressed: () {
-                    // TODO: Implement map functionality
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       margin: EdgeInsets.only(bottom: 10.h),
+//       padding: EdgeInsets.all(16.w),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(12.r),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withOpacity(0.05),
+//             spreadRadius: 2,
+//             blurRadius: 5,
+//             offset: const Offset(0, 3),
+//           ),
+//         ],
+//       ),
+//       child: Row(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           CircleAvatar(radius: 30.r, backgroundImage: NetworkImage(imageUrl)),
+//           15.horizontalSpace,
+//           Expanded(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 CustomText(
+//                   text: merchantName,
+//                   fontSize: 16.sp,
+//                   fontWeight: FontWeight.bold,
+//                 ),
+//                 5.verticalSpace,
+//                 CustomText(
+//                   text: profession,
+//                   fontSize: 14.sp,
+//                   color: AppPalette.lightGreyColor,
+//                 ),
+//                 5.verticalSpace,
+//                 Row(
+//                   children: [
+//                     Icon(Icons.star, color: AppPalette.starColor, size: 16.w),
+//                     5.horizontalSpace,
+//                     CustomText(text: rating, fontSize: 12.sp),
+//                     10.horizontalSpace,
+//                     Icon(
+//                       Icons.location_on,
+//                       color: AppPalette.greyColor,
+//                       size: 16.w,
+//                     ),
+//                     5.horizontalSpace,
+//                     CustomText(text: distance, fontSize: 12.sp),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//           ),
+//           Column(
+//             children: [
+//               IconButton(
+//                 icon: Image.asset(
+//                   AppAssets.ic_chat,
+//                   color: AppPalette.blackColor,
+//                   width: 24.w,
+//                   height: 24.h,
+//                 ),
+//                 onPressed: () {
+//                   // TODO: Implement chat functionality
+//                 },
+//               ),
+//               IconButton(
+//                 icon: Image.asset(
+//                   AppAssets.ic_target,
+//                   color: AppPalette.blackColor,
+//                   width: 24.w,
+//                   height: 24.h,
+//                 ),
+//                 onPressed: () {
+//                   context.pushNamed(AppRoutes.mapTracking);
+//                 },
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

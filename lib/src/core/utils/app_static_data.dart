@@ -23,6 +23,7 @@ class AppStaticData {
     AppTexts.waitingConfirmation,
     AppTexts.waitingPayment,
     AppTexts.cancelled,
+    AppTexts.rejected,
   ];
 
   static const List<OnboardingSlideData> onboardingSlides = [
@@ -47,16 +48,16 @@ class AppStaticData {
   ];
 
   static const List<CategoryData> categories = [
-    CategoryData(name: AppTexts.officeWorkers, icon: Icons.business_center),
-    CategoryData(name: AppTexts.education, icon: Icons.school),
-    CategoryData(name: AppTexts.eventPlanner, icon: Icons.calendar_today),
-    CategoryData(name: AppTexts.mechanic, icon: Icons.car_repair),
-    CategoryData(name: AppTexts.health, icon: Icons.favorite_border),
-    CategoryData(name: AppTexts.dailyWorkers, icon: Icons.engineering),
-    CategoryData(name: AppTexts.artist, icon: Icons.palette),
-    CategoryData(name: AppTexts.personalCare, icon: Icons.spa),
-    CategoryData(name: AppTexts.careTakers, icon: Icons.people),
-    CategoryData(name: AppTexts.technicians, icon: Icons.build),
+    CategoryData(name: AppTexts.officeWorkers, iconPath: AppAssets.officeWorker),
+    CategoryData(name: AppTexts.education,iconPath: AppAssets.education),
+    CategoryData(name: AppTexts.eventPlanner, iconPath: AppAssets.eventPlanner),
+    CategoryData(name: AppTexts.mechanic, iconPath: AppAssets.mechanic),
+    CategoryData(name: AppTexts.health, iconPath: AppAssets.health),
+    CategoryData(name: AppTexts.dailyWorkers, iconPath: AppAssets.dailyWorkers),
+    CategoryData(name: AppTexts.artist, iconPath: AppAssets.artist),
+    CategoryData(name: AppTexts.personalCare, iconPath: AppAssets.perosnalCare),
+    CategoryData(name: AppTexts.careTakers,iconPath: AppAssets.careTaker),
+    CategoryData(name: AppTexts.technicians, iconPath: AppAssets.technician),
   ];
 
   static const List<ServiceProviderModel> serviceProviders = [
@@ -194,6 +195,13 @@ class AppStaticData {
       serviceName: "AC Service",
       status: JobStatus.completed,
     ),
+    JobModel(
+      date: "28/07/2022",
+      time: "2:00 pm",
+      customerName: "Shafeeq",
+      serviceName: "Refrigerator Repair",
+      status: JobStatus.rejected,
+    ),
   ];
 }
 
@@ -213,7 +221,7 @@ class OnboardingSlideData {
 
 class CategoryData {
   final String name;
-  final IconData icon;
+  final String iconPath;
 
-  const CategoryData({required this.name, required this.icon});
+  const CategoryData({required this.name, required this.iconPath});
 }

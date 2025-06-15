@@ -25,6 +25,8 @@ class AppPalette {
   static const Color lightBlueColor = Color(0xFFF5F8FF);
   static const Color greenColor = Color(0xFFAFFFA8);
   static const Color redColor = Color(0xFFFF0000);
+  static const Color chatBubbleColor = Color(0xFFE0F7FA);
+  static const Color lightGreenColor = Color(0xFF8BC34A);
   static MaterialColor whiteSwatch = MaterialColor(0xFFFFFFFF, <int, Color>{
     50: Color(0xFFFFFFFF),
     100: Color(0xFFFDFDFD),

@@ -46,6 +46,7 @@ class AppUtils {
       case JobStatus.waitingPayment:
         return Color(0xFFFFC680);
       case JobStatus.cancelled:
+      case JobStatus.rejected:
         return Color(0xFFFF0000);
       case JobStatus.all:
         return Colors.transparent;
@@ -71,6 +72,9 @@ class AppUtils {
         return AppTexts.all;
       case JobStatus.pending:
         return AppTexts.pending;
+
+      case JobStatus.rejected:
+       return AppTexts.rejected;
     }
   }
 
@@ -87,11 +91,14 @@ class AppUtils {
       case JobStatus.waitingPayment:
       case JobStatus.completed:
         return AppTexts.serviceStartsOn;
-
+         case JobStatus.waitingConfirmation:
+         return AppTexts.confirmationRequestedAt;
       case JobStatus.all:
       case JobStatus.ongoing:
-      case JobStatus.waitingConfirmation:
+  
+      case JobStatus.rejected:
         return AppTexts.approvedAt;
+      
     }
   }
 

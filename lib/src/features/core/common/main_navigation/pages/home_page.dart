@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:help_sum/src/core/constants/app_palette.dart';
+import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/category_card.dart';
-import 'package:help_sum/src/widgets/custom_search_field.dart';
-import 'package:help_sum/src/widgets/custom_text_formfield.dart';
-import 'package:help_sum/src/features/core/common/main_navigation/widgets/recommended_card.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/heading_with_view_all.dart';
-import 'package:go_router/go_router.dart';
-import 'package:help_sum/src/core/router/app_routes.dart';
+import 'package:help_sum/src/features/core/common/main_navigation/widgets/home_service_provider_card.dart';
+import 'package:help_sum/src/widgets/custom_search_field.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -43,7 +41,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-
   Widget _categoryGrid(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +69,10 @@ class HomePage extends StatelessWidget {
             if (index < categories.length) {
               return CategoryCard(
                 title: categories[index].name,
-                icon: categories[index].icon,
+                icon: categories[index].iconPath,
+                onTap: () {
+                  context.pushNamed(AppRoutes.findMerchant);
+                },
               );
             } else {
               return Container();
@@ -95,15 +95,17 @@ class HomePage extends StatelessWidget {
         ),
         SizedBox(height: 15.h),
         SizedBox(
-          height: 120.h,
+          height: 150.h,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: AppStaticData.serviceProviders.length,
             itemBuilder: (context, index) {
               final item = AppStaticData.serviceProviders[index];
-              return RecommendedServiceProviderCard(
+              //  return Container();
+              return HomeServiceProviderCard(
                 title: item.name,
-                reviews: item.reviews.length.toString(),
+                reviews: item.reviewsCount.toString(),
+                rating: item.rating.toString(),
                 onTap: () {
                   context.pushNamed(AppRoutes.merchantProfile, extra: item);
                 },

@@ -175,11 +175,14 @@ class AppTexts {
   static const String waitingConfirmation = "Waiting Confirmation";
   static const String waitingPayment = "Waiting Payment";
   static const String cancelled = "Cancelled";
+  static const String confirmJob = 'Confirm Job';
+  static const String cancelJob = 'Cancel Job';
 
   static const String all = 'All';
   static const String onGoing = 'On Going';
   static const String pending = 'Pending';
   static const String approved = 'Approved';
+  static const String online = 'Online';
   static const String serviceStartTime = 'Service Start Time:';
   static const String serviceDateAndTime = 'Service Date and Time:';
   static const String serviceStartsOn = 'Service Starts on:';
@@ -187,6 +190,7 @@ class AppTexts {
   static const String approvedAt = 'Approved on:';
   static const String rejectedAt = 'Rejected At:';
   static const String serviceEndsOn = 'Service Ends on:';
+  static const String confirmationRequestedAt = 'Confirmation Requested At:';
   static const String bookingDetail = 'Booking Detail';
   static const String contract = 'Contract';
   static const String jobDetailsUpdates = 'Job details:';
@@ -204,12 +208,13 @@ class AppTexts {
   static const String ratingAndReviews = '4.3 (21 reviews)';
   static const String serviceLocation = 'Service location:';
   static const String otherOptions = 'Other Options';
-  static const String cancelJob = "Cancel Job";
   static const String selectReasonToCancel = "Select Reason to Cancel";
   static const String areYouSureToCancelThisJob =
       "Are you sure to cancel this job due to following reason?";
   static const String yes = "Yes";
   static const String no = "No";
+  static const String areYouSureToStartThisJob =
+      'Are you sure to start this job?';
 
   static const List<String> cancelJobReasons = [
     "Unsatisfied with Merchant",
@@ -232,4 +237,18 @@ class AppTexts {
 
   static const String jobImages = 'Job Images';
   static const String address = 'Address';
+  static const String rejected = 'Rejected';
+
+  static const String chatScreen = 'Chat Screen';
+  static const String seen = 'Seen';
+  static const String mapTracking = 'Map Tracking';
+  static const String searchLocationHint = 'Search location';
+  static const String directions = 'Directions';
+  static const String startNavigation = 'Start';
+  static const String map = 'Map';
+  static const String list = 'List';
+  static const String showingMerchantsInYourArea =
+      'Showing merchants in your area';
+  static const String search = 'Search';
+  static const String bookImmediately = 'Book Immediately';
 }

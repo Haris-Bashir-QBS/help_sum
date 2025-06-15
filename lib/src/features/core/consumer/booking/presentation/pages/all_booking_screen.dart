@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
@@ -56,28 +57,34 @@ class _AllBookingsPageState extends State<AllBookingsPage> {
 
   _jobListView() {
     return Expanded(
-      child: ListView.separated(
-        itemCount: jobs.length,
-        itemBuilder: (c, i) {
-          return BookingCard(
-            job: jobs[i],
-            showStatus: selectedIndex == 0,
-            index: i,
-            onTap: () {
-              print("Clicked hereee");
-              context.pushNamed(
-                AppRoutes.bookingDetail,
-                extra: {
-                  'job': jobs[i],
-                  'tabName': AppStaticData.jobStatusTabs[selectedIndex],
-                },
-              );
-            },
-          );
+      child: RefreshIndicator(
+        color: AppPalette.warningColor,
+        onRefresh: () async {
+          await Future.delayed(Duration(milliseconds: 600));
         },
-        separatorBuilder: (BuildContext context, int index) {
-          return 10.verticalSpace;
-        },
+        child: ListView.separated(
+          itemCount: jobs.length,
+          itemBuilder: (c, i) {
+            return BookingCard(
+              job: jobs[i],
+              showStatus: selectedIndex == 0,
+              index: i,
+              onTap: () {
+                print("Clicked hereee");
+                context.pushNamed(
+                  AppRoutes.bookingDetail,
+                  extra: {
+                    'job': jobs[i],
+                    'tabName': AppStaticData.jobStatusTabs[selectedIndex],
+                  },
+                );
+              },
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return 10.verticalSpace;
+          },
+        ),
       ),
     );
   }
@@ -96,6 +103,7 @@ class _AllBookingsPageState extends State<AllBookingsPage> {
           5: JobStatus.waitingConfirmation,
           6: JobStatus.waitingPayment,
           7: JobStatus.cancelled,
+          8: JobStatus.rejected,
         };
 
         jobs =

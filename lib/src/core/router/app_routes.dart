@@ -29,5 +29,8 @@ class AppRoutes {
   static const String editContactInfo = 'edit-contact-info';
   //============================== Booking ==============================
   static const String bookingDetail = 'booking-detail';
-  static const String otherOptions = 'other-options';
+  static const String otherOptions = '/otherOptions';
+  static const String chatScreen = '/chatScreen';
+  static const String mapTracking = '/mapTracking';
+  static const String findMerchant = '/findMerchant';
 }

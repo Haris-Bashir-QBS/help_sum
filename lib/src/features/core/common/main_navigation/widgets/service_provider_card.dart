@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
+import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class ServiceProviderCard extends StatelessWidget {
@@ -9,6 +10,8 @@ class ServiceProviderCard extends StatelessWidget {
   final String reviews;
   final bool? showMapIcon;
   final VoidCallback onTap;
+  final VoidCallback onTapChat;
+  final VoidCallback onTapMap;
 
   const ServiceProviderCard({
     super.key,
@@ -16,6 +19,8 @@ class ServiceProviderCard extends StatelessWidget {
     required this.reviews,
     required this.onTap,
     this.showMapIcon,
+    required this.onTapChat,
+    required this.onTapMap,
   });
 
   @override
@@ -90,13 +95,13 @@ class ServiceProviderCard extends StatelessWidget {
                     border: Border.all(color: AppPalette.greyColor),
                   ),
                   child: IconButton(
-                    icon: Icon(
-                      Icons.chat_bubble_outline,
+                    icon: Image.asset(
+                      AppAssets.chatIcon,
                       color: AppPalette.blackColor,
+                      width: 24.w,
+                      height: 24.h,
                     ),
-                    onPressed: () {
-                      // TODO: Implement chat functionality
-                    },
+                    onPressed: onTapChat,
                   ),
                 ),
                 if (showMapIcon == true) ...[
@@ -109,13 +114,13 @@ class ServiceProviderCard extends StatelessWidget {
                         border: Border.all(color: AppPalette.greyColor),
                       ),
                       child: IconButton(
-                        icon: Icon(
-                          Icons.location_on_outlined,
+                        icon: Image.asset(
+                          AppAssets.trgetIcon,
                           color: AppPalette.blackColor,
+                          width: 24.w,
+                          height: 24.h,
                         ),
-                        onPressed: () {
-                          // TODO: Implement map functionality
-                        },
+                        onPressed: onTapMap,
                       ),
                     ),
                   ),

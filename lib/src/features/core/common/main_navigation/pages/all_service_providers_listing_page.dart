@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
-import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
-import 'package:help_sum/src/features/core/common/main_navigation/widgets/service_provider_card.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 
 class AllServiceProvidersListingPage extends StatelessWidget {
@@ -23,17 +20,19 @@ class AllServiceProvidersListingPage extends StatelessWidget {
           crossAxisCount: 2, // Adjust as needed for service providers layout
           crossAxisSpacing: 10.w,
           mainAxisSpacing: 10.h,
-          childAspectRatio: 0.8, // Adjust aspect ratio for service provider cards
+          childAspectRatio:
+              0.8, // Adjust aspect ratio for service provider cards
         ),
         itemCount: AppStaticData.serviceProviders.length,
         itemBuilder: (context, index) {
           final provider = AppStaticData.serviceProviders[index];
-          return ServiceProviderCard(title: provider.name, reviews: provider.reviews.length.toString(),
-           onTap: () { 
-context.pushNamed(AppRoutes.merchantProfile,extra: provider);
-           },);
+          return Container();
+          //           return ServiceProviderCard(title: provider.name, reviews: provider.reviews.length.toString(),
+          //            onTap: () {
+          // context.pushNamed(AppRoutes.merchantProfile,extra: provider);
+          //            },);
         },
       ),
     );
   }
-} 
+}

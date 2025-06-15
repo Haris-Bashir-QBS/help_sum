@@ -25,12 +25,15 @@ import 'package:help_sum/src/features/core/common/profile/pages/edit_contact_inf
 import 'package:help_sum/src/features/core/common/profile/models/user_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/booking_detail_page.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/other_options_page.dart';
+import 'package:help_sum/src/features/core/common/chat/pages/chat_screen.dart';
+import 'package:help_sum/src/features/core/common/map_tracking/pages/map_tracking_page.dart';
+import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/find_merchant_screen.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/${AppRoutes.mainNavigation}',
+  initialLocation: '/${AppRoutes.splash}',
   navigatorKey: SessionManager.navigatorKey,
   observers: [UnFocusOnNavigateObserver()],
-  routes: [
+  routes: <RouteBase>[
     /// ====================== Auth Routes ======================
     _splash(),
     _selectSkill(),
@@ -54,8 +57,20 @@ final GoRouter appRouter = GoRouter(
     _editBasicInfo(),
     _editContactInfo(),
     _otherOptions(),
+    _chatScreen(),
+    _mapTracking(),
+    _findMerchant(),
+    
   ],
 );
+
+GoRoute _findMerchant(){
+return GoRoute(
+      path: '/find-merchant',
+      name:AppRoutes.findMerchant,
+      builder: (context, state) => const FindMerchantScreen(),
+    );
+}
 
 GoRoute _splash() {
   return GoRoute(
@@ -303,5 +318,21 @@ GoRoute _otherOptions() {
     path: '/other-options',
     name: AppRoutes.otherOptions,
     builder: (context, state) => const OtherOptionsPage(),
+  );
+}
+
+GoRoute _chatScreen() {
+  return GoRoute(
+    path: '/chat-screen',
+    name: AppRoutes.chatScreen,
+    builder: (context, state) => const ChatScreen(),
+  );
+}
+
+GoRoute _mapTracking() {
+  return GoRoute(
+    path: '/map-tracking',
+    name: AppRoutes.mapTracking,
+    builder: (context, state) => const MapTrackingPage(),
   );
 }

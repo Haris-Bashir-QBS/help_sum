@@ -9,6 +9,7 @@ class CustomSearchField extends StatelessWidget {
   final TextEditingController? controller;
   final String? hintText;
   final Function(String)? onChanged;
+  final double? horizontalPadding;
   final Function()? onSearch;
   final bool autofocus;
   final FocusNode? focusNode;
@@ -21,13 +22,14 @@ class CustomSearchField extends StatelessWidget {
     this.onSearch,
     this.autofocus = false,
     this.focusNode,
+    this.horizontalPadding,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.paddingAllSides,
+      padding: EdgeInsets.symmetric(
+        horizontal: horizontalPadding ?? AppDimensions.paddingAllSides,
       ).copyWith(top: 10.h),
       child: CustomTextFormField(
         controller: controller,
