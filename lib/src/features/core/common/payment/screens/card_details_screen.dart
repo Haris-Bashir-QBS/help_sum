@@ -37,7 +37,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar:  CustomAppBar(
         title: AppTexts.cardDetails,
         centerTitle: true,
       ),

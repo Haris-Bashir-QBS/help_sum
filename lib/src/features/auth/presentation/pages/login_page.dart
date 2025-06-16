@@ -134,12 +134,12 @@ class _LoginPageState extends State<LoginPage> {
 
   /// Login Method
   void _login() {
-    if (_formKey.currentState!.validate()) {
+  //  if (_formKey.currentState!.validate()) {
       // Process data
       debugPrint('Phone: ${_phoneController.text}');
       debugPrint('Password: ${_passwordController.text}');
       context.goNamed(AppRoutes.mainNavigation);
-    }
+  //  }
   }
 
   /// Fill mock details for testing

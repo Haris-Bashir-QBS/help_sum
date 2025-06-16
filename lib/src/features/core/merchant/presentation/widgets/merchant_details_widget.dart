@@ -20,18 +20,14 @@ class MerchantDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CustomText(
-          text: name,
-          fontSize: 24.sp,
-          fontWeight: FontWeight.bold,
-        ),
+        CustomText(text: name, fontSize: 22.sp, fontWeight: FontWeight.bold),
         SizedBox(height: 5.h),
         CustomText(
           text: profession,
-          fontSize: 16.sp,
+          fontSize: 14.sp,
           color: AppPalette.darkGreyColor,
         ),
-        SizedBox(height: 10.h),
+        SizedBox(height: 4.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -43,7 +39,7 @@ class MerchantDetailsWidget extends StatelessWidget {
             SizedBox(width: 5.w),
             CustomText(
               text: isAvailable ? AppTexts.available : 'Unavailable',
-              fontSize: 14.sp,
+              fontSize: 12.sp,
               color: isAvailable ? Colors.green : Colors.red,
             ),
           ],
@@ -51,4 +47,4 @@ class MerchantDetailsWidget extends StatelessWidget {
       ],
     );
   }
-} 
+}

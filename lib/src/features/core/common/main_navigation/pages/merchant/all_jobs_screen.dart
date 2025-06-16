@@ -228,6 +228,8 @@ class _AllJobsScreenState extends State<AllJobsScreen> {
         return AppTexts.all;
       case JobStatus.pending:
         return AppTexts.pending;
+        case JobStatus.rejected:
+        return AppTexts.rejected;
     }
   }
 
@@ -244,6 +246,7 @@ class _AllJobsScreenState extends State<AllJobsScreen> {
       case JobStatus.waitingPayment:
         return Color(0xFFFFC680);
       case JobStatus.cancelled:
+      case JobStatus.rejected:
         return Color(0xFFFF0000);
       case JobStatus.all:
         return Colors.transparent;

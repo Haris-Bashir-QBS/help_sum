@@ -7,10 +7,7 @@ import 'package:help_sum/src/widgets/custom_text.dart';
 class RatingReviewSection extends StatelessWidget {
   final List<Map<String, dynamic>> reviews;
 
-  const RatingReviewSection({
-    super.key,
-    required this.reviews,
-  });
+  const RatingReviewSection({super.key, required this.reviews});
 
   @override
   Widget build(BuildContext context) {
@@ -24,23 +21,29 @@ class RatingReviewSection extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 10.h),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: reviews.length,
-          separatorBuilder: (context, index) => SizedBox(height: 10.h),
-          itemBuilder: (context, index) {
-            final review = reviews[index];
-            return RatingReviewCard(
-              reviewerName: review['reviewerName']!,
-              rating: review['rating'] as double,
-              reviewText: review['reviewText']!,
-              date: review['date']!,
-            );
-          },
+        SizedBox(height: 20.h),
+        SizedBox(
+          height: 210.h,
+          child: ListView.separated(
+            shrinkWrap: true,
+            itemCount: reviews.length,
+            scrollDirection: Axis.horizontal,
+            separatorBuilder: (context, index) => SizedBox(width: 10.w),
+            itemBuilder: (context, index) {
+              final review = reviews[index];
+              return SizedBox(
+                width: 200.w,
+                child: RatingReviewCard(
+                  reviewerName: review['reviewerName']!,
+                  rating: review['rating'] as double,
+                  reviewText: review['reviewText']!,
+                  date: review['date']!,
+                ),
+              );
+            },
+          ),
         ),
       ],
     );
   }
-} 
+}

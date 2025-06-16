@@ -50,7 +50,7 @@ class _EditContactInfoScreenState extends State<EditContactInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar:  CustomAppBar(
       //  title: AppTexts.editContactInformation,
         title: AppTexts.account,
       ),

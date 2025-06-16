@@ -398,6 +398,7 @@ class ProfileDetailsPage extends StatelessWidget {
         textColor: Colors.white,
         color: const Color(0xFF0D6EFD), // Blue color from screenshot
         onPressed: () {
+          context.pushNamed(AppRoutes.roleSelection, extra: true);
           debugPrint('Signing out...');
           // context.pushNamed(AppRoutes.paymentResult, extra: true);
         },

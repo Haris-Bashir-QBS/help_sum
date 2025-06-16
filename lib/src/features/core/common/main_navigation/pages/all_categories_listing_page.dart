@@ -11,7 +11,7 @@ class AllCategoriesListingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar:  CustomAppBar(
         title: AppTexts.allCategories,
         centerTitle: true,
       ),
@@ -26,9 +26,13 @@ class AllCategoriesListingPage extends StatelessWidget {
         itemCount: AppStaticData.categories.length,
         itemBuilder: (context, index) {
           final category = AppStaticData.categories[index];
-          return CategoryCard(title: category.name, icon: category.icon);
+          return CategoryCard(
+            title: category.name,
+            icon: category.iconPath,
+            onTap: () {},
+          );
         },
       ),
     );
   }
-} 
+}

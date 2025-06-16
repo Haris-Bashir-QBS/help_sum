@@ -126,74 +126,24 @@ class _AnimatedStatusDialogState extends State<AnimatedStatusDialog>
           padding: EdgeInsets.all(24.w),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children:
-                widget.isSuccess
-                    ? [
-                      widget.icon ??
-                          Image.asset(
-                            widget.isSuccess
-                                ? AppAssets.successIcon
-                                : AppAssets.payIcon,
-                            width: 100.w,
-                            height: 100.w,
-                            color:
-                                widget.isSuccess
-                                    ? null
-                                    : AppPalette.accentColor,
-                          ),
-                      20.verticalSpace,
-                      if (!widget.isShowTimer) _title(),
-
-                      if (widget.isShowTimer) ...[
-                        CustomText(
-                          text:
-                              widget.title ??
-                              (widget.isSuccess
-                                  ? AppTexts.success
-                                  : AppTexts.somethingWentWrong),
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppPalette.blackColor,
-                          textAlign: TextAlign.center,
-                          maxLines: 4,
-                        ),
-
-                        20.verticalSpace,
-                        _description(),
-                        40.verticalSpace,
-                        Center(
-                          child: CircularProgressIndicator(
-                            color: AppPalette.primaryColor,
-                            backgroundColor: AppPalette.primaryColor.withValues(
-                              alpha: .3,
-                            ),
-                          ),
-                        ),
-                        20.verticalSpace,
-                      ],
-
-                      if (widget.icon != null) ...[
-                        20.verticalSpace,
-                        _actions(),
-                      ],
-                    ]
-                    : [
-                      // widget.icon ??
-                      //     Image.asset(
-                      //       widget.isSuccess
-                      //           ? AppAssets.successIcon
-                      //           : AppAssets.warningIcon,
-                      //       width: 100.w,
-                      //       height: 100.w,
-                      //       color: widget.isSuccess ? null : AppPalette.yellowColor,
-                      //     ),
-                      SizedBox(height: 20.h),
-                      _title(),
-                      SizedBox(height: 8.h),
-                      _description(),
-                      SizedBox(height: 24.h),
-                      _actions(),
-                    ],
+            children: [
+              if (widget.icon != null) ...[widget.icon!, 10.verticalSpace],
+              // widget.icon ??
+              //     Image.asset(
+              //       widget.isSuccess
+              //           ? AppAssets.successIcon
+              //           : AppAssets.warningIcon,
+              //       width: 100.w,
+              //       height: 100.w,
+              //       color: widget.isSuccess ? null : AppPalette.yellowColor,
+              //     ),
+              SizedBox(height: 20.h),
+              _title(),
+              SizedBox(height: 8.h),
+              _description(),
+              SizedBox(height: 24.h),
+              _actions(),
+            ],
           ),
         ),
       ),

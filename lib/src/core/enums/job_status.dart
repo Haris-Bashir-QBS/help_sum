@@ -8,4 +8,5 @@ enum JobStatus {
   waitingPayment,
   completed,
   cancelled,
+  rejected,
 }

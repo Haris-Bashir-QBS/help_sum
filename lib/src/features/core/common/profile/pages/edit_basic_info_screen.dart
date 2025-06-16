@@ -50,7 +50,7 @@ class _EditBasicInfoScreenState extends State<EditBasicInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar:  CustomAppBar(
        // title: AppTexts.editBasicInformation,
           title: AppTexts.account,
       ),
