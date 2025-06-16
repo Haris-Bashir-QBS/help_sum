@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
@@ -15,9 +16,15 @@ class AnimatedStatusDialog extends StatefulWidget {
   final VoidCallback? onPrimaryTap;
   final String? secondaryButtonText;
   final VoidCallback? onSecondaryTap;
+  final bool sucessOnly;
+  final bool isShowTimer; // ✅ New flag
+  final Function()? onBack;
 
   const AnimatedStatusDialog({
     super.key,
+    this.sucessOnly = false,
+    this.isShowTimer = false,
+    this.onBack,
     this.icon,
     required this.isSuccess,
     this.title,
@@ -42,7 +49,9 @@ class AnimatedStatusDialog extends StatefulWidget {
     String? secondaryButtonText,
     String? primaryButtonIcon,
     String? secondaryButtonIcon,
+    Function()? onBack,
     VoidCallback? onSecondaryTap,
+    bool isShowTimer = false, // ✅ Passed to dialog
   }) {
     return showDialog(
       context: context,
@@ -59,6 +68,8 @@ class AnimatedStatusDialog extends StatefulWidget {
             onSecondaryTap: onSecondaryTap,
             primaryButtonIcon: primaryButtonIcon,
             secondaryButtonIcon: secondaryButtonIcon,
+            isShowTimer: isShowTimer,
+            onBack: onBack,
           ),
     );
   }
@@ -71,10 +82,12 @@ class _AnimatedStatusDialogState extends State<AnimatedStatusDialog>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnim;
+  final bool loading = true;
 
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       duration: const Duration(milliseconds: 350),
       vsync: this,
@@ -84,6 +97,14 @@ class _AnimatedStatusDialogState extends State<AnimatedStatusDialog>
       curve: Curves.easeOutBack,
     );
     _controller.forward();
+
+    WidgetsBinding.instance.addPostFrameCallback((t) {
+      if (widget.isShowTimer) {
+        Future.delayed((Duration(seconds: 3)), () {
+          widget.onBack?.call();
+        });
+      }
+    });
   }
 
   @override
@@ -105,23 +126,74 @@ class _AnimatedStatusDialogState extends State<AnimatedStatusDialog>
           padding: EdgeInsets.all(24.w),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              // widget.icon ??
-              //     Image.asset(
-              //       widget.isSuccess
-              //           ? AppAssets.successIcon
-              //           : AppAssets.warningIcon,
-              //       width: 100.w,
-              //       height: 100.w,
-              //       color: widget.isSuccess ? null : AppPalette.yellowColor,
-              //     ),
-              SizedBox(height: 20.h),
-              _title(),
-              SizedBox(height: 8.h),
-              _description(),
-              SizedBox(height: 24.h),
-              _actions(),
-            ],
+            children:
+                widget.isSuccess
+                    ? [
+                      widget.icon ??
+                          Image.asset(
+                            widget.isSuccess
+                                ? AppAssets.successIcon
+                                : AppAssets.payIcon,
+                            width: 100.w,
+                            height: 100.w,
+                            color:
+                                widget.isSuccess
+                                    ? null
+                                    : AppPalette.accentColor,
+                          ),
+                      20.verticalSpace,
+                      if (!widget.isShowTimer) _title(),
+
+                      if (widget.isShowTimer) ...[
+                        CustomText(
+                          text:
+                              widget.title ??
+                              (widget.isSuccess
+                                  ? AppTexts.success
+                                  : AppTexts.somethingWentWrong),
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppPalette.blackColor,
+                          textAlign: TextAlign.center,
+                          maxLines: 4,
+                        ),
+
+                        20.verticalSpace,
+                        _description(),
+                        40.verticalSpace,
+                        Center(
+                          child: CircularProgressIndicator(
+                            color: AppPalette.primaryColor,
+                            backgroundColor: AppPalette.primaryColor.withValues(
+                              alpha: .3,
+                            ),
+                          ),
+                        ),
+                        20.verticalSpace,
+                      ],
+
+                      if (widget.icon != null) ...[
+                        20.verticalSpace,
+                        _actions(),
+                      ],
+                    ]
+                    : [
+                      // widget.icon ??
+                      //     Image.asset(
+                      //       widget.isSuccess
+                      //           ? AppAssets.successIcon
+                      //           : AppAssets.warningIcon,
+                      //       width: 100.w,
+                      //       height: 100.w,
+                      //       color: widget.isSuccess ? null : AppPalette.yellowColor,
+                      //     ),
+                      SizedBox(height: 20.h),
+                      _title(),
+                      SizedBox(height: 8.h),
+                      _description(),
+                      SizedBox(height: 24.h),
+                      _actions(),
+                    ],
           ),
         ),
       ),

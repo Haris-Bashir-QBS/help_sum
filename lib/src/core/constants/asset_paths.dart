@@ -10,6 +10,7 @@ final class AppAssets {
   static const String onboarding1 = '$_imagePath/onboarding_1.png';
   static const String onboarding2 = '$_imagePath/onboarding_2.png';
   static const String onboarding3 = '$_imagePath/onboarding_3.png';
+  static const String dummy1 = '$_imagePath/dummy1.png';
 
   // Merchant Profile
   static const String merchantProfilePlaceholder =
@@ -31,4 +32,6 @@ final class AppAssets {
   static const String successIcon = '$_iconPath/ic_success.png';
   static const String refreshIcon = '$_iconPath/ic_refresh.png';
   static const String starIcon = '$_iconPath/ic_star.png';
+  static const String cross = '$_iconPath/cross.png';
+  static const String arrow = '$_iconPath/arrow.png';
 }

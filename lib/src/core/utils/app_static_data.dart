@@ -12,7 +12,12 @@ class AppStaticData {
     AppTexts.categories,
     AppTexts.profile,
   ];
-  static List<String> merchantAppBarTitles = [AppTexts.jobs, "", ""];
+  static List<String> merchantAppBarTitles = [
+    AppTexts.jobs,
+    "",
+    "History",
+    "Account",
+  ];
 
   static const List<String> jobStatusTabs = [
     AppTexts.all,

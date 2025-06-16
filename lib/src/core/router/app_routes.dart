@@ -4,6 +4,7 @@ class AppRoutes {
   static const String splash = 'splash';
   static const String login = 'login';
   static const String signUp = 'signup';
+  static const String rates = 'rates';
   static const String forgotPassword = 'forgot_password';
   static const String resetPassword = 'reset_password';
   static const String changePassword = 'change_password';
@@ -11,6 +12,7 @@ class AppRoutes {
   static const String onboarding = 'onboarding';
   static const String selectSkill = 'select_skill';
   static const String mainNavigation = 'main_navigation';
+  static const String changeDescriptipon = 'change_description';
   static const String allCategoriesListing = 'all_categories_listing';
   static const String allServiceProvidersListing =
       'all_service_providers_listing';
@@ -30,4 +32,6 @@ class AppRoutes {
   //============================== Booking ==============================
   static const String bookingDetail = 'booking-detail';
   static const String otherOptions = 'other-options';
+
+  static const String createSchedule = 'create-schedule';
 }

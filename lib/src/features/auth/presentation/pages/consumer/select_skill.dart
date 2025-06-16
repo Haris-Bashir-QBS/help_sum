@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/core/constants/asset_paths.dart';
+import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/features/auth/domain/model/skill_category.dart';
 import 'package:help_sum/src/features/auth/domain/model/skill_model.dart';
+import 'package:help_sum/src/widgets/animated_dialog.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/custom_text_formfield.dart';
@@ -12,7 +16,8 @@ import 'package:help_sum/src/widgets/custom_text_formfield.dart';
 // Data Model for a single skill
 
 class SkillSelectionScreen extends StatefulWidget {
-  const SkillSelectionScreen({super.key});
+  const SkillSelectionScreen({super.key, this.isEdit = false});
+  final bool isEdit;
 
   @override
   State<SkillSelectionScreen> createState() => _SkillSelectionScreenState();
@@ -29,6 +34,8 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
   @override
   void initState() {
     super.initState();
+
+    print(widget.isEdit);
     // Initialize with a proper list of categories and skills
     _allSkillsData = [
       SkillCategory(
@@ -254,11 +261,25 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                       return Column(
                         children: [
                           InkWell(
-                            onTap:
-                                () => _toggleSkillSelection(
-                                  category.categoryName,
-                                  skill.id,
-                                ),
+                            onTap: () {
+                              if (!skill.selected) {
+                                AnimatedStatusDialog.show(
+                                  context: context,
+                                  isSuccess: true,
+                                  title: AppTexts.skillAdded,
+                                  message: "Success",
+                                );
+
+                                Future.delayed(Duration(seconds: 2), () {
+                                  context.pop();
+                                });
+                              }
+
+                              _toggleSkillSelection(
+                                category.categoryName,
+                                skill.id,
+                              );
+                            },
                             child: Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: AppDimensions.paddingAllSides.w,
@@ -314,7 +335,13 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                 color: AppPalette.orangeColor,
                 textColor: AppPalette.whiteColor,
                 text: AppTexts.next,
-                onPressed: () {},
+                onPressed: () {
+                  if (widget.isEdit) {
+                    context.pop();
+                  } else {
+                    context.goNamed(AppRoutes.createSchedule);
+                  }
+                },
               ),
             ),
           ),

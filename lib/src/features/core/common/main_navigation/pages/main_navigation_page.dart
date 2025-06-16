@@ -3,10 +3,11 @@ import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
-import 'package:help_sum/src/features/core/common/main_navigation/pages/consumer/all_jobs_screen.dart';
+import 'package:help_sum/src/features/core/common/main_navigation/pages/merchant/all_jobs_screen.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/home_page.dart';
 import 'package:help_sum/src/features/core/common/profile/pages/profile_details_page.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/all_booking_screen.dart';
+import 'package:help_sum/src/features/core/merchant/presentation/pages/income_history.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
@@ -46,9 +47,22 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       selectedIcon: Icon(Icons.copy_all),
       label: '',
     ),
+
     NavigationDestination(
       icon: Icon(Icons.apps_outlined),
       selectedIcon: Icon(Icons.apps),
+      label: '',
+    ),
+
+    NavigationDestination(
+      icon: Icon(Icons.history),
+      selectedIcon: Icon(Icons.history_rounded),
+      label: '',
+    ),
+
+    NavigationDestination(
+      icon: Icon(Icons.person_outline),
+      selectedIcon: Icon(Icons.person),
       label: '',
     ),
   ];
@@ -66,7 +80,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     } else {
       _pages.addAll([
         const AllJobsScreen(),
-        CustomText(text: AppTexts.categories),
+        Container(),
+        IncomeScreen(),
         ProfileDetailsPage(),
       ]);
     }

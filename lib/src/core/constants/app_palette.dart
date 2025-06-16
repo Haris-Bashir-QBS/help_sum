@@ -8,7 +8,7 @@ class AppPalette {
   static const Color greyColor = Color(0xFF979797);
   static const Color fillColor = Color(0xFFF3F3F3);
   static const Color darkGreyColor = Color(0xFF848484);
-  static const Color orangeColor = Color(0xFFFFC680);
+  static const Color orangeColor = Color(0xFFFF8E01);
   static const Color extraLightGreyColor = Color(0xFFF7F7F7);
   static const Color starColor = Color(0xFFFFC107);
   static const Color secondaryColor = Color(0xFF9EFFAD);

@@ -6,27 +6,34 @@ import 'package:help_sum/src/widgets/custom_text.dart';
 
 class JobImageSlider extends StatelessWidget {
   final List<String> imageUrls;
+  final bool showDivider;
 
-  const JobImageSlider({super.key, required this.imageUrls});
+  const JobImageSlider({
+    super.key,
+    required this.imageUrls,
+    this.showDivider = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Divider(),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingAllSides.w,
+        if (showDivider) ...[
+          Divider(),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppDimensions.paddingAllSides.w,
+            ),
+            child: CustomText(
+              text: AppTexts.jobImages,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          child: CustomText(
-            text: AppTexts.jobImages,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Divider(),
-        5.verticalSpace,
+          Divider(),
+          5.verticalSpace,
+        ],
         SizedBox(
           height: 100.h,
           child: ListView.builder(

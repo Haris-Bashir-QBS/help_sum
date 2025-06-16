@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/observers/navigator_observer.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/services/session_service.dart';
+import 'package:help_sum/src/features/auth/presentation/pages/consumer/create_schdule.dart';
 import 'package:help_sum/src/features/auth/presentation/pages/consumer/select_skill.dart';
 import 'package:help_sum/src/features/auth/presentation/pages/login_page.dart';
 import 'package:help_sum/src/features/auth/presentation/pages/signup_page.dart';
@@ -18,6 +19,8 @@ import 'package:help_sum/src/features/core/common/payment/screens/payment_method
 import 'package:help_sum/src/features/core/common/payment/screens/payment_result_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/rate_merchant_screen.dart';
 import 'package:help_sum/src/features/core/merchant/domain/models/service_provider_model.dart';
+import 'package:help_sum/src/features/core/merchant/presentation/pages/change_description_page.dart';
+import 'package:help_sum/src/features/core/merchant/presentation/pages/change_rate_page.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/merchant_profile_page.dart';
 import 'package:help_sum/src/features/core/common/profile/pages/profile_details_page.dart';
 import 'package:help_sum/src/features/core/common/profile/pages/edit_basic_info_screen.dart';
@@ -34,10 +37,13 @@ final GoRouter appRouter = GoRouter(
     /// ====================== Auth Routes ======================
     _splash(),
     _selectSkill(),
+    _createSchdule(),
     _login(),
     _signUp(),
     _verifyOtp(),
     _onboarding(),
+    _changeDescription(),
+    _changeRates(),
 
     _mainNavigation(),
     _allCategoriesListing(),
@@ -62,6 +68,24 @@ GoRoute _splash() {
     path: '/splash',
     name: AppRoutes.splash,
     builder: (context, state) => SplashPage(),
+  );
+}
+
+GoRoute _changeRates() {
+  return GoRoute(
+    path: '/rates',
+    name: AppRoutes.rates,
+    builder: (context, state) {
+      return ChangeRatePage();
+    },
+  );
+}
+
+GoRoute _changeDescription() {
+  return GoRoute(
+    path: '/change_description',
+    name: AppRoutes.changeDescriptipon,
+    builder: (context, state) => ChangeDescriptionPage(),
   );
 }
 
@@ -160,7 +184,22 @@ GoRoute _selectSkill() {
   return GoRoute(
     path: '/select_skill',
     name: AppRoutes.selectSkill,
-    builder: (context, state) => const SkillSelectionScreen(),
+    builder: (context, state) {
+      final isEdit = state.extra as bool?;
+
+      return SkillSelectionScreen(isEdit: isEdit ?? false);
+    },
+  );
+}
+
+GoRoute _createSchdule() {
+  return GoRoute(
+    path: '/create-schedule',
+    name: AppRoutes.createSchedule,
+    builder: (context, state) {
+      final isEdit = state.extra as bool?;
+      return SelectScheduleScreen(isEdit: isEdit ?? false);
+    },
   );
 }
 

@@ -132,6 +132,7 @@ class CustomTextFormFieldState extends State<CustomTextFormField> {
           children: [
             Expanded(
               child: TextFormField(
+                cursorColor: AppPalette.primaryColor,
                 style: TextStyle(color: Colors.black),
                 enabled: (widget.enabled),
                 controller: widget.controller,

@@ -205,6 +205,7 @@ class AppTexts {
   static const String serviceLocation = 'Service location:';
   static const String otherOptions = 'Other Options';
   static const String cancelJob = "Cancel Job";
+  static const String skillAdded = "Skill added successfully to your profile";
   static const String selectReasonToCancel = "Select Reason to Cancel";
   static const String areYouSureToCancelThisJob =
       "Are you sure to cancel this job due to following reason?";

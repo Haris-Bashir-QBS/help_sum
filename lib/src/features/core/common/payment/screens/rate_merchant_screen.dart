@@ -9,7 +9,8 @@ import 'package:help_sum/src/widgets/custom_rating_widget.dart';
 import 'package:help_sum/src/widgets/custom_text_formfield.dart';
 
 class RateScreen extends StatefulWidget {
-  const RateScreen({super.key});
+  const RateScreen({super.key, this.isEdit = false});
+  final bool isEdit;
 
   @override
   State<RateScreen> createState() => _RateScreenState();
