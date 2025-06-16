@@ -40,7 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Online',
         centerTitle: true,
         showLeading: true,

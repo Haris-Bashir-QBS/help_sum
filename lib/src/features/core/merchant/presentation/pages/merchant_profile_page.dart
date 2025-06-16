@@ -6,7 +6,7 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/features/core/merchant/domain/models/service_provider_model.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/about_merchant_widget.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/merchant_details_widget.dart';
-import 'package:help_sum/src/features/core/merchant/presentation/widgets/rating_rate_row.dart';
+import 'package:help_sum/src/features/core/merchant/presentation/widgets/merchant_info_row.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/image_view.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/merchant_profile_image_view.dart';
@@ -15,10 +15,7 @@ import 'package:help_sum/src/features/core/merchant/presentation/widgets/rating_
 class MerchantProfilePage extends StatelessWidget {
   final ServiceProviderModel serviceProvider;
 
-  const MerchantProfilePage({
-    super.key,
-    required this.serviceProvider,
-  });
+  const MerchantProfilePage({super.key, required this.serviceProvider});
 
   @override
   Widget build(BuildContext context) {
@@ -31,29 +28,59 @@ class MerchantProfilePage extends StatelessWidget {
             children: [
               CarouselSlider(
                 options: CarouselOptions(
-                  height: 250.h,
+                  height: 180.h,
                   viewportFraction: 1.0,
                   enableInfiniteScroll: false,
                   autoPlay: true,
                 ),
-                items: serviceProvider.profileImages.map((imageUrl) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return ImageView(
-                        imagePath: imageUrl,
-                        height: 250.h,
-                        width: 1.sw,
-                        fit: BoxFit.cover,
+                items:
+                    serviceProvider.profileImages.map((imageUrl) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return ImageView(
+                            imagePath: imageUrl,
+                            height: 250.h,
+                            width: 1.sw,
+                            fit: BoxFit.cover,
+                          );
+                        },
                       );
-                    },
-                  );
-                }).toList(),
+                    }).toList(),
               ),
+              40.verticalSpace,
+              MerchantDetailsWidget(
+                name: serviceProvider.name,
+                profession: serviceProvider.profession,
+                isAvailable: serviceProvider.isAvailable,
+              ),
+              10.verticalSpace,
+              InfoRow(
+                ratePerHour: 250,
+                averageRating: 4.4,
+                distanceKm: 5.5,
+                finishedJobs: 24,
+              ),
+              Divider(thickness: 0.2),
+
               _detailsWidget(),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                child: CustomButton(
+                  text: AppTexts.next,
+                  // icon: Icons.message,
+                  color: AppPalette.primaryColor,
+                  textColor: Colors.white,
+                  iconColor: Colors.white,
+                  onPressed: () {
+                    // Handle send message
+                  },
+                ),
+              ),
+              SizedBox(height: 20.h),
             ],
           ),
           Positioned(
-            top: 190.h,
+            top: 120.h,
             left: 0,
             right: 0,
             child: Align(
@@ -73,61 +100,14 @@ class MerchantProfilePage extends StatelessWidget {
     return Expanded(
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 70.h),
-              MerchantDetailsWidget(
-                name: serviceProvider.name,
-                profession: serviceProvider.profession,
-                isAvailable: serviceProvider.isAvailable,
-              ),
-              SizedBox(height: 20.h),
-              RatingRateRow(
-                rating: serviceProvider.rating,
-                reviewsCount: serviceProvider.reviewsCount,
-              ),
-              SizedBox(height: 30.h),
-              Divider(color: AppPalette.lightGreyColor, thickness: 1.h),
-              SizedBox(height: 20.h),
-              AboutMerchantWidget(
-                aboutText: serviceProvider.aboutText,
-              ),
-              SizedBox(height: 30.h),
-              RatingReviewSection(
-                reviews: serviceProvider.reviews,
-              ),
-              SizedBox(height: 20.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomButton(
-                      text: AppTexts.sendMessage,
-                      icon: Icons.message,
-                      onPressed: () {
-                        // Handle send message
-                      },
-                      color: AppPalette.primaryColor,
-                      textColor: Colors.white,
-                      iconColor: Colors.white,
-                    ),
-                  ),
-                  SizedBox(width: 10.w),
-                  Expanded(
-                    child: CustomButton(
-                      text: AppTexts.bookNow,
-                      icon: Icons.calendar_today,
-                      onPressed: () {
-                        // Handle book now
-                      },
-                      color: AppPalette.secondaryColor,
-                      textColor: Colors.white,
-                      iconColor: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
+              SizedBox(height: 0.h),
+              AboutMerchantWidget(aboutText: serviceProvider.aboutText),
+              Divider(thickness: 0.3),
+              RatingReviewSection(reviews: serviceProvider.reviews),
               SizedBox(height: 20.h),
             ],
           ),
@@ -135,4 +115,4 @@ class MerchantProfilePage extends StatelessWidget {
       ),
     );
   }
-} 
+}

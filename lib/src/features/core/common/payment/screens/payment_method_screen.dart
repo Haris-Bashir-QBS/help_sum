@@ -14,7 +14,7 @@ class PaymentMethodScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar:  CustomAppBar(
         title: AppTexts.selectPaymentMethod,
         centerTitle: false,
       ),

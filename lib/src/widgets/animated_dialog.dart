@@ -106,6 +106,7 @@ class _AnimatedStatusDialogState extends State<AnimatedStatusDialog>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              if (widget.icon != null) ...[widget.icon!, 10.verticalSpace],
               // widget.icon ??
               //     Image.asset(
               //       widget.isSuccess

@@ -35,7 +35,7 @@ class _RateScreenState extends State<RateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: AppTexts.rateMerchant),
+      appBar: CustomAppBar(title: AppTexts.rateMerchant),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(

@@ -3,6 +3,8 @@ class AppRoutes {
   //============================== Auth ==============================
   static const String splash = 'splash';
   static const String login = 'login';
+  static const String roleSelection = 'roleSelection';
+  
   static const String signUp = 'signup';
   static const String forgotPassword = 'forgot_password';
   static const String resetPassword = 'reset_password';
@@ -33,4 +35,7 @@ class AppRoutes {
   static const String chatScreen = '/chatScreen';
   static const String mapTracking = '/mapTracking';
   static const String findMerchant = '/findMerchant';
+  static const String createRequest = '/createRequest';
+  static const String immediateBooking = '/immediateBooking';
+
 }

@@ -11,7 +11,7 @@ class AllCategoriesListingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar:  CustomAppBar(
         title: AppTexts.allCategories,
         centerTitle: true,
       ),

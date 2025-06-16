@@ -10,7 +10,7 @@ class AllServiceProvidersListingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar:  CustomAppBar(
         title: AppTexts.allServiceProviders,
         centerTitle: true,
       ),

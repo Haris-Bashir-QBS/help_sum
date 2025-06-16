@@ -5,6 +5,49 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
 
 class AppUtils {
+  /// Picks a date with optional range.
+  static Future<DateTime?> pickDate(
+    BuildContext context, {
+    required DateTime firstDate,
+    required DateTime lastDate,
+  }) async {
+    return await showDatePicker(
+      context: context,
+     // useRootNavigator: true,
+      initialDate: DateTime.now(),
+      firstDate: firstDate,
+      lastDate: lastDate,
+      currentDate: DateTime.now(),
+    );
+  }
+
+  /// Picks a time, restricts past time if needed (only for same-day selection).
+  static Future<TimeOfDay?> pickTime(
+    BuildContext context, {
+    bool restrictPast = false,
+  }) async {
+    final now = TimeOfDay.now();
+    final picked = await showTimePicker(context: context, initialTime: now);
+
+    if (picked != null && restrictPast) {
+      final pickedMinutes = picked.hour * 60 + picked.minute;
+      final nowMinutes = now.hour * 60 + now.minute;
+
+      if (pickedMinutes < nowMinutes) {
+        showSnackBar(context, 'Please select a future time');
+        return null;
+      }
+    }
+
+    return picked;
+  }
+
+  static void showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
   static String maskCardNumber(String cardNumber) {
     if (cardNumber.length < 4) return cardNumber;
     return '•••• •••• •••• ${cardNumber.substring(cardNumber.length - 4)}';
@@ -74,7 +117,7 @@ class AppUtils {
         return AppTexts.pending;
 
       case JobStatus.rejected:
-       return AppTexts.rejected;
+        return AppTexts.rejected;
     }
   }
 
@@ -91,14 +134,12 @@ class AppUtils {
       case JobStatus.waitingPayment:
       case JobStatus.completed:
         return AppTexts.serviceStartsOn;
-         case JobStatus.waitingConfirmation:
-         return AppTexts.confirmationRequestedAt;
+      case JobStatus.waitingConfirmation:
+        return AppTexts.confirmationRequestedAt;
       case JobStatus.all:
       case JobStatus.ongoing:
-  
       case JobStatus.rejected:
         return AppTexts.approvedAt;
-      
     }
   }
 

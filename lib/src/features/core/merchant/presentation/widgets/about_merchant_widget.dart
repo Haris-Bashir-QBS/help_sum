@@ -7,10 +7,7 @@ import 'package:help_sum/src/widgets/custom_text.dart';
 class AboutMerchantWidget extends StatelessWidget {
   final String aboutText;
 
-  const AboutMerchantWidget({
-    super.key,
-    required this.aboutText,
-  });
+  const AboutMerchantWidget({super.key, required this.aboutText});
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +18,16 @@ class AboutMerchantWidget extends StatelessWidget {
           text: AppTexts.aboutMerchant,
           fontSize: 18.sp,
           fontWeight: FontWeight.bold,
+          maxLines: 10,
         ),
         SizedBox(height: 10.h),
         CustomText(
           text: aboutText,
           fontSize: 14.sp,
-          color: AppPalette.darkGreyColor,
+          maxLines: 10,
+          color: AppPalette.blackColor.withAlpha(200),
         ),
       ],
     );
   }
-} 
+}

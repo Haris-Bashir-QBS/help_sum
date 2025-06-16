@@ -5,6 +5,7 @@ import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/services/session_service.dart';
 import 'package:help_sum/src/features/auth/presentation/pages/consumer/select_skill.dart';
 import 'package:help_sum/src/features/auth/presentation/pages/login_page.dart';
+import 'package:help_sum/src/features/auth/presentation/pages/role_selection.dart';
 import 'package:help_sum/src/features/auth/presentation/pages/signup_page.dart';
 import 'package:help_sum/src/features/core/common/intro/spash/pages/splash_page.dart';
 import 'package:help_sum/src/features/auth/presentation/pages/otp_verification_page.dart';
@@ -17,6 +18,8 @@ import 'package:help_sum/src/features/core/common/payment/screens/card_details_s
 import 'package:help_sum/src/features/core/common/payment/screens/payment_method_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/payment_result_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/rate_merchant_screen.dart';
+import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/create_request_screen.dart';
+import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/immediate_book_screen.dart';
 import 'package:help_sum/src/features/core/merchant/domain/models/service_provider_model.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/merchant_profile_page.dart';
 import 'package:help_sum/src/features/core/common/profile/pages/profile_details_page.dart';
@@ -37,6 +40,7 @@ final GoRouter appRouter = GoRouter(
     /// ====================== Auth Routes ======================
     _splash(),
     _selectSkill(),
+    _roleSelection(),
     _login(),
     _signUp(),
     _verifyOtp(),
@@ -60,16 +64,33 @@ final GoRouter appRouter = GoRouter(
     _chatScreen(),
     _mapTracking(),
     _findMerchant(),
-    
+    _createRequest(),
+    _immediateBooking(),
   ],
 );
 
-GoRoute _findMerchant(){
-return GoRoute(
-      path: '/find-merchant',
-      name:AppRoutes.findMerchant,
-      builder: (context, state) => const FindMerchantScreen(),
-    );
+GoRoute _findMerchant() {
+  return GoRoute(
+    path: '/find-merchant',
+    name: AppRoutes.findMerchant,
+    builder: (context, state) => const FindMerchantScreen(),
+  );
+}
+
+GoRoute _immediateBooking() {
+  return GoRoute(
+    path: '/immediate-booking',
+    name: AppRoutes.immediateBooking,
+    builder: (context, state) => const ImmediateBookingScreen(),
+  );
+}
+
+GoRoute _createRequest() {
+  return GoRoute(
+    path: '/create-request',
+    name: AppRoutes.createRequest,
+    builder: (context, state) => const CreateRequestScreen(),
+  );
 }
 
 GoRoute _splash() {
@@ -80,6 +101,13 @@ GoRoute _splash() {
   );
 }
 
+GoRoute _roleSelection() {
+  return GoRoute(
+    path: '/roleSelection',
+    name: AppRoutes.roleSelection,
+    builder: (context, state) => RoleSelectionPage(),
+  );
+}
 GoRoute _login() {
   return GoRoute(
     path: '/login',

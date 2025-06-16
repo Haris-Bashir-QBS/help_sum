@@ -48,6 +48,11 @@ final class AppAssets {
   static const String perosnalCare = '$_iconPath/ic_personal_care.png';
   static const String careTaker = '$_iconPath/ic_care_taker.png';
   static const String technician = '$_iconPath/ic_tecnician.png';
+  static const String dollar = '$_iconPath/ic_dollar.png';
+  static const String starTwo = '$_iconPath/ic_star_2.png';
+  static const String distance = '$_iconPath/ic_distance.png';
+  static const String tick = '$_iconPath/ic_tick.png';
+  static const String roleSelection = '$_iconPath/ic_role_selection.png';
 
 
 

@@ -86,24 +86,7 @@ class _FindMerchantScreenState extends State<FindMerchantScreen>
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new, size: 25),
-                  color: AppPalette.blackColor,
-                  onPressed: () {
-                    if (showRecommenededMerchants == true) {
-                      showRecommenededMerchants = false;
-                      showBottomButtons = true;
-                      setState(() {});
-                    } else if (showBottomButtons == true) {
-                      showBottomButtons = false;
-                      _searchController.clear();
-                      setState(() {});
-                    } else {
-                      print("dadsadsaa");
-                      context.pop();
-                    }
-                  },
-                ),
+                _backIcon(context),
                 Expanded(
                   child: CustomSearchField(
                     horizontalPadding: 0,
@@ -155,6 +138,26 @@ class _FindMerchantScreenState extends State<FindMerchantScreen>
         ),
       ),
     );
+  }
+
+  IconButton _backIcon(BuildContext context) {
+    return IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new, size: 25),
+                color: AppPalette.blackColor,
+                onPressed: () {
+                  if (showRecommenededMerchants == true) {
+                    showRecommenededMerchants = false;
+                    showBottomButtons = true;
+                    setState(() {});
+                  } else if (showBottomButtons == true) {
+                    showBottomButtons = false;
+                    _searchController.clear();
+                    setState(() {});
+                  } else {
+                    context.pop();
+                  }
+                },
+              );
   }
 
   Widget _recommendedServiceproviders() {

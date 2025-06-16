@@ -57,7 +57,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final effectiveTextColor =
         textColor ??
-        (color == Colors.white ? Colors.black : AppPalette.darkGreyColor);
+        (color == Colors.white ? Colors.black : AppPalette.whiteColor);
     final effectiveBorderColor =
         borderColor ?? (isBorder! ? context.primaryColor : Colors.transparent);
 

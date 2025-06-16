@@ -92,7 +92,7 @@ class ProfileDetailsPage extends StatelessWidget {
         textColor: Colors.white,
         color: AppPalette.primaryColor,
         onPressed: () {
-          context.pushNamed(AppRoutes.paymentResult, extra: true);
+          context.pushNamed(AppRoutes.roleSelection, extra: true);
           debugPrint('Signing out...');
         },
       ),
