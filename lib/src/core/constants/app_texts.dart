@@ -16,9 +16,8 @@ class AppTexts {
   static const String confirmPassword = 'Confirm Password';
   static const String alreadyHaveAccount = 'Already have an account?';
   static const String loginHere = 'Login here.';
-  static const String roleSelectionHeading = 'Need Services\nor Job at Your\nFingertips?.';
-
-
+  static const String roleSelectionHeading =
+      'Need Services\nor Job at Your\nFingertips?.';
 
   // OTP Verification Page
   static const String verificationCode = 'Verification Code';
@@ -256,17 +255,18 @@ class AppTexts {
       'Showing merchants in your area';
   static const String search = 'Search';
   static const String bookAJob = 'Book a job';
-    static const String postAJob = 'Post a job';
-    static const String averageRating = 'Avg Rating';
-    static const String distance = 'Distance(km)';
-    static const String merchant = 'Merchant';
-    static const String consumer = 'Consumer';
-  
+  static const String postAJob = 'Post a job';
+  static const String averageRating = 'Avg Rating';
+  static const String distance = 'Distance(km)';
+  static const String merchant = 'Merchant';
+  static const String consumer = 'Consumer';
+
   static const String enterDescriptionAboutJob = 'Enter Description about Job';
-  
+
   static const String bookImmediately = 'Book Immediately';
   static const String createAnOffer = "Create an offer";
-  static const String requestSuccessSubtitle = "Your request has been summited.A merchant will contact you soon";
-    static const String areYouSureToPostThisJob =
+  static const String requestSuccessSubtitle =
+      "Your request has been summited.A merchant will contact you soon";
+  static const String areYouSureToPostThisJob =
       "Are you sure to Post this job?";
 }

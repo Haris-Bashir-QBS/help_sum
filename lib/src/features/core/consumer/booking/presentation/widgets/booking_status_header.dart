@@ -15,7 +15,7 @@ class BookingStatusHeader extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppDimensions.paddingAllSides,
-        vertical: 20.h,
+        vertical: 14.h,
       ),
       decoration: BoxDecoration(color: AppPalette.lightGreyColor),
       child: Row(
@@ -23,13 +23,13 @@ class BookingStatusHeader extends StatelessWidget {
         children: [
           CustomText(
             text: text ?? "",
-            fontSize: 23.sp,
+            fontSize: 20.sp,
             fontWeight: FontWeight.w500,
           ),
           Visibility(
             visible: showContractTag == true,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 5.h),
               decoration: BoxDecoration(
                 color: AppPalette.orangeColor,
                 borderRadius: BorderRadius.circular(
@@ -38,8 +38,8 @@ class BookingStatusHeader extends StatelessWidget {
               ),
               child: CustomText(
                 text: AppTexts.contract,
-                color: AppPalette.blackColor,
-                fontSize: 16.sp,
+                color: AppPalette.whiteColor,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),

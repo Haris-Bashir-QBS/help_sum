@@ -13,7 +13,7 @@ class AppUtils {
   }) async {
     return await showDatePicker(
       context: context,
-     // useRootNavigator: true,
+      // useRootNavigator: true,
       initialDate: DateTime.now(),
       firstDate: firstDate,
       lastDate: lastDate,
@@ -102,7 +102,7 @@ class AppUtils {
       case JobStatus.inProgress:
         return "In-Progress";
       case JobStatus.approved:
-        return "Completed";
+        return "Approved";
       case JobStatus.waitingConfirmation:
         return "Waiting Confirmation";
       case JobStatus.waitingPayment:

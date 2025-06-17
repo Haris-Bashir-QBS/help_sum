@@ -34,24 +34,6 @@ class JobImageSlider extends StatelessWidget {
           Divider(),
           5.verticalSpace,
         ],
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingAllSides.w,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Divider(),
-              CustomText(
-                text: AppTexts.jobImages,
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-              ),
-              Divider(),
-            ],
-          ),
-        ),
-
         5.verticalSpace,
         SizedBox(
           height: 100.h,

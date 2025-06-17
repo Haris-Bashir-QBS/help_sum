@@ -34,6 +34,11 @@ class MyApp extends StatelessWidget {
               space: 24,
               thickness: 0.8,
             ),
+            textSelectionTheme: TextSelectionThemeData(
+              cursorColor: Colors.grey, // Cursor color
+              selectionColor: Colors.grey[200], // Text highlight color
+              selectionHandleColor: Colors.grey, // Handle (for drag)
+            ),
           ),
           debugShowCheckedModeBanner: false,
           routerConfig: appRouter,

@@ -8,7 +8,7 @@ import 'package:help_sum/src/widgets/custom_text.dart';
 class ServiceProviderCard extends StatelessWidget {
   final String title;
   final String reviews;
-  final bool? showMapIcon;
+  final bool? showMapIcon, showChatIcon;
   final VoidCallback onTap;
   final VoidCallback onTapChat;
   final VoidCallback onTapMap;
@@ -20,6 +20,7 @@ class ServiceProviderCard extends StatelessWidget {
     required this.onTap,
     this.showMapIcon,
     required this.onTapChat,
+    this.showChatIcon = true,
     required this.onTapMap,
   });
 
@@ -89,21 +90,22 @@ class ServiceProviderCard extends StatelessWidget {
             // Chat and Map icons
             Row(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppPalette.greyColor),
-                  ),
-                  child: IconButton(
-                    icon: Image.asset(
-                      AppAssets.chatIcon,
-                      color: AppPalette.blackColor,
-                      width: 24.w,
-                      height: 24.h,
+                if (showChatIcon == true)
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppPalette.greyColor),
                     ),
-                    onPressed: onTapChat,
+                    child: IconButton(
+                      icon: Image.asset(
+                        AppAssets.chatIcon,
+                        color: AppPalette.blackColor,
+                        width: 24.w,
+                        height: 24.h,
+                      ),
+                      onPressed: onTapChat,
+                    ),
                   ),
-                ),
                 if (showMapIcon == true) ...[
                   10.horizontalSpace,
                   Visibility(
