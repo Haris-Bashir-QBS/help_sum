@@ -9,11 +9,11 @@ class BookingTimer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 20.h),
+      padding: EdgeInsets.symmetric(vertical: 10.h),
 
       child: CustomText(
         text: '00 : 00 : 00 : 07',
-        fontSize: 40.sp,
+        fontSize: 36.sp,
         fontWeight: FontWeight.bold,
         textAlign: TextAlign.center,
       ),

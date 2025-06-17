@@ -108,7 +108,7 @@ class BookingDetailPage extends StatelessWidget {
                   20.verticalSpace,
 
                   if (job.status != JobStatus.inProgress) ...[
-                    ServiceLocationMap(latitude: 144, longitude: 146),
+                    LocationMapView(latitude: 144, longitude: 146),
                     10.verticalSpace,
                   ],
                   ServiceProviderCard(

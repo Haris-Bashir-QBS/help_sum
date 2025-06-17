@@ -5,8 +5,15 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class JobDetailsUpdateCard extends StatelessWidget {
-  final String? workLabel, workValue;
-  const JobDetailsUpdateCard({super.key, this.workLabel, this.workValue});
+  final String? workLabel, workValue, heading;
+  final bool? showMerchantNotes;
+  const JobDetailsUpdateCard({
+    super.key,
+    this.showMerchantNotes,
+    this.workLabel,
+    this.workValue,
+    this.heading,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +27,13 @@ class JobDetailsUpdateCard extends StatelessWidget {
         children: [
           Divider(),
           CustomText(
-            text: AppTexts.jobDetailsUpdates,
+            text: heading ?? AppTexts.jobDetailsUpdates,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
           Divider(),
           5.verticalSpace,
-          _buildDetailRow(AppTexts.description, AppTexts.lowServiceCharges),
+          _buildDetailRow(AppTexts.reason, AppTexts.lowServiceCharges),
           10.verticalSpace,
           _buildDetailRow(
             workLabel ?? AppTexts.estimatedWorkTime,
@@ -34,6 +41,10 @@ class JobDetailsUpdateCard extends StatelessWidget {
           ),
           10.verticalSpace,
           _buildDetailRow(AppTexts.amount, AppTexts.twoHundredDollars),
+          if (showMerchantNotes == true) ...[
+            10.verticalSpace,
+            _buildDetailRow("Merchant Notes", "Pipe Repair"),
+          ],
         ],
       ),
     );

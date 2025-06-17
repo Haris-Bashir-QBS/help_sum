@@ -22,8 +22,10 @@ import 'package:help_sum/src/features/core/common/payment/screens/rate_merchant_
 import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/create_request_screen.dart';
 import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/immediate_book_screen.dart';
 import 'package:help_sum/src/features/core/merchant/domain/models/service_provider_model.dart';
+import 'package:help_sum/src/features/core/merchant/presentation/pages/job_detail_screen.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/change_description_page.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/change_rate_page.dart';
+import 'package:help_sum/src/features/core/merchant/presentation/pages/manage_job_page.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/merchant_profile_page.dart';
 import 'package:help_sum/src/features/core/common/profile/pages/profile_details_page.dart';
 import 'package:help_sum/src/features/core/common/profile/pages/edit_basic_info_screen.dart';
@@ -36,7 +38,7 @@ import 'package:help_sum/src/features/core/common/map_tracking/pages/map_trackin
 import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/find_merchant_screen.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/${AppRoutes.splash}',
+  initialLocation: '/${AppRoutes.mainNavigation}',
   navigatorKey: SessionManager.navigatorKey,
   observers: [UnFocusOnNavigateObserver()],
   routes: <RouteBase>[
@@ -72,8 +74,33 @@ final GoRouter appRouter = GoRouter(
     _findMerchant(),
     _createRequest(),
     _immediateBooking(),
+    _jobDetail(),
+    _manageJob(),
   ],
 );
+
+GoRoute _jobDetail() {
+  return GoRoute(
+    path: '/job-detail',
+    name: AppRoutes.jobDetail,
+    builder: (context, state) {
+      final Map<String, dynamic> extras = state.extra as Map<String, dynamic>;
+      final JobModel job = extras['job'];
+      final String? tabName = extras['tabName'];
+      return JobDetailPage(job: job, tabName: tabName);
+    },
+  );
+}
+
+GoRoute _manageJob() {
+  return GoRoute(
+    path: '/manage-job',
+    name: AppRoutes.manageJob,
+    builder: (context, state) {
+      return ManageJobPage();
+    },
+  );
+}
 
 GoRoute _findMerchant() {
   return GoRoute(
@@ -132,6 +159,7 @@ GoRoute _roleSelection() {
     builder: (context, state) => RoleSelectionPage(),
   );
 }
+
 GoRoute _login() {
   return GoRoute(
     path: '/login',

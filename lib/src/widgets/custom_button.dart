@@ -46,11 +46,12 @@ class CustomButton extends StatelessWidget {
     this.isLoading = false,
     this.radius,
     this.iconColor,
+    this.textColor,
+    this.borderColor = AppPalette.greyColor,
     this.isKeyboardDismissOnClick = true,
   }) : isBorder = true,
-       borderColor = AppPalette.greyColor,
+       //   borderColor = AppPalette.greyColor,
        color = Colors.white,
-       textColor = null,
        gradient = null;
 
   @override

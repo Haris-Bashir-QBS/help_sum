@@ -4,14 +4,16 @@ import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
-class ServiceLocationMap extends StatelessWidget {
+class LocationMapView extends StatelessWidget {
   final double latitude;
   final double longitude;
+  final String? heading;
 
-  const ServiceLocationMap({
+  const LocationMapView({
     super.key,
     required this.latitude,
     required this.longitude,
+    this.heading,
   });
 
   @override
@@ -25,7 +27,7 @@ class ServiceLocationMap extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomText(
-            text: AppTexts.serviceLocation,
+            text: heading ?? AppTexts.serviceLocation,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),

@@ -24,7 +24,7 @@ class OfferDetailsCard extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
           Divider(),
-          5.verticalSpace,
+          3.verticalSpace,
           _buildDetailRow(AppTexts.estimatedWorkTime, AppTexts.oneToTwoHours),
           10.verticalSpace,
           _buildDetailRow(AppTexts.estimatedBudget, AppTexts.twoHundredDollars),
@@ -40,7 +40,7 @@ class OfferDetailsCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText(text: title, fontWeight: FontWeight.bold),
-        5.horizontalSpace,
+        10.horizontalSpace,
         CustomText(text: value),
       ],
     );

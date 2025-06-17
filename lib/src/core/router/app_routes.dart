@@ -4,7 +4,7 @@ class AppRoutes {
   static const String splash = 'splash';
   static const String login = 'login';
   static const String roleSelection = 'roleSelection';
-  
+
   static const String signUp = 'signup';
   static const String rates = 'rates';
   static const String forgotPassword = 'forgot_password';
@@ -41,5 +41,7 @@ class AppRoutes {
   static const String findMerchant = '/findMerchant';
   static const String createRequest = '/createRequest';
   static const String immediateBooking = '/immediateBooking';
-
+  //
+  static const String jobDetail = '/JobDetail';
+  static const String manageJob = '/manageJob';
 }
