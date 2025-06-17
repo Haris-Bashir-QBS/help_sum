@@ -11,6 +11,7 @@ import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/a
 import 'package:help_sum/src/features/core/merchant/presentation/pages/income_history.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
+import 'package:help_sum/src/widgets/custom_text_formfield.dart';
 
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
@@ -24,46 +25,47 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
 
   final List<Widget> _pages = [];
 
-  final List<NavigationDestination> _consumerDestinations = const [
+  final List<NavigationDestination> _consumerDestinations = [
     NavigationDestination(
-      icon: Icon(Icons.history_outlined),
-      selectedIcon: Icon(Icons.history),
+      icon: Image.asset("assets/icons/bottom/unfocused/history.png"),
+      selectedIcon: Image.asset("assets/icons/bottom/focused/history.png"),
+      label: '',
+    ),
+
+    NavigationDestination(
+      icon: Image.asset("assets/icons/bottom/unfocused/dashbaord.png"),
+      selectedIcon: Image.asset("assets/icons/bottom/focused/dashboard.png"),
       label: '',
     ),
     NavigationDestination(
-      icon: Icon(Icons.apps_outlined),
-      selectedIcon: Icon(Icons.apps),
-      label: '',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.person_outline),
-      selectedIcon: Icon(Icons.person),
+      icon: Image.asset("assets/icons/bottom/unfocused/profile.png"),
+      selectedIcon: Image.asset("assets/icons/bottom/focused/profile.png"),
       label: '',
     ),
   ];
 
-  final List<NavigationDestination> _merchantDestinations = const [
+  final List<NavigationDestination> _merchantDestinations = [
     NavigationDestination(
-      icon: Icon(Icons.copy_all_outlined),
-      selectedIcon: Icon(Icons.copy_all),
+      icon: Image.asset("assets/icons/bottom/unfocused/jobs.png"),
+      selectedIcon: Image.asset("assets/icons/bottom/focused/jobs.png"),
       label: '',
     ),
 
     NavigationDestination(
-      icon: Icon(Icons.apps_outlined),
-      selectedIcon: Icon(Icons.apps),
+      icon: Image.asset("assets/icons/bottom/unfocused/dashbaord.png"),
+      selectedIcon: Image.asset("assets/icons/bottom/focused/dashboard.png"),
       label: '',
     ),
 
     NavigationDestination(
-      icon: Icon(Icons.history),
-      selectedIcon: Icon(Icons.history_rounded),
+      icon: Image.asset("assets/icons/bottom/unfocused/history.png"),
+      selectedIcon: Image.asset("assets/icons/bottom/focused/history.png"),
       label: '',
     ),
 
     NavigationDestination(
-      icon: Icon(Icons.person_outline),
-      selectedIcon: Icon(Icons.person),
+      icon: Image.asset("assets/icons/bottom/unfocused/profile.png"),
+      selectedIcon: Image.asset("assets/icons/bottom/focused/profile.png"),
       label: '',
     ),
   ];
@@ -95,6 +97,32 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       appBar: CustomAppBar(
         centerTitle: false,
         showLeading: false,
+        bottomWidget:
+            _selectedIndex == 1 && appRole == AppRole.merchant
+                ? PreferredSize(
+                  preferredSize: Size.fromHeight(95),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CustomTextFormField(
+                            hint: 'Search...',
+                            prefixIcon: Icons.search,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+
+                        Icon(
+                          Icons.bookmark,
+                          size: 30,
+                          color: AppPalette.primaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                : null,
         title:
             appRole == AppRole.consumer
                 ? AppStaticData.consumerAppbarTitles[_selectedIndex]
@@ -125,7 +153,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           elevation: 120,
           height: 65,
           backgroundColor: AppPalette.lightGreyColor,
-          indicatorColor: AppPalette.primaryColor.withOpacity(0.2),
+          // indicatorColor: AppPalette.primaryColor.withOpacity(0.2),
           labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         ),
       ),

@@ -148,7 +148,10 @@ class ProfileDetailsPage extends StatelessWidget {
         InfoRow(label: AppTexts.lastName, value: user.lastName),
       ],
       onPressed: () {
-        context.pushNamed(AppRoutes.editBasicInfo, extra: user.copyWith());
+        context.pushNamed(
+          AppRoutes.editBasicInfo,
+          extra: user.copyWith(isVerified: true),
+        );
       },
     );
   }
@@ -227,6 +230,9 @@ class ProfileDetailsPage extends StatelessWidget {
       ),
     );
   }
+
+
+
 
   Widget _buildAvatarWithBadge() {
     return Stack(

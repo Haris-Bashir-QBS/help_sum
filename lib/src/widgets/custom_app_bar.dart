@@ -8,25 +8,36 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool? centerTitle;
   final bool showLeading;
   List<Widget>? actions;
+  final PreferredSizeWidget? bottomWidget;
   final VoidCallback? onBackButtonPressed;
 
-   CustomAppBar({super.key, required this.title, 
-  this.actions,
-  this.centerTitle = true,
-  this.showLeading = true,
-  this.onBackButtonPressed});
+  CustomAppBar({
+    super.key,
+    required this.title,
+    this.actions,
+    this.centerTitle = true,
+    this.showLeading = true,
+    this.onBackButtonPressed,
+    this.bottomWidget,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: AppPalette.backgroundColor,
       elevation: 0,
-    actions: actions,
-      leading: showLeading?  IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new),
-        color: AppPalette.blackColor,
-        onPressed: onBackButtonPressed ?? () => Navigator.pop(context),
-      ):null,
+
+      actions: actions,
+
+      leading:
+          showLeading
+              ? IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new),
+                color: AppPalette.blackColor,
+                onPressed: onBackButtonPressed ?? () => Navigator.pop(context),
+              )
+              : null,
+      bottom: bottomWidget,
       title: CustomText(
         text: title,
         fontSize: 20.sp,
@@ -37,5 +48,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(50.h);
+  Size get preferredSize =>
+      bottomWidget != null
+          ? Size.fromHeight(bottomWidget!.preferredSize.height)
+          : Size.fromHeight(50.h);
 }

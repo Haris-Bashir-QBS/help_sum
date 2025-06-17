@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
+import 'package:help_sum/src/widgets/custom_text_formfield.dart';
 
 class MerchantHome extends StatefulWidget {
   const MerchantHome({super.key});
@@ -24,7 +25,8 @@ class _MerchantHomeState extends State<MerchantHome> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // GoogleMap(initialCameraPosition: _initialCameraPosition),
+        // CustomTextFormField(),
+        GoogleMap(initialCameraPosition: _initialCameraPosition),
         Container(
           width: .42.sw,
           height: 60,

@@ -42,6 +42,7 @@ class AnimatedStatusDialog extends StatefulWidget {
     required BuildContext context,
     Widget? icon,
     required bool isSuccess,
+    bool sucessOnly = false,
     String? title,
     String? message,
     String? primaryButtonText,
@@ -70,6 +71,7 @@ class AnimatedStatusDialog extends StatefulWidget {
             secondaryButtonIcon: secondaryButtonIcon,
             isShowTimer: isShowTimer,
             onBack: onBack,
+            sucessOnly: sucessOnly,
           ),
     );
   }
@@ -126,24 +128,57 @@ class _AnimatedStatusDialogState extends State<AnimatedStatusDialog>
           padding: EdgeInsets.all(24.w),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              if (widget.icon != null) ...[widget.icon!, 10.verticalSpace],
-              // widget.icon ??
-              //     Image.asset(
-              //       widget.isSuccess
-              //           ? AppAssets.successIcon
-              //           : AppAssets.warningIcon,
-              //       width: 100.w,
-              //       height: 100.w,
-              //       color: widget.isSuccess ? null : AppPalette.yellowColor,
-              //     ),
-              SizedBox(height: 20.h),
-              _title(),
-              SizedBox(height: 8.h),
-              _description(),
-              SizedBox(height: 24.h),
-              _actions(),
-            ],
+            children:
+                widget.sucessOnly
+                    ? [
+                      widget.icon ??
+                          Image.asset(
+                            widget.isSuccess
+                                ? AppAssets.successIcon
+                                : AppAssets.starIcon,
+                            width: 100.w,
+                            height: 100.w,
+                            // color:
+                            //     widget.isSuccess
+                            //         ? null
+                            //         : AppPalette.yellowColor,
+                          ),
+
+                      _title(),
+
+                      if (widget.isShowTimer) ...[
+                        30.verticalSpace,
+                        _description(),
+                        30.verticalSpace,
+                        Center(
+                          child: CircularProgressIndicator(
+                            color: AppPalette.primaryColor,
+                          ),
+                        ),
+                        30.verticalSpace,
+                      ],
+                    ]
+                    : [
+                      if (widget.icon != null) ...[
+                        widget.icon!,
+                        10.verticalSpace,
+                      ],
+                      // widget.icon ??
+                      //     Image.asset(
+                      //       widget.isSuccess
+                      //           ? AppAssets.successIcon
+                      //           : AppAssets.warningIcon,
+                      //       width: 100.w,
+                      //       height: 100.w,
+                      //       color: widget.isSuccess ? null : AppPalette.yellowColor,
+                      //     ),
+                      SizedBox(height: 20.h),
+                      _title(),
+                      SizedBox(height: 8.h),
+                      _description(),
+                      SizedBox(height: 24.h),
+                      _actions(),
+                    ],
           ),
         ),
       ),

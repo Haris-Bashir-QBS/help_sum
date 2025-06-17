@@ -53,15 +53,18 @@ class AppStaticData {
   ];
 
   static const List<CategoryData> categories = [
-    CategoryData(name: AppTexts.officeWorkers, iconPath: AppAssets.officeWorker),
-    CategoryData(name: AppTexts.education,iconPath: AppAssets.education),
+    CategoryData(
+      name: AppTexts.officeWorkers,
+      iconPath: AppAssets.officeWorker,
+    ),
+    CategoryData(name: AppTexts.education, iconPath: AppAssets.education),
     CategoryData(name: AppTexts.eventPlanner, iconPath: AppAssets.eventPlanner),
     CategoryData(name: AppTexts.mechanic, iconPath: AppAssets.mechanic),
     CategoryData(name: AppTexts.health, iconPath: AppAssets.health),
     CategoryData(name: AppTexts.dailyWorkers, iconPath: AppAssets.dailyWorkers),
     CategoryData(name: AppTexts.artist, iconPath: AppAssets.artist),
     CategoryData(name: AppTexts.personalCare, iconPath: AppAssets.perosnalCare),
-    CategoryData(name: AppTexts.careTakers,iconPath: AppAssets.careTaker),
+    CategoryData(name: AppTexts.careTakers, iconPath: AppAssets.careTaker),
     CategoryData(name: AppTexts.technicians, iconPath: AppAssets.technician),
   ];
 

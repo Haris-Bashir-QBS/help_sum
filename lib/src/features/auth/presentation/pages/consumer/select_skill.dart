@@ -169,69 +169,85 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading:
+            widget.isEdit
+                ? InkWell(
+                  onTap: () {
+                    context.pop();
+                  },
+                  child: Image.asset(AppAssets.cross),
+                )
+                : null,
         title: CustomText(
-          text: AppTexts.appTitle,
+          text: widget.isEdit ? "Add your skills" : AppTexts.appTitle,
           fontWeight: FontWeight.bold,
           fontSize: 24.sp,
         ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal:
-                  AppDimensions
-                      .paddingAllSides
-                      .w, // Apply .w for horizontal padding
-            ),
-            child: CustomTextFormField(
-              hint: "Search for a skill", // Replaced AppTexts.searchHint
-              controller: _searchController,
-              onChanged:
-                  (value) => _filterSkills(), // Call filter on text change
-              customHintStyle: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: AppPalette.blackColor,
-              ),
-              fillColor: AppPalette.fillColor,
-              suffixIcon: Container(
-                width:
-                    48.w, // Increased width for better touch target and visual
-                height: 48.h, // Added height for better sizing
-                decoration: BoxDecoration(
-                  color: AppPalette.orangeColor,
-                  borderRadius: BorderRadius.circular(
-                    AppDimensions.appBorderRadius.r,
+        bottom:
+            !widget.isEdit
+                ? PreferredSize(
+                  preferredSize: Size.fromHeight(50),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal:
+                          AppDimensions
+                              .paddingAllSides
+                              .w, // Apply .w for horizontal padding
+                    ),
+                    child: CustomTextFormField(
+                      hint:
+                          "Search for a skill", // Replaced AppTexts.searchHint
+                      controller: _searchController,
+                      onChanged:
+                          (value) =>
+                              _filterSkills(), // Call filter on text change
+                      customHintStyle: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppPalette.blackColor,
+                      ),
+                      fillColor: AppPalette.fillColor,
+                      suffixIcon: Container(
+                        width:
+                            48.w, // Increased width for better touch target and visual
+                        height: 48.h, // Added height for better sizing
+                        decoration: BoxDecoration(
+                          color: AppPalette.orangeColor,
+                          borderRadius: BorderRadius.circular(
+                            AppDimensions.appBorderRadius.r,
+                          ),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.search,
+                            color: AppPalette.blackColor,
+                            size: 24.sp, // Use .sp for icon size
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.search,
-                    color: AppPalette.blackColor,
-                    size: 24.sp, // Use .sp for icon size
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+                )
+                : null,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          20.verticalSpace, // Spacing from flutter_screenutil
+          if (!widget.isEdit)
+            20.verticalSpace, // Spacing from flutter_screenutil
 
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppDimensions.paddingAllSides.w,
+          if (!widget.isEdit)
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppDimensions.paddingAllSides.w,
+              ),
+              child: CustomText(
+                text: "Add your skill", // Heading for skill section
+                fontSize: 20.sp, // Use .sp for font size
+                fontWeight: FontWeight.bold,
+                color: AppPalette.blackColor,
+              ),
             ),
-            child: CustomText(
-              text: "Add your skill", // Heading for skill section
-              fontSize: 20.sp, // Use .sp for font size
-              fontWeight: FontWeight.bold,
-              color: AppPalette.blackColor,
-            ),
-          ),
           15.verticalSpace,
 
           Expanded(
@@ -265,6 +281,7 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                               if (!skill.selected) {
                                 AnimatedStatusDialog.show(
                                   context: context,
+                                  sucessOnly: true,
                                   isSuccess: true,
                                   title: AppTexts.skillAdded,
                                   message: "Success",
@@ -327,24 +344,28 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
               },
             ),
           ),
-          40.verticalSpace,
-          Center(
-            child: SizedBox(
-              width: 0.4.sw,
-              child: CustomButton(
-                color: AppPalette.orangeColor,
-                textColor: AppPalette.whiteColor,
-                text: AppTexts.next,
-                onPressed: () {
-                  if (widget.isEdit) {
-                    context.pop();
-                  } else {
-                    context.goNamed(AppRoutes.createSchedule);
-                  }
-                },
+          if (!widget.isEdit) 40.verticalSpace,
+          if (!widget.isEdit)
+            Center(
+              child: SizedBox(
+                width: 0.4.sw,
+                child: CustomButton(
+                  color:
+                      widget.isEdit
+                          ? AppPalette.primaryColor
+                          : AppPalette.orangeColor,
+                  textColor: AppPalette.whiteColor,
+                  text: AppTexts.next,
+                  onPressed: () {
+                    if (widget.isEdit) {
+                      context.pop();
+                    } else {
+                      context.goNamed(AppRoutes.createSchedule);
+                    }
+                  },
+                ),
               ),
             ),
-          ),
 
           // Next Button
           40.verticalSpace,

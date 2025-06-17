@@ -13,20 +13,19 @@ class UserModel {
     required this.isVerified,
   });
 
-  
   UserModel copyWith({
     String? firstName,
     String? lastName,
     String? emailAddress,
     String? phoneNumber,
-    bool? isVerified
+    bool? isVerified,
   }) {
     return UserModel(
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       emailAddress: emailAddress ?? this.emailAddress,
       phoneNumber: phoneNumber ?? this.phoneNumber,
-      isVerified: isVerified??this.isVerified,
+      isVerified: isVerified ?? this.isVerified,
     );
   }
-} 
+}

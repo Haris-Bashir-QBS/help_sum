@@ -154,6 +154,7 @@ class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
     AnimatedStatusDialog.show(
       context: context,
       isShowTimer: true,
+      sucessOnly: true,
       title: "Congratulations!",
       message:
           widget.isEdit
