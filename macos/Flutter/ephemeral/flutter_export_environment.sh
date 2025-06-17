@@ -1,6 +1,6 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/ara12/Documents/Development/Sdks/flutter"
+export "FLUTTER_ROOT=/Users/ara12/.shorebird/bin/cache/flutter/1ba725429e5037b65e86d9c277f0250a60b737cc"
 export "FLUTTER_APPLICATION_PATH=/Users/ara12/Documents/GitHub/help_sum"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
