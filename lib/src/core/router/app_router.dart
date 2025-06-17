@@ -46,7 +46,7 @@ final GoRouter appRouter = GoRouter(
     _createSchdule(),
     _roleSelection(),
     _login(),
-    _signUp(),
+    _signUp(),  
     _verifyOtp(),
     _onboarding(),
     _changeDescription(),

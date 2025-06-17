@@ -14,11 +14,11 @@ class OnboardingGetStartedButton extends StatelessWidget {
     return CustomButton(
       text: AppTexts.getStarted,
       onPressed: () {
-        context.goNamed(AppRoutes.login);
+        context.goNamed(AppRoutes.roleSelection);
       },
       radius: 10.r,
       color: AppPalette.primaryColor,
       textColor: Colors.white,
     );
   }
-} 
+}

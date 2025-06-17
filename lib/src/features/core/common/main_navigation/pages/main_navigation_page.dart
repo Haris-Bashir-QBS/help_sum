@@ -5,6 +5,7 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/merchant/all_jobs_screen.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/home_page.dart';
+import 'package:help_sum/src/features/core/common/main_navigation/pages/merchant_home.dart';
 import 'package:help_sum/src/features/core/common/profile/pages/profile_details_page.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/all_booking_screen.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/income_history.dart';
@@ -80,7 +81,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     } else {
       _pages.addAll([
         const AllJobsScreen(),
-        Container(),
+        MerchantHome(),
         IncomeScreen(),
         ProfileDetailsPage(),
       ]);

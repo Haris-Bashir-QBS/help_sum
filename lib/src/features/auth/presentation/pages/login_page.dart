@@ -22,11 +22,13 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool isButtonVissible = false;
 
   @override
   void dispose() {
     _phoneController.dispose();
     _passwordController.dispose();
+
     super.dispose();
   }
 
@@ -134,12 +136,12 @@ class _LoginPageState extends State<LoginPage> {
 
   /// Login Method
   void _login() {
-  //  if (_formKey.currentState!.validate()) {
-      // Process data
-      debugPrint('Phone: ${_phoneController.text}');
-      debugPrint('Password: ${_passwordController.text}');
-      context.goNamed(AppRoutes.mainNavigation);
-  //  }
+    //  if (_formKey.currentState!.validate()) {
+    // Process data
+    debugPrint('Phone: ${_phoneController.text}');
+    debugPrint('Password: ${_passwordController.text}');
+    context.goNamed(AppRoutes.verifyOtp, extra: _phoneController.text);
+    //  }
   }
 
   /// Fill mock details for testing

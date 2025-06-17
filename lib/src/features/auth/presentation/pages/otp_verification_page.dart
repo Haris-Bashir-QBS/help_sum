@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/constants/app_role.dart';
+import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
@@ -25,11 +28,24 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
 
   late Timer _timer;
   int _startSeconds = 30;
+  bool _isVissibleButton = false;
 
   @override
   void initState() {
     super.initState();
+
     startTimer();
+    _otpController.addListener(() {
+      if (_otpController.text.length == 4) {
+        setState(() {
+          _isVissibleButton = true;
+        });
+      } else {
+        setState(() {
+          _isVissibleButton = false;
+        });
+      }
+    });
   }
 
   void startTimer() {
@@ -146,11 +162,15 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     return GestureDetector(
       onTap: _startSeconds == 0 ? startTimer : null,
       child: CustomText(
-        text: _startSeconds == 0
-            ? AppTexts.resendCode
-            : '${AppTexts.resendCode} in ( $_startSeconds${AppTexts.seconds} )',
+        text:
+            _startSeconds == 0
+                ? AppTexts.resendCode
+                : '${AppTexts.resendCode} in ( $_startSeconds${AppTexts.seconds} )',
         fontSize: 16.sp,
-        color: _startSeconds == 0?AppPalette.primaryColor:AppPalette.orangeColor,
+        color:
+            _startSeconds == 0
+                ? AppPalette.primaryColor
+                : AppPalette.orangeColor,
         fontWeight: FontWeight.w600,
       ),
     );
@@ -159,13 +179,22 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
   Widget _buildVerifyButton() {
     return CustomButton(
       text: AppTexts.verify,
+      color: _isVissibleButton ? AppPalette.primaryColor : null,
       onPressed: () {
         if (_formKey.currentState!.validate()) {
           debugPrint('OTP: ${_otpController.text}');
-          // TODO: Implement OTP verification logic
+
+          if (appRole == AppRole.consumer) {
+            context.goNamed(AppRoutes.mainNavigation);
+            print("object");
+          } else {
+            context.goNamed(AppRoutes.selectSkill);
+          }
+
+          // context.goNamed(AppRoutes.mainNavigation);
         }
       },
       radius: 10.r,
     );
   }
-} 
+}

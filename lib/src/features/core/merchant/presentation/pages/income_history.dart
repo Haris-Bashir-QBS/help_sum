@@ -31,14 +31,14 @@ class _IncomeScreenState extends State<IncomeScreen> {
               children: [
                 Expanded(child: _buildTimePeriodToggle()),
 
-                Container(
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: AppPalette.backgroundColor,
-                  ),
-                  child: Icon(Icons.filter_list),
-                ),
+                // Container(
+                //   padding: EdgeInsets.all(12),
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(12),
+                //     color: AppPalette.backgroundColor,
+                //   ),
+                //   child: Icon(Icons.filter_list),
+                // ),
                 16.horizontalSpace,
               ],
             ),
@@ -53,7 +53,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                     averageIncome: 20.80,
                     color: Colors.blue.shade700,
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 10.h),
                   _buildJobTypeCard(
                     letter: 'I',
                     title: 'Immediate',
@@ -61,7 +61,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                     averageIncome: 0.00,
                     color: Colors.orange.shade700,
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 10.h),
                   _buildJobTypeCard(
                     letter: 'C',
                     title: 'Contract',
@@ -118,10 +118,15 @@ class _IncomeScreenState extends State<IncomeScreen> {
           SizedBox(height: 12.h),
           Center(
             child: CustomText(
-              text: '\$ 10.90',
+              text:
+                  '\$ ${_selectedPeriod == TimePeriod.monthly
+                      ? "10.90"
+                      : _selectedPeriod == TimePeriod.weekly
+                      ? "6.4"
+                      : "200"}',
               textAlign: TextAlign.center,
               fontSize: 30.sp,
-              fontWeight: FontWeight.bold,
+              // fontWeight: FontWeight.bold,
               // style: TextStyle(
               //   color: Colors.white,
               //   fontSize: 40.sp,
@@ -129,7 +134,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
               // ),
             ),
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 25.h),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -201,7 +206,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
   Widget _buildTimePeriodToggle() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      padding: EdgeInsets.all(4.w),
+      padding: EdgeInsets.all(8.w),
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
         borderRadius: BorderRadius.circular(12.r),
@@ -226,7 +231,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
           });
         },
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 12.h),
+          padding: EdgeInsets.symmetric(vertical: 8.h),
           decoration: BoxDecoration(
             color:
                 isSelected
@@ -239,7 +244,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
               text,
               style: TextStyle(
                 color: isSelected ? Colors.black : Colors.black54,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
                 fontSize: 14.sp,
               ),
             ),
@@ -257,8 +262,10 @@ class _IncomeScreenState extends State<IncomeScreen> {
     required Color color,
   }) {
     return Card(
-      elevation: 2,
-      shadowColor: Colors.black.withOpacity(0.1),
+      color: Colors.grey.shade200,
+      elevation: 0,
+      // elevation: 2,
+      // shadowColor: Colors.black.withOpacity(0.1),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
       child: Padding(
         padding: EdgeInsets.all(16.w),
@@ -276,15 +283,8 @@ class _IncomeScreenState extends State<IncomeScreen> {
                 ),
               ),
             ),
-            SizedBox(width: 12.w),
-            Container(
-              width: 4.w,
-              height: 50.h,
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(2.r),
-              ),
-            ),
+
+            // SizedBox(height: .w),
             SizedBox(width: 16.w),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,25 +293,44 @@ class _IncomeScreenState extends State<IncomeScreen> {
                   title,
                   style: TextStyle(
                     fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w500,
                     color: Colors.black87,
                   ),
                 ),
                 SizedBox(height: 8.h),
-                Text(
-                  'No. of jobs: $jobCount',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  'Average Income: \$${averageIncome.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: Colors.grey.shade600,
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(right: 8.w),
+                      width: 4.w,
+                      height: 50.h,
+                      decoration: BoxDecoration(
+                        color: color,
+                        borderRadius: BorderRadius.circular(2.r),
+                      ),
+                    ),
+
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'No. of jobs: $jobCount',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          'Average Income: \$${averageIncome.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),

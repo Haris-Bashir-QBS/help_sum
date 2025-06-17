@@ -284,7 +284,9 @@ class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
                   color: AppPalette.primaryColor,
                   textColor: AppPalette.fillColor,
                   text: "Skip",
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    context.goNamed(AppRoutes.mainNavigation);
+                  },
                 ),
               ),
               const SizedBox(height: 10),

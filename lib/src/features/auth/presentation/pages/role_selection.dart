@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
+import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
+import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
@@ -60,14 +63,21 @@ class RoleSelectionPage extends StatelessWidget {
                         text: AppTexts.merchant,
                         textColor: Colors.white,
                         color: AppPalette.primaryColor,
-                        onPressed: () {},
+                        onPressed: () {
+                          appRole = AppRole.merchant;
+                          context.pushNamed(AppRoutes.login);
+                        },
                       ),
                       10.verticalSpace,
                       CustomButton(
                         text: AppTexts.consumer,
                         textColor: Colors.white,
                         color: AppPalette.primaryColor,
-                        onPressed: () {},
+                        onPressed: () {
+                          appRole = AppRole.consumer;
+
+                          context.pushNamed(AppRoutes.login);
+                        },
                       ),
                     ],
                   ),
