@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -5,68 +6,101 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_validators.dart';
+import 'package:help_sum/src/features/auth/data/models/request/login_request_model.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
 import 'package:help_sum/src/widgets/animated_slide_fade.dart';
 import 'package:help_sum/src/widgets/clickable_text_pair.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/custom_text_formfield.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginPage extends StatefulWidget {
+import '../../../../widgets/modal_progress_hud.dart';
+
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool isButtonVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _listener();
+  }
+
+  void _listener() {
+    ref.listen<AuthState>(authNotifierProvider, (prev, next) {
+      if (next is LoginSuccess) {
+        context.goNamed(AppRoutes.verifyOtp, extra: next.user.phone);
+        ref.read(authNotifierProvider.notifier).reset();
+      }
+
+      if (next is LoginError) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(next.message)));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                140.verticalSpace,
-                AnimatedSlideFade(
-                  delayMilliseconds: 0,
-                  child: _buildIllustration(),
-                ),
-                72.verticalSpace,
-                AnimatedSlideFade(
-                  delayMilliseconds: 100,
-                  child: _buildLoginTitle(),
-                ),
-                72.verticalSpace,
-                AnimatedSlideFade(
-                  delayMilliseconds: 200,
-                  child: _buildPhoneNumberTextField(),
-                ),
-                15.verticalSpace,
-                AnimatedSlideFade(
-                  delayMilliseconds: 300,
-                  child: _buildPasswordTextField(),
-                ),
-                60.verticalSpace,
-                AnimatedSlideFade(
-                  delayMilliseconds: 400,
-                  child: _buildLoginButton(),
-                ),
-                26.verticalSpace,
-                AnimatedSlideFade(
-                  delayMilliseconds: 500,
-                  child: _buildSignUpText(),
-                ),
-              ],
+    final AuthState authState = ref.watch(authNotifierProvider);
+    final isLoading = authState is LoginLoading;
+
+    return ModalProgressHUD(
+      inAsyncCall: isLoading,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  140.verticalSpace,
+                  AnimatedSlideFade(
+                    delayMilliseconds: 0,
+                    child: _buildIllustration(),
+                  ),
+                  72.verticalSpace,
+                  AnimatedSlideFade(
+                    delayMilliseconds: 100,
+                    child: _buildLoginTitle(),
+                  ),
+                  72.verticalSpace,
+                  AnimatedSlideFade(
+                    delayMilliseconds: 200,
+                    child: _buildPhoneNumberTextField(),
+                  ),
+                  15.verticalSpace,
+                  AnimatedSlideFade(
+                    delayMilliseconds: 300,
+                    child: _buildPasswordTextField(),
+                  ),
+                  60.verticalSpace,
+                  AnimatedSlideFade(
+                    delayMilliseconds: 400,
+                    child: _buildLoginButton(),
+                  ),
+                  26.verticalSpace,
+                  AnimatedSlideFade(
+                    delayMilliseconds: 500,
+                    child: _buildSignUpText(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -120,27 +154,26 @@ class _LoginPageState extends State<LoginPage> {
     return ClickableTextPair(
       firstText: AppTexts.dontHaveAccount,
       secondText: AppTexts.signUp,
-      onSecondTextTap: () {
-        context.pushNamed(AppRoutes.signUp);
-      },
+      onSecondTextTap: () => context.pushNamed(AppRoutes.signUp),
     );
   }
 
-  /// Login Method
   void _login() {
-    //  if (_formKey.currentState!.validate()) {
-    // Process data
-    debugPrint('Phone: ${_phoneController.text}');
-    debugPrint('Password: ${_passwordController.text}');
-    context.goNamed(AppRoutes.verifyOtp, extra: _phoneController.text);
-    //  }
+    if (_formKey.currentState!.validate()) {
+      final params = LoginRequestModel(
+        phoneNumber: _phoneController.text,
+        password: _passwordController.text,
+      );
+      ref.read(authNotifierProvider.notifier).login(params);
+    }
   }
 
-  /// Fill mock details for testing
   void _fillMockDetails() {
-    _phoneController.text = '1234567890';
-    _passwordController.text = 'Test@123';
-    debugPrint('Dummy values filled for login');
+    if (kDebugMode) {
+      _phoneController.text = '1234567890';
+      _passwordController.text = 'Test@123';
+      debugPrint('Dummy values filled for login');
+    }
   }
 
   @override

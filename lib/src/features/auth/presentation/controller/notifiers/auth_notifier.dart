@@ -1,13 +1,15 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/features/auth/data/models/request/login_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/signup_request_model.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/login_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/signup_usecase.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'auth_state.dart';
+part 'auth_notifier.g.dart';
 
-class AuthNotifier extends Notifier<AuthState> {
+@riverpod
+class AuthNotifier extends _$AuthNotifier {
   late final LoginUseCase _loginUseCase = sl();
   late final SignupUseCase _signUpUseCase = sl();
 

@@ -1,8 +1,11 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../domain/entities/user_entity.dart';
 
-class UserNotifier extends Notifier<UserEntity?> {
+part 'user_notifier.g.dart';
+
+@riverpod
+class UserNotifier extends _$UserNotifier {
   @override
   UserEntity? build() => null;
 
