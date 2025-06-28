@@ -5,9 +5,9 @@ import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
+import 'package:help_sum/src/core/models/merchant/skill_model.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
-import 'package:help_sum/src/features/auth/domain/model/skill_category.dart';
-import 'package:help_sum/src/features/auth/domain/model/skill_model.dart';
+import 'package:help_sum/src/core/models/merchant/skill_category.dart';
 import 'package:help_sum/src/widgets/animated_dialog.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
@@ -35,7 +35,7 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
   void initState() {
     super.initState();
 
-    print(widget.isEdit);
+    debugPrint(widget.isEdit.toString());
     // Initialize with a proper list of categories and skills
     _allSkillsData = [
       SkillCategory(
@@ -135,32 +135,32 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
     }
   }
 
-  /// Handles the "Next" button press.
-  /// Gathers all selected skills and prints them.
-  void _handleNext() {
-    final selectedSkills =
-        _allSkillsData
-            .expand(
-              (category) => category.skills,
-            ) // Flatten the list of lists into a single list of skills
-            .where((skill) => skill.selected) // Filter for selected skills
-            .toList();
-
-    debugPrint('Selected Skills:');
-    for (var skill in selectedSkills) {
-      debugPrint('- ${skill.name} (ID: ${skill.id})');
-    }
-
-    // In a real application, you would typically navigate to another screen
-    // or send the selected skills to a backend service here.
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Selected ${selectedSkills.length} skills. Check debug console for details.',
-        ),
-      ),
-    );
-  }
+  // /// Handles the "Next" button press.
+  // /// Gathers all selected skills and prints them.
+  // void _handleNext() {
+  //   final selectedSkills =
+  //       _allSkillsData
+  //           .expand(
+  //             (category) => category.skills,
+  //           ) // Flatten the list of lists into a single list of skills
+  //           .where((skill) => skill.selected) // Filter for selected skills
+  //           .toList();
+  //
+  //   debugPrint('Selected Skills:');
+  //   for (var skill in selectedSkills) {
+  //     debugPrint('- ${skill.name} (ID: ${skill.id})');
+  //   }
+  //
+  //   // In a real application, you would typically navigate to another screen
+  //   // or send the selected skills to a backend service here.
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(
+  //       content: Text(
+  //         'Selected ${selectedSkills.length} skills. Check debug console for details.',
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -287,9 +287,12 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                                   message: "Success",
                                 );
 
-                                Future.delayed(Duration(seconds: 2), () {
-                                  context.pop();
+                                Future.delayed(Duration(seconds: 2), () async {
+                                  if(mounted) {
+                                    context.pop();
+                                  }
                                 });
+
                               }
 
                               _toggleSkillSelection(
@@ -337,7 +340,7 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                           ),
                         ],
                       );
-                    }).toList(),
+                    }),
                     20.verticalSpace, // Space between categories
                   ],
                 );

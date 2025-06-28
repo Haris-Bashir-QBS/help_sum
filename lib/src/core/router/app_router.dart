@@ -3,13 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/observers/navigator_observer.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/services/session_service.dart';
-import 'package:help_sum/src/features/auth/presentation/pages/consumer/create_schdule.dart';
-import 'package:help_sum/src/features/auth/presentation/pages/consumer/select_skill.dart';
-import 'package:help_sum/src/features/auth/presentation/pages/login_page.dart';
-import 'package:help_sum/src/features/auth/presentation/pages/role_selection.dart';
-import 'package:help_sum/src/features/auth/presentation/pages/signup_page.dart';
+import 'package:help_sum/src/features/auth/presentation/screens/select_skill_page.dart';
+import 'package:help_sum/src/features/auth/presentation/screens/login_page.dart';
+import 'package:help_sum/src/features/auth/presentation/screens/role_selection.dart';
+import 'package:help_sum/src/features/auth/presentation/screens/signup_page.dart';
 import 'package:help_sum/src/features/core/common/intro/spash/pages/splash_page.dart';
-import 'package:help_sum/src/features/auth/presentation/pages/otp_verification_page.dart';
+import 'package:help_sum/src/features/auth/presentation/screens/otp_verification_page.dart';
 import 'package:help_sum/src/features/core/common/intro/onboarding/pages/onboarding_page.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/main_navigation_page.dart';
@@ -37,6 +36,8 @@ import 'package:help_sum/src/features/core/common/chat/pages/chat_screen.dart';
 import 'package:help_sum/src/features/core/common/map_tracking/pages/map_tracking_page.dart';
 import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/find_merchant_screen.dart';
 
+import '../../features/auth/presentation/screens/create_schdule_page.dart';
+
 final GoRouter appRouter = GoRouter(
   initialLocation: '/${AppRoutes.mainNavigation}',
   navigatorKey: SessionManager.navigatorKey,
@@ -48,7 +49,7 @@ final GoRouter appRouter = GoRouter(
     _createSchdule(),
     _roleSelection(),
     _login(),
-    _signUp(),  
+    _signUp(),
     _verifyOtp(),
     _onboarding(),
     _changeDescription(),
@@ -391,7 +392,7 @@ GoRoute _editBasicInfo() {
     path: '/edit-basic-info',
     name: AppRoutes.editBasicInfo,
     builder: (context, state) {
-      final user = state.extra as UserModel;
+      final user = state.extra as UserLocalModel;
       return EditBasicInfoScreen(user: user);
     },
   );
@@ -402,7 +403,7 @@ GoRoute _editContactInfo() {
     path: '/edit-contact-info',
     name: AppRoutes.editContactInfo,
     builder: (context, state) {
-      final user = state.extra as UserModel;
+      final user = state.extra as UserLocalModel;
       return EditContactInfoScreen(user: user);
     },
   );

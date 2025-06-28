@@ -269,4 +269,7 @@ class AppTexts {
       "Your request has been summited.A merchant will contact you soon";
   static const String areYouSureToPostThisJob =
       "Are you sure to Post this job?";
+  static const String camera = 'Camera';
+  static const String photos = 'Photos';
+  static const String file = 'File';
 }

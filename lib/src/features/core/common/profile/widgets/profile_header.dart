@@ -5,7 +5,7 @@ import 'package:help_sum/src/features/core/common/profile/models/user_model.dart
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class ProfileHeader extends StatelessWidget {
-  final UserModel user;
+  final UserLocalModel user;
 
   const ProfileHeader({
     super.key,

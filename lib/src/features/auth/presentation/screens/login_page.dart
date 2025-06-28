@@ -22,15 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool isButtonVissible = false;
-
-  @override
-  void dispose() {
-    _phoneController.dispose();
-    _passwordController.dispose();
-
-    super.dispose();
-  }
+  bool isButtonVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -149,5 +141,12 @@ class _LoginPageState extends State<LoginPage> {
     _phoneController.text = '1234567890';
     _passwordController.text = 'Test@123';
     debugPrint('Dummy values filled for login');
+  }
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

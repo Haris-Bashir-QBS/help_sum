@@ -10,7 +10,7 @@ import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 
 class EditContactInfoScreen extends StatefulWidget {
-  final UserModel user;
+  final UserLocalModel user;
 
   const EditContactInfoScreen({
     super.key,

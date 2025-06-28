@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:help_sum/src/core/themes/app_dimensions.dart';
 import 'package:help_sum/src/widgets/app_background.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/custom_text_formfield.dart';
 
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/constants/app_palette.dart';
 
 class ChangeDescriptionPage extends StatefulWidget {

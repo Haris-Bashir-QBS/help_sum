@@ -13,7 +13,7 @@ import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 
 class EditBasicInfoScreen extends StatefulWidget {
-  final UserModel user;
+  final UserLocalModel user;
 
   const EditBasicInfoScreen({super.key, required this.user});
 

@@ -16,10 +16,10 @@ class SelectScheduleScreen extends StatefulWidget {
   final bool isEdit;
 
   @override
-  _SelectScheduleScreenState createState() => _SelectScheduleScreenState();
+  SelectScheduleScreenState createState() => SelectScheduleScreenState();
 }
 
-class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
+class SelectScheduleScreenState extends State<SelectScheduleScreen> {
   final List<String> days = [
     'Monday',
     'Tuesday',
@@ -61,15 +61,15 @@ class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
               entryModeIconColor: Color(0xFFFF8E01),
               dialHandColor: Color(0xFFFF8E01),
               dialBackgroundColor: Colors.grey.shade800,
-              dialTextColor: MaterialStateColor.resolveWith(
+              dialTextColor: WidgetStateColor.resolveWith(
                 (states) =>
-                    states.contains(MaterialState.selected)
+                    states.contains(WidgetState.selected)
                         ? Colors.black
                         : Colors.white,
               ),
-              hourMinuteColor: MaterialStateColor.resolveWith(
+              hourMinuteColor: WidgetStateColor.resolveWith(
                 (states) =>
-                    states.contains(MaterialState.selected)
+                    states.contains(WidgetState.selected)
                         ? Color(0xFFFF8E01)
                         : Colors.grey.shade800,
               ),

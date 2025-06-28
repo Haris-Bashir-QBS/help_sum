@@ -15,11 +15,11 @@ import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class ProfileDetailsPage extends StatelessWidget {
-  final UserModel user;
+  final UserLocalModel user;
 
   const ProfileDetailsPage({
     super.key,
-    this.user = const UserModel(
+    this.user = const UserLocalModel(
       firstName: 'John',
       lastName: 'Doe',
       emailAddress: 'johnDoe0008@gmail.com',
@@ -230,9 +230,6 @@ class ProfileDetailsPage extends StatelessWidget {
       ),
     );
   }
-
-
-
 
   Widget _buildAvatarWithBadge() {
     return Stack(

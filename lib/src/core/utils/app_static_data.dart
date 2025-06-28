@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
+import 'package:help_sum/src/core/models/common/category_model.dart';
+import 'package:help_sum/src/core/models/common/onboarding_slider_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/merchant/domain/models/service_provider_model.dart';
 
@@ -211,25 +212,4 @@ class AppStaticData {
       status: JobStatus.rejected,
     ),
   ];
-}
-
-class OnboardingSlideData {
-  final String imagePath;
-  final String title;
-  final String description;
-  final bool isLastPage;
-
-  const OnboardingSlideData({
-    required this.imagePath,
-    required this.title,
-    required this.description,
-    required this.isLastPage,
-  });
-}
-
-class CategoryData {
-  final String name;
-  final String iconPath;
-
-  const CategoryData({required this.name, required this.iconPath});
 }

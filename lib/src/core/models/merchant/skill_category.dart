@@ -1,5 +1,6 @@
 // Data Model for a skill category
-import 'package:help_sum/src/features/auth/domain/model/skill_model.dart';
+
+import 'package:help_sum/src/core/models/merchant/skill_model.dart';
 
 class SkillCategory {
   final String categoryName;
