@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
+import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/core/utils/app_validators.dart';
 import 'package:help_sum/src/features/auth/data/models/request/login_request_model.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
@@ -15,6 +16,7 @@ import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/custom_text_formfield.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:help_sum/src/widgets/custom_toast.dart';
 
 import '../../../../widgets/modal_progress_hud.dart';
 
@@ -33,32 +35,42 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   void initState() {
     super.initState();
-
-    _listener();
   }
 
   void _listener() {
     ref.listen<AuthState>(authNotifierProvider, (prev, next) {
       if (next is LoginSuccess) {
-        context.goNamed(AppRoutes.verifyOtp, extra: next.user.phone);
+        if (next.user.isVerified == true) {
+          context.goNamed(
+            AppRoutes.verifyOtp,
+            extra: {'userId': next.user.id, 'phone': next.user.phone},
+          );
+        } else {
+          context.goNamed(AppRoutes.mainNavigation);
+        }
+
         ref.read(authNotifierProvider.notifier).reset();
       }
 
       if (next is LoginError) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(next.message)));
+        CustomToast.errorToast(context: context, message: next.message);
+        // ScaffoldMessenger.of(
+        //   context,
+        // ).showSnackBar(SnackBar(content: Text(next.message)));
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    _listener();
+
     final AuthState authState = ref.watch(authNotifierProvider);
     final isLoading = authState is LoginLoading;
 
     return ModalProgressHUD(
       inAsyncCall: isLoading,
+
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
@@ -129,7 +141,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       hint: AppTexts.phoneNumber,
       prefixIcon: Icons.phone,
       keyboardType: TextInputType.phone,
-      validator: AppValidators.validatePhoneNumber(),
+      // validator: AppValidators.validatePhoneNumber(),
     );
   }
 

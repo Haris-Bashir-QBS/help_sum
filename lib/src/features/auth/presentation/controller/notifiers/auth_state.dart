@@ -29,3 +29,16 @@ class SignupError extends AuthState {
   final String message;
   SignupError(this.message);
 }
+
+/// Signup states
+class OtpLoading extends AuthState {}
+
+class OtpSuccess extends AuthState {
+  final UserEntity userEntity;
+  OtpSuccess(this.userEntity);
+}
+
+class OtpError extends AuthState {
+  final String message;
+  OtpError(this.message);
+}

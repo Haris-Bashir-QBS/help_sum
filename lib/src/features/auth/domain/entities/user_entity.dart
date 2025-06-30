@@ -20,6 +20,10 @@ class UserEntity {
   final bool? isDeleted;
   final bool? isBlocked;
 
+  // ✅ Add missing fields here
+  final List<Map<String, dynamic>>? services;
+  final List<Map<String, dynamic>>? schedule;
+
   const UserEntity({
     this.id,
     this.role,
@@ -41,6 +45,8 @@ class UserEntity {
     this.isCompleted,
     this.isDeleted,
     this.isBlocked,
+    this.services,
+    this.schedule,
   });
 }
 

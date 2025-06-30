@@ -39,7 +39,7 @@ import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/p
 import '../../features/auth/presentation/screens/create_schdule_page.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/${AppRoutes.mainNavigation}',
+  initialLocation: '/${AppRoutes.splash}',
   navigatorKey: SessionManager.navigatorKey,
   observers: [UnFocusOnNavigateObserver()],
   routes: <RouteBase>[
@@ -220,10 +220,15 @@ GoRoute _verifyOtp() {
     path: '/verify-otp',
     name: AppRoutes.verifyOtp,
     pageBuilder: (context, state) {
-      final phoneNumber = state.extra as String?;
+      final data = state.extra as Map<String, dynamic>;
+      final phoneNumber = data['phone'] as String?;
+      final userId = data['userId'] as String?;
       return CustomTransitionPage(
         key: state.pageKey,
-        child: OtpVerificationPage(phoneNumber: phoneNumber ?? ''),
+        child: OtpVerificationPage(
+          phoneNumber: phoneNumber ?? '',
+          userId: userId ?? '',
+        ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(0.0, 1.0);
           const end = Offset.zero;

@@ -12,13 +12,13 @@ enum ApiEndpoints {
     switch (this) {
       /// ================= Authentication =======================
       case ApiEndpoints.signup:
-        return "signup";
+        return "/$_auth/signup";
       case ApiEndpoints.login:
-        return "$_auth/login";
+        return "/$_auth/login";
       case ApiEndpoints.logout:
         return "logout";
       case ApiEndpoints.verifyOtp:
-        return "$_auth/verify-otp";
+        return "/$_auth/verify-otp";
       case ApiEndpoints.resendCode:
         return "$_auth/resend-code";
     }

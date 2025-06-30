@@ -1,21 +1,50 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/core/constants/print_logs.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
+import 'package:help_sum/src/widgets/custom_toast.dart';
 
-class SplashPage extends StatefulWidget {
+class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
 
   @override
-  State<SplashPage> createState() => _SplashPageState();
+  ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateMixin {
+class _SplashPageState extends ConsumerState<SplashPage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<Color?> _textColorAnimation;
+
+  void _listener() {
+    ref.listen<AuthState>(authNotifierProvider, (prev, next) {
+      log(next.toString());
+      if (next is LoginSuccess) {
+        printLogs(next.user.id, tag: "User Verified");
+        if (next.user.isVerified == false) {
+          context.goNamed(
+            AppRoutes.verifyOtp,
+            extra: {'userId': next.user.id, 'phone': next.user.phone},
+          );
+        } else {
+          context.goNamed(AppRoutes.mainNavigation);
+        }
+      }
+
+      if (next is AuthInitial) {
+        context.goNamed(AppRoutes.roleSelection);
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -33,18 +62,21 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
     _textColorAnimation = ColorTween(
       begin: Colors.black,
       end: Colors.white,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.1, 0.3, curve: Curves.easeOut),
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.1, 0.3, curve: Curves.easeOut),
+      ),
+    );
 
-    _controller.forward();
-
-    _controller.addStatusListener((status) {
+    _controller.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
-        context.goNamed(AppRoutes.onboarding);
+        final authNotifier = ref.read(authNotifierProvider.notifier);
+        await authNotifier.loadUserFromStorage();
       }
     });
+
+    _controller.forward();
   }
 
   @override
@@ -55,19 +87,14 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: _buildBody(),
-    );
+    _listener();
+    return Scaffold(backgroundColor: Colors.white, body: _buildBody());
   }
 
   Widget _buildBody() {
     return Stack(
       fit: StackFit.expand,
-      children: [
-        _buildAnimatingCircle(),
-        _buildAnimatingText(),
-      ],
+      children: [_buildAnimatingCircle(), _buildAnimatingText()],
     );
   }
 
@@ -110,5 +137,3 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
     );
   }
 }
-
- 

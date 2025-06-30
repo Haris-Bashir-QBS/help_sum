@@ -1,9 +1,16 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_role.dart';
+import 'package:help_sum/src/core/constants/print_logs.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
+import 'package:help_sum/src/features/auth/data/models/request/otp_request_model.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
+import 'package:help_sum/src/widgets/custom_toast.dart';
+import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
@@ -13,16 +20,21 @@ import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'dart:async';
 
-class OtpVerificationPage extends StatefulWidget {
+class OtpVerificationPage extends ConsumerStatefulWidget {
   final String phoneNumber;
-
-  const OtpVerificationPage({super.key, required this.phoneNumber});
+  final String userId;
+  const OtpVerificationPage({
+    super.key,
+    required this.userId,
+    required this.phoneNumber,
+  });
 
   @override
-  State<OtpVerificationPage> createState() => _OtpVerificationPageState();
+  ConsumerState<OtpVerificationPage> createState() =>
+      _OtpVerificationPageState();
 }
 
-class _OtpVerificationPageState extends State<OtpVerificationPage> {
+class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
   final TextEditingController _otpController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -36,7 +48,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
 
     startTimer();
     _otpController.addListener(() {
-      if (_otpController.text.length == 4) {
+      if (_otpController.text.length == 6) {
         setState(() {
           _isVissibleButton = true;
         });
@@ -69,39 +81,58 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     super.dispose();
   }
 
+  void _listener() {
+    ref.listen<AuthState>(authNotifierProvider, (prev, next) {
+      if (next is OtpSuccess) {
+        context.goNamed(AppRoutes.mainNavigation);
+        ref.read(authNotifierProvider.notifier).reset();
+      }
+
+      if (next is OtpError) {
+        CustomToast.errorToast(context: context, message: next.message);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          children: [
-            160.verticalSpace,
-            AnimatedSlideFade(
-              delayMilliseconds: 0,
-              child: _buildVerificationTitle(),
-            ),
-            20.verticalSpace,
-            AnimatedSlideFade(
-              delayMilliseconds: 100,
-              child: _buildVerificationInstruction(),
-            ),
-            40.verticalSpace,
-            AnimatedSlideFade(
-              delayMilliseconds: 200,
-              child: _buildOtpFields(context),
-            ),
-            20.verticalSpace,
-            AnimatedSlideFade(
-              delayMilliseconds: 300,
-              child: _buildResendCodeText(),
-            ),
-            80.verticalSpace,
-            AnimatedSlideFade(
-              delayMilliseconds: 400,
-              child: _buildVerifyButton(),
-            ),
-          ],
+    _listener();
+    final AuthState authState = ref.watch(authNotifierProvider);
+    final isLoading = authState is OtpLoading;
+    return ModalProgressHUD(
+      inAsyncCall: isLoading,
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            children: [
+              160.verticalSpace,
+              AnimatedSlideFade(
+                delayMilliseconds: 0,
+                child: _buildVerificationTitle(),
+              ),
+              20.verticalSpace,
+              AnimatedSlideFade(
+                delayMilliseconds: 100,
+                child: _buildVerificationInstruction(),
+              ),
+              40.verticalSpace,
+              AnimatedSlideFade(
+                delayMilliseconds: 200,
+                child: _buildOtpFields(context),
+              ),
+              20.verticalSpace,
+              AnimatedSlideFade(
+                delayMilliseconds: 300,
+                child: _buildResendCodeText(),
+              ),
+              80.verticalSpace,
+              AnimatedSlideFade(
+                delayMilliseconds: 400,
+                child: _buildVerifyButton(),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -136,7 +167,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       child: PinCodeTextField(
         appContext: context,
         controller: _otpController,
-        length: 4,
+        length: 6,
         separatorBuilder: (context, index) => 14.horizontalSpace,
         obscureText: false,
         animationType: AnimationType.fade,
@@ -183,13 +214,24 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       onPressed: () {
         if (_formKey.currentState!.validate()) {
           debugPrint('OTP: ${_otpController.text}');
+          final userId =
+              ref.read(authNotifierProvider.notifier).currentUser?.id;
 
-          if (appRole == AppRole.consumer) {
-            context.goNamed(AppRoutes.mainNavigation);
-            print("object");
-          } else {
-            context.goNamed(AppRoutes.selectSkill);
-          }
+          printLogs(userId);
+
+          final params = OtpRequestModel(
+            userId: widget.userId,
+            otp: _otpController.text == "123456" ? 123456 : _otpController.text,
+          );
+
+          ref.read(authNotifierProvider.notifier).verifyOtp(params);
+
+          // if (appRole == AppRole.consumer) {
+          //   context.goNamed(AppRoutes.mainNavigation);
+          //   print("object");
+          // } else {
+          //   context.goNamed(AppRoutes.selectSkill);
+          // }
 
           // context.goNamed(AppRoutes.mainNavigation);
         }

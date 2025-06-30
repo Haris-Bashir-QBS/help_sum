@@ -27,6 +27,7 @@ Future<void> _initAuthDependencies() async {
   _registerAuthRemoteDatasources();
   _registerAuthRepositories();
   _registerAuthUsecases();
+
   // _registerAuthBloc();
 }
 
@@ -45,7 +46,8 @@ void _registerAuthRepositories() {
 void _registerAuthUsecases() {
   sl
     ..registerLazySingleton(() => LoginUseCase(sl()))
-    ..registerLazySingleton(() => SignupUseCase(sl()));
+    ..registerLazySingleton(() => SignupUseCase(sl()))
+    ..registerLazySingleton(() => OtpUseCase(sl()));
   // ..registerLazySingleton(() => VerifyOtpUseCase(sl()))
   // ..registerLazySingleton(() => ChangePasswordUsecase(sl()))
   // ..registerLazySingleton(() => ForgetPasswordUsecase(sl()))

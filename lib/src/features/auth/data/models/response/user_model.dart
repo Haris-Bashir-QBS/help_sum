@@ -22,6 +22,8 @@ class UserModel extends UserEntity {
     super.isCompleted,
     super.isDeleted,
     super.isBlocked,
+    super.services,
+    super.schedule,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -38,7 +40,10 @@ class UserModel extends UserEntity {
               ? LocationModel.fromJson(json['location'])
               : null,
       description: json['description']?.toString(),
-      hourlyRate: json['hourlyRate'] as int?,
+      hourlyRate:
+          json['hourlyRate'] is int
+              ? json['hourlyRate'] as int
+              : int.tryParse(json['hourlyRate']?.toString() ?? '0'),
       status: json['status'] as bool?,
       idCard: json['idCard']?.toString(),
       media: (json['Media'] as List?)?.map((e) => e.toString()).toList(),
@@ -49,6 +54,44 @@ class UserModel extends UserEntity {
       isCompleted: json['isCompleted'] as bool?,
       isDeleted: json['isDeleted'] as bool?,
       isBlocked: json['isBlocked'] as bool?,
+      services:
+          (json['services'] as List?)
+              ?.map((e) => Map<String, dynamic>.from(e))
+              .toList(),
+      schedule:
+          (json['schedule'] as List?)
+              ?.map((e) => Map<String, dynamic>.from(e))
+              .toList(),
+    );
+  }
+
+  factory UserModel.fromEntity(UserEntity entity) {
+    return UserModel(
+      id: entity.id,
+      role: entity.role,
+      image: entity.image,
+      firstName: entity.firstName,
+      lastName: entity.lastName,
+      email: entity.email,
+      phone: entity.phone,
+      location:
+          entity.location != null
+              ? LocationModel.fromEntity(entity.location!)
+              : null,
+      description: entity.description,
+      hourlyRate: entity.hourlyRate,
+      status: entity.status,
+      idCard: entity.idCard,
+      media: entity.media,
+      isConsumer: entity.isConsumer,
+      isMerchant: entity.isMerchant,
+      isNotification: entity.isNotification,
+      isVerified: entity.isVerified,
+      isCompleted: entity.isCompleted,
+      isDeleted: entity.isDeleted,
+      isBlocked: entity.isBlocked,
+      services: entity.services,
+      schedule: entity.schedule,
     );
   }
 
@@ -73,6 +116,8 @@ class UserModel extends UserEntity {
     'isCompleted': isCompleted,
     'isDeleted': isDeleted,
     'isBlocked': isBlocked,
+    'services': services,
+    'schedule': schedule,
   };
 }
 
@@ -84,15 +129,26 @@ class LocationModel extends LocationEntity {
     super.type,
     super.coordinates,
   });
+  factory LocationModel.fromEntity(LocationEntity entity) {
+    return LocationModel(
+      city: entity.city,
+      state: entity.state,
+      address: entity.address,
+      type: entity.type,
+      coordinates: entity.coordinates,
+    );
+  }
 
   factory LocationModel.fromJson(Map<String, dynamic> json) {
     return LocationModel(
       city: json['city']?.toString(),
       state: json['state']?.toString(),
       address: json['address']?.toString(),
-      type: json['type'] as String?,
+      type: json['type']?.toString(),
       coordinates:
-          (json['coordinates'] as List?)?.map((e) => e as int).toList(),
+          (json['coordinates'] as List?)
+              ?.map((e) => e is int ? e : int.tryParse(e.toString()) ?? 0)
+              .toList(),
     );
   }
 
