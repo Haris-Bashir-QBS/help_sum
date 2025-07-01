@@ -42,3 +42,15 @@ class OtpError extends AuthState {
   final String message;
   OtpError(this.message);
 }
+
+class ResendOtpLoading extends AuthState {}
+
+class ResendOtpSuccess extends AuthState {
+  final String message;
+  ResendOtpSuccess(this.message);
+}
+
+class ResendOtpError extends AuthState {
+  final String message;
+  ResendOtpError(this.message);
+}

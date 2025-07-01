@@ -2,11 +2,13 @@ import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/features/auth/data/models/request/login_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/otp_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/request/resend_otp_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/signup_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/user_model.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/login_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/otp_use_case.dart';
+import 'package:help_sum/src/features/auth/domain/usecases/resend_otp_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -18,6 +20,7 @@ class AuthNotifier extends _$AuthNotifier {
   late final LoginUseCase _loginUseCase = sl();
   late final SignupUseCase _signUpUseCase = sl();
   late final OtpUseCase _otpUseCase = sl();
+  late final ResendOtpUsecase _resendOtpUsecase = sl();
   // late final LocalStorageService _localStorageService = sl();
 
   // User entity
@@ -62,6 +65,21 @@ class AuthNotifier extends _$AuthNotifier {
         UserModel.fromEntity(user),
       ); // ✅ Save to local storage
       state = OtpSuccess(user);
+    });
+  }
+
+  Future<void> resendOtp(
+    ResendOtpRequestModel params,
+    Function(String message) onSuccess,
+  ) async {
+    state = ResendOtpLoading();
+    final result = await _resendOtpUsecase(params);
+
+    result.match((failure) => state = ResendOtpError(failure.message), (
+      message,
+    ) async {
+      onSuccess(message);
+      state = ResendOtpSuccess(message);
     });
   }
 

@@ -20,7 +20,7 @@ enum ApiEndpoints {
       case ApiEndpoints.verifyOtp:
         return "/$_auth/verify-otp";
       case ApiEndpoints.resendCode:
-        return "$_auth/resend-code";
+        return "/$_auth/resend-otp";
     }
   }
 }

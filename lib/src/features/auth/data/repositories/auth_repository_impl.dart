@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:help_sum/src/features/auth/data/models/request/otp_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/request/resend_otp_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/signup_request_model.dart';
 import 'package:help_sum/src/features/auth/domain/repositories/auth_repository.dart';
 
@@ -46,6 +47,18 @@ class AuthRepositoryImplementation implements AuthRepository {
     try {
       final UserModel user = await remoteDataSource.verifyOtp(params: params);
       return right(user);
+    } on Failure catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> resendOtp({
+    required ResendOtpRequestModel params,
+  }) async {
+    try {
+      final String message = await remoteDataSource.resendOtp(params: params);
+      return right(message);
     } on Failure catch (e) {
       return left(Failure(message: e.message));
     }

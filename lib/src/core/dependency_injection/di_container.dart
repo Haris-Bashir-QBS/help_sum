@@ -47,6 +47,7 @@ void _registerAuthUsecases() {
   sl
     ..registerLazySingleton(() => LoginUseCase(sl()))
     ..registerLazySingleton(() => SignupUseCase(sl()))
+    ..registerLazySingleton(() => ResendOtpUsecase(sl()))
     ..registerLazySingleton(() => OtpUseCase(sl()));
   // ..registerLazySingleton(() => VerifyOtpUseCase(sl()))
   // ..registerLazySingleton(() => ChangePasswordUsecase(sl()))

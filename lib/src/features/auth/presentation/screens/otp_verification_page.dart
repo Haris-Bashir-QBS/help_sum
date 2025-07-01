@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/print_logs.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/features/auth/data/models/request/otp_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/request/resend_otp_request_model.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
 import 'package:help_sum/src/widgets/custom_toast.dart';
@@ -46,7 +46,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
   void initState() {
     super.initState();
 
-    startTimer();
+    timerStart();
     _otpController.addListener(() {
       if (_otpController.text.length == 6) {
         setState(() {
@@ -60,7 +60,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
     });
   }
 
-  void startTimer() {
+  timerStart() {
     _startSeconds = 30;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_startSeconds == 0) {
@@ -72,6 +72,13 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
           _startSeconds--;
         });
       }
+    });
+  }
+
+  void resendOtp() {
+    final params = ResendOtpRequestModel(userId: widget.userId);
+    ref.read(authNotifierProvider.notifier).resendOtp(params, (message) {
+      CustomToast.errorToast(context: context, message: message);
     });
   }
 
@@ -91,6 +98,10 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
       if (next is OtpError) {
         CustomToast.errorToast(context: context, message: next.message);
       }
+
+      if (next is ResendOtpSuccess) {
+        CustomToast.errorToast(context: context, message: next.message);
+      }
     });
   }
 
@@ -98,7 +109,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
   Widget build(BuildContext context) {
     _listener();
     final AuthState authState = ref.watch(authNotifierProvider);
-    final isLoading = authState is OtpLoading;
+    final isLoading = authState is OtpLoading || authState is ResendOtpLoading;
     return ModalProgressHUD(
       inAsyncCall: isLoading,
       child: Scaffold(
@@ -191,7 +202,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
 
   Widget _buildResendCodeText() {
     return GestureDetector(
-      onTap: _startSeconds == 0 ? startTimer : null,
+      onTap: _startSeconds == 0 ? resendOtp : null,
       child: CustomText(
         text:
             _startSeconds == 0

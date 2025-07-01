@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
+import 'package:help_sum/src/core/constants/print_logs.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
-import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/core/utils/app_validators.dart';
 import 'package:help_sum/src/features/auth/data/models/request/login_request_model.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
@@ -40,7 +40,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   void _listener() {
     ref.listen<AuthState>(authNotifierProvider, (prev, next) {
       if (next is LoginSuccess) {
-        if (next.user.isVerified == true) {
+        printLogs(next.user.isVerified);
+        if (next.user.isVerified == false) {
+          
           context.goNamed(
             AppRoutes.verifyOtp,
             extra: {'userId': next.user.id, 'phone': next.user.phone},
@@ -49,7 +51,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           context.goNamed(AppRoutes.mainNavigation);
         }
 
-        ref.read(authNotifierProvider.notifier).reset();
+        // ref.read(authNotifierProvider.notifier).reset();
       }
 
       if (next is LoginError) {
