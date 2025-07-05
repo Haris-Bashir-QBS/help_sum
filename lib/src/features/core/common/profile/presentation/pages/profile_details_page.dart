@@ -6,7 +6,7 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
-import 'package:help_sum/src/features/auth/presentation/controller/notifiers/user_provider.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/controller/user_state_provider.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_card.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_row.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/profile_header.dart';

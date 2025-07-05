@@ -10,9 +10,9 @@ import 'package:help_sum/src/features/auth/domain/usecases/login_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/otp_use_case.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/resend_otp_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/signup_usecase.dart';
-import 'package:help_sum/src/features/auth/presentation/controller/notifiers/user_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/common/profile/presentation/controller/user_state_provider.dart';
 import 'auth_state.dart';
 part 'auth_notifier.g.dart';
 
