@@ -21,8 +21,9 @@ import 'package:help_sum/src/features/core/common/payment/screens/payment_result
 import 'package:help_sum/src/features/core/common/payment/screens/rate_merchant_screen.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/edit_contact_info_screen.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/profile_details_page.dart';
-import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/create_request_screen.dart';
-import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/immediate_book_screen.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/create_request_screen.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/find_merchant_screen.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/immediate_book_screen.dart';
 import 'package:help_sum/src/features/core/merchant/domain/models/service_provider_model.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/job_detail_screen.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/change_description_page.dart';
@@ -33,7 +34,6 @@ import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/b
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/other_options_page.dart';
 import 'package:help_sum/src/features/core/common/chat/pages/chat_screen.dart';
 import 'package:help_sum/src/features/core/common/map_tracking/pages/map_tracking_page.dart';
-import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/find_merchant_screen.dart';
 
 import '../../features/auth/presentation/screens/create_schdule_page.dart';
 import '../../features/core/common/profile/presentation/pages/edit_basic_info_screen.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
-import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/widgets/recommended_service_provider_card.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/recommended_service_provider_card.dart';
 
 class MerchantTabView extends StatelessWidget {
   final List<Map<String, String>> merchants;

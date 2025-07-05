@@ -5,10 +5,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
-import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/widgets/recommended_service_provider_card.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/merchant_list_tab_view.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/recommended_service_provider_card.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
-import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/merchant_list_tab_view.dart';
 
 class FindMerchantScreen extends StatefulWidget {
   const FindMerchantScreen({super.key});
@@ -142,22 +142,22 @@ class _FindMerchantScreenState extends State<FindMerchantScreen>
 
   IconButton _backIcon(BuildContext context) {
     return IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new, size: 25),
-                color: AppPalette.blackColor,
-                onPressed: () {
-                  if (showRecommenededMerchants == true) {
-                    showRecommenededMerchants = false;
-                    showBottomButtons = true;
-                    setState(() {});
-                  } else if (showBottomButtons == true) {
-                    showBottomButtons = false;
-                    _searchController.clear();
-                    setState(() {});
-                  } else {
-                    context.pop();
-                  }
-                },
-              );
+      icon: const Icon(Icons.arrow_back_ios_new, size: 25),
+      color: AppPalette.blackColor,
+      onPressed: () {
+        if (showRecommenededMerchants == true) {
+          showRecommenededMerchants = false;
+          showBottomButtons = true;
+          setState(() {});
+        } else if (showBottomButtons == true) {
+          showBottomButtons = false;
+          _searchController.clear();
+          setState(() {});
+        } else {
+          context.pop();
+        }
+      },
+    );
   }
 
   Widget _recommendedServiceproviders() {
