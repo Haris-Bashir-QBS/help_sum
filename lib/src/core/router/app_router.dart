@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/observers/navigator_observer.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/services/session_service.dart';
+import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/select_skill_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/login_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/role_selection.dart';
@@ -18,6 +19,8 @@ import 'package:help_sum/src/features/core/common/payment/screens/card_details_s
 import 'package:help_sum/src/features/core/common/payment/screens/payment_method_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/payment_result_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/rate_merchant_screen.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/pages/edit_contact_info_screen.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/pages/profile_details_page.dart';
 import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/create_request_screen.dart';
 import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/immediate_book_screen.dart';
 import 'package:help_sum/src/features/core/merchant/domain/models/service_provider_model.dart';
@@ -26,10 +29,6 @@ import 'package:help_sum/src/features/core/merchant/presentation/pages/change_de
 import 'package:help_sum/src/features/core/merchant/presentation/pages/change_rate_page.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/manage_job_page.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/merchant_profile_page.dart';
-import 'package:help_sum/src/features/core/common/profile/pages/profile_details_page.dart';
-import 'package:help_sum/src/features/core/common/profile/pages/edit_basic_info_screen.dart';
-import 'package:help_sum/src/features/core/common/profile/pages/edit_contact_info_screen.dart';
-import 'package:help_sum/src/features/core/common/profile/models/user_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/booking_detail_page.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/other_options_page.dart';
 import 'package:help_sum/src/features/core/common/chat/pages/chat_screen.dart';
@@ -37,6 +36,7 @@ import 'package:help_sum/src/features/core/common/map_tracking/pages/map_trackin
 import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/find_merchant_screen.dart';
 
 import '../../features/auth/presentation/screens/create_schdule_page.dart';
+import '../../features/core/common/profile/presentation/pages/edit_basic_info_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/${AppRoutes.splash}',
@@ -397,7 +397,7 @@ GoRoute _editBasicInfo() {
     path: '/edit-basic-info',
     name: AppRoutes.editBasicInfo,
     builder: (context, state) {
-      final user = state.extra as UserLocalModel;
+      final user = state.extra as UserEntity;
       return EditBasicInfoScreen(user: user);
     },
   );
@@ -408,7 +408,7 @@ GoRoute _editContactInfo() {
     path: '/edit-contact-info',
     name: AppRoutes.editContactInfo,
     builder: (context, state) {
-      final user = state.extra as UserLocalModel;
+      final user = state.extra as UserEntity;
       return EditContactInfoScreen(user: user);
     },
   );

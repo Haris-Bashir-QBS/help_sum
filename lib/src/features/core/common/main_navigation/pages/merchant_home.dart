@@ -25,7 +25,7 @@ class _MerchantHomeState extends State<MerchantHome> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // CustomTextFormField(),
+        _searchField(),
         GoogleMap(initialCameraPosition: _initialCameraPosition),
         Container(
           width: .42.sw,
@@ -63,6 +63,25 @@ class _MerchantHomeState extends State<MerchantHome> {
           ),
         ),
       ],
+    );
+  }
+
+  Container _searchField() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      child: Row(
+        children: [
+          Expanded(
+            child: CustomTextFormField(
+              hint: 'Search...',
+              prefixIcon: Icons.search,
+            ),
+          ),
+          SizedBox(width: 10),
+
+          Icon(Icons.bookmark, size: 30, color: AppPalette.primaryColor),
+        ],
+      ),
     );
   }
 }

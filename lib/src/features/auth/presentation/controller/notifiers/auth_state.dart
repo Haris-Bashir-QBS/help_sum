@@ -54,3 +54,13 @@ class ResendOtpError extends AuthState {
   final String message;
   ResendOtpError(this.message);
 }
+
+class UserState {
+  final UserEntity? user;
+
+  const UserState({this.user});
+
+  UserState copyWith({UserEntity? user}) {
+    return UserState(user: user ?? this.user);
+  }
+}

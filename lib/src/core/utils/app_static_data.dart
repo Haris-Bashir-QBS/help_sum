@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
@@ -210,6 +211,47 @@ class AppStaticData {
       customerName: "Shafeeq",
       serviceName: "Refrigerator Repair",
       status: JobStatus.rejected,
+    ),
+  ];
+
+  static final List<NavigationDestination> consumerDestinations = [
+    NavigationDestination(
+      icon: Image.asset(AppAssets.consumerHistoryUnfocused),
+      selectedIcon: Image.asset(AppAssets.consumerHistoryFocused),
+      label: '',
+    ),
+    NavigationDestination(
+      icon: Image.asset(AppAssets.consumerDashboardUnfocused),
+      selectedIcon: Image.asset(AppAssets.consumerDashboardFocused),
+      label: '',
+    ),
+    NavigationDestination(
+      icon: Image.asset(AppAssets.consumerProfileUnfocused),
+      selectedIcon: Image.asset(AppAssets.consumerProfileFocused),
+      label: '',
+    ),
+  ];
+
+  static final List<NavigationDestination> merchantDestinations = [
+    NavigationDestination(
+      icon: Image.asset(AppAssets.merchantJobsUnfocused),
+      selectedIcon: Image.asset(AppAssets.merchantJobsFocused),
+      label: '',
+    ),
+    NavigationDestination(
+      icon: Image.asset(AppAssets.merchantDashboardUnfocused),
+      selectedIcon: Image.asset(AppAssets.merchantDashboardFocused),
+      label: '',
+    ),
+    NavigationDestination(
+      icon: Image.asset(AppAssets.merchantHistoryUnfocused),
+      selectedIcon: Image.asset(AppAssets.merchantHistoryFocused),
+      label: '',
+    ),
+    NavigationDestination(
+      icon: Image.asset(AppAssets.merchantProfileUnfocused),
+      selectedIcon: Image.asset(AppAssets.merchantProfileFocused),
+      label: '',
     ),
   ];
 }

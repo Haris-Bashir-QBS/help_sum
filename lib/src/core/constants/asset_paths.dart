@@ -39,8 +39,7 @@ final class AppAssets {
   static const String chatIcon = '$_iconPath/ic_chat.png';
   static const String trgetIcon = '$_iconPath/ic_target.png';
 
-
-  /// Dashbaord Categories 
+  /// Dashbaord Categories
   static const String officeWorker = '$_iconPath/ic_office_worker.png';
   static const String education = '$_iconPath/ic_education.png';
   static const String eventPlanner = '$_iconPath/ic_event_planner.png';
@@ -57,6 +56,42 @@ final class AppAssets {
   static const String tick = '$_iconPath/ic_tick.png';
   static const String roleSelection = '$_iconPath/ic_role_selection.png';
 
+  /// Bottom Navigation Icons - Focused & Unfocused
 
+  // Consumer
+  static const String consumerHistoryFocused =
+      '$_iconPath/bottom/focused/history.png';
+  static const String consumerHistoryUnfocused =
+      '$_iconPath/bottom/unfocused/history.png';
 
+  static const String consumerDashboardFocused =
+      '$_iconPath/bottom/focused/dashboard.png';
+  static const String consumerDashboardUnfocused =
+      '$_iconPath/bottom/unfocused/dashbaord.png';
+
+  static const String consumerProfileFocused =
+      '$_iconPath/bottom/focused/profile.png';
+  static const String consumerProfileUnfocused =
+      '$_iconPath/bottom/unfocused/profile.png';
+
+  // Merchant
+  static const String merchantJobsFocused =
+      '$_iconPath/bottom/focused/jobs.png';
+  static const String merchantJobsUnfocused =
+      '$_iconPath/bottom/unfocused/jobs.png';
+
+  static const String merchantDashboardFocused =
+      '$_iconPath/bottom/focused/dashboard.png';
+  static const String merchantDashboardUnfocused =
+      '$_iconPath/bottom/unfocused/dashbaord.png';
+
+  static const String merchantHistoryFocused =
+      '$_iconPath/bottom/focused/history.png';
+  static const String merchantHistoryUnfocused =
+      '$_iconPath/bottom/unfocused/history.png';
+
+  static const String merchantProfileFocused =
+      '$_iconPath/bottom/focused/profile.png';
+  static const String merchantProfileUnfocused =
+      '$_iconPath/bottom/unfocused/profile.png';
 }

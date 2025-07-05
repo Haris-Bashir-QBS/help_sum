@@ -5,15 +5,14 @@ import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/utils/app_validators.dart';
-import 'package:help_sum/src/features/core/common/profile/models/user_model.dart';
-import 'package:help_sum/src/features/core/common/profile/widgets/info_card.dart';
-import 'package:help_sum/src/features/core/common/profile/widgets/info_row.dart';
-import 'package:help_sum/src/features/core/common/profile/widgets/profile_header.dart';
+import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_card.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_row.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 
 class EditBasicInfoScreen extends StatefulWidget {
-  final UserLocalModel user;
+  final UserEntity user;
 
   const EditBasicInfoScreen({super.key, required this.user});
 
@@ -119,8 +118,8 @@ class _EditBasicInfoScreenState extends State<EditBasicInfoScreen> {
 
     _firstNameController = TextEditingController(text: widget.user.firstName);
     _lastNameController = TextEditingController(text: widget.user.lastName);
-    _emailController = TextEditingController(text: widget.user.emailAddress);
-    _phoneController = TextEditingController(text: widget.user.phoneNumber);
+    _emailController = TextEditingController(text: widget.user.email);
+    _phoneController = TextEditingController(text: widget.user.phone);
   }
 
   @override
@@ -137,9 +136,9 @@ class _EditBasicInfoScreenState extends State<EditBasicInfoScreen> {
     }
   }
 
-  Widget _buildProfileHeader() {
-    return ProfileHeader(user: widget.user);
-  }
+  // Widget _buildProfileHeader() {
+  //   return ProfileHeader(user: widget.user);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +166,7 @@ class _EditBasicInfoScreenState extends State<EditBasicInfoScreen> {
                 children: [
                   InfoRow(
                     label: AppTexts.firstName,
-                    value: widget.user.firstName,
+                    value: widget.user.firstName ?? "",
                     isEditable: true,
                     controller: _firstNameController,
                     validator: AppValidators.validateFullName(),
@@ -177,7 +176,7 @@ class _EditBasicInfoScreenState extends State<EditBasicInfoScreen> {
                   ),
                   InfoRow(
                     label: AppTexts.lastName,
-                    value: widget.user.lastName,
+                    value: widget.user.lastName ?? "",
                     isEditable: true,
                     controller: _lastNameController,
                     validator: AppValidators.validateFullName(),
@@ -189,7 +188,7 @@ class _EditBasicInfoScreenState extends State<EditBasicInfoScreen> {
                   if (appRole == AppRole.merchant) ...[
                     InfoRow(
                       label: AppTexts.emailAddress,
-                      value: widget.user.emailAddress,
+                      value: widget.user.email ?? "",
                       isEditable: true,
                       controller: _emailController,
                       validator: AppValidators.validateEmail(),
@@ -200,7 +199,7 @@ class _EditBasicInfoScreenState extends State<EditBasicInfoScreen> {
 
                     InfoRow(
                       label: AppTexts.phoneNumber,
-                      value: widget.user.phoneNumber,
+                      value: widget.user.phone ?? "",
                       isEditable: true,
                       controller: _phoneController,
                       validator: AppValidators.validatePhoneNumber(),

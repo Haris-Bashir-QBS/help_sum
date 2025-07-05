@@ -1,17 +1,15 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
 
-import '../../../domain/entities/user_entity.dart';
+class UserStateNotifier extends StateNotifier<UserState> {
+  UserStateNotifier() : super(const UserState());
 
-part 'user_notifier.g.dart';
+  void setUser(UserEntity user) {
+    state = state.copyWith(user: user);
+  }
 
-@riverpod
-class UserNotifier extends _$UserNotifier {
-  @override
-  UserEntity? build() => null;
-
-  void setUser(UserEntity user) => state = user;
-
-  void clearUser() => state = null;
-
-  UserEntity? get currentUser => state;
+  void clearUser() {
+    state = const UserState(user: null);
+  }
 }

@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
-import 'package:help_sum/src/features/core/common/profile/models/user_model.dart';
+import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class ProfileHeader extends StatelessWidget {
-  final UserLocalModel user;
+  final UserEntity user;
 
-  const ProfileHeader({
-    super.key,
-    required this.user,
-  });
+  const ProfileHeader({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -42,4 +39,4 @@ class ProfileHeader extends StatelessWidget {
       ),
     );
   }
-} 
+}

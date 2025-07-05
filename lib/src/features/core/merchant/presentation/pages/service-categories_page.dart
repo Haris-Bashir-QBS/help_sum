@@ -9,8 +9,8 @@ import 'package:help_sum/src/features/core/common/main_navigation/widgets/headin
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/home_service_provider_card.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class ServiceCategoriesPage extends StatelessWidget {
+  const ServiceCategoriesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
