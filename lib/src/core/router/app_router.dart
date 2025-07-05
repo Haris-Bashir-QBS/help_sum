@@ -13,8 +13,8 @@ import 'package:help_sum/src/features/auth/presentation/screens/otp_verification
 import 'package:help_sum/src/features/core/common/intro/onboarding/pages/onboarding_page.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/main_navigation_page.dart';
-import 'package:help_sum/src/features/core/common/main_navigation/pages/all_categories_listing_page.dart';
-import 'package:help_sum/src/features/core/common/main_navigation/pages/all_service_providers_listing_page.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_categories_listing_page.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_service_providers_listing_page.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/card_details_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/payment_method_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/payment_result_screen.dart';

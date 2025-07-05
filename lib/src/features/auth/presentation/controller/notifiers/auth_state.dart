@@ -9,6 +9,7 @@ class LoginLoading extends AuthState {}
 
 class LoginSuccess extends AuthState {
   final UserEntity user;
+
   LoginSuccess(this.user);
 }
 

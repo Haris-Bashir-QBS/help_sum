@@ -1,4 +1,4 @@
-var _auth = "user/";
+var _auth = "user";
 
 enum ApiEndpoints {
   /// ================= Auth =======================
@@ -6,7 +6,10 @@ enum ApiEndpoints {
   signup,
   verifyOtp,
   resendCode,
-  logout;
+  logout,
+
+  /// ================= Categories =======================
+  categories;
 
   String get value {
     switch (this) {
@@ -21,6 +24,10 @@ enum ApiEndpoints {
         return "/$_auth/verify-otp";
       case ApiEndpoints.resendCode:
         return "/$_auth/resend-otp";
+
+      /// ================= Categories =======================
+      case ApiEndpoints.categories:
+        return "/category";
     }
   }
 }

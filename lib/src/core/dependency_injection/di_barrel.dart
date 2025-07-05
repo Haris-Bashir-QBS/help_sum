@@ -9,6 +9,11 @@ import '../../features/auth/data/datasources/remote/auth_remote_datasource_impl.
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/signup_usecase.dart';
+import '../../features/core/consumer/explore_services/data/datasources/remote/category_remote_datasource.dart';
+import '../../features/core/consumer/explore_services/data/datasources/remote/category_remote_datasource_impl.dart';
+import '../../features/core/consumer/explore_services/data/repositories/category_repository_impl.dart';
+import '../../features/core/consumer/explore_services/domain/repositories/category_repository.dart';
+import '../../features/core/consumer/explore_services/domain/usecases/get_categories_usecase.dart';
 import '../network/client/dio_client.dart';
 
 part 'di_container.dart';

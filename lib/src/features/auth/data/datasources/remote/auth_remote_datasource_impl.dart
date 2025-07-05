@@ -24,7 +24,7 @@ class AuthRemoteDataSourceImplementation implements AuthRemoteDataSource {
     : _client = client;
 
   @override
-  Future<UserModel> login({required LoginRequestModel params}) async {
+  Future<(UserModel, String)> login({required LoginRequestModel params}) async {
     return await ApiErrorHandler.executeGuarded(() async {
       final response = await _client.post(
         endpoint: ApiEndpoints.login.value,
@@ -32,9 +32,10 @@ class AuthRemoteDataSourceImplementation implements AuthRemoteDataSource {
       );
       log("Response: ${response.data}");
       if (response.isOk) {
-        UserModel user =
-            LoginResponseModel.fromJson(response.data).data!.userDetail!;
-        return user;
+        final loginResponse = LoginResponseModel.fromJson(response.data);
+        UserModel user = loginResponse.data!.userDetail!;
+        String token = loginResponse.data!.token!;
+        return (user, token);
       } else {
         throw ServerException(
           statusCode: response.statusCode,

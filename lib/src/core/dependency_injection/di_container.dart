@@ -6,6 +6,7 @@ Future<void> initializeDI() async {
   await LocalStorageService().init();
   await _initCoreDependencies();
   await _initAuthDependencies();
+  await _initCategoryDependencies();
 }
 
 /// ------------------------
@@ -56,15 +57,30 @@ void _registerAuthUsecases() {
   // ..registerLazySingleton(() => ResetPasswordUsecase(sl()));
 }
 
-// void _registerAuthBloc() {
-//   sl.registerFactory(
-//     () => AuthBloc(
-//       loginUseCase: sl(),
-//       logoutUseCase: sl(),
-//       userCubit: sl(),
-//       verifyOptUseCase: sl(),
-//       changePasswordUseCase: sl(),
-//       forgetPasswordUsecase: sl(),
-//       resetPasswordUsecase: sl(),
-//     ),
-//   );
+/// ------------------------
+/// CATEGORY DEPENDENCIES
+/// ------------------------
+
+Future<void> _initCategoryDependencies() async {
+  _registerCategoryRemoteDatasources();
+  _registerCategoryRepositories();
+  _registerCategoryUsecases();
+}
+
+void _registerCategoryRemoteDatasources() {
+  sl.registerLazySingleton<CategoryRemoteDataSource>(
+    () => CategoryRemoteDataSourceImpl(client: sl()),
+  );
+}
+
+void _registerCategoryRepositories() {
+  sl.registerLazySingleton<CategoryRepository>(
+    () => CategoryRepositoryImpl(remoteDataSource: sl()),
+  );
+}
+
+void _registerCategoryUsecases() {
+  sl.registerLazySingleton(() => GetCategoriesUseCase(sl()));
+}
+
+

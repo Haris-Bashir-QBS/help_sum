@@ -42,7 +42,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if (next is LoginSuccess) {
         printLogs(next.user.isVerified);
         if (next.user.isVerified == false) {
-          
           context.goNamed(
             AppRoutes.verifyOtp,
             extra: {'userId': next.user.id, 'phone': next.user.phone},
@@ -184,8 +183,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   void _fillMockDetails() {
     if (kDebugMode) {
-      _phoneController.text = '1234567890';
-      _passwordController.text = 'Test@123';
+      _phoneController.text = '923188912022';
+      _passwordController.text = 'Abcd@1234';
       debugPrint('Dummy values filled for login');
     }
   }

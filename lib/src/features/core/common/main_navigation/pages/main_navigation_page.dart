@@ -6,10 +6,10 @@ import 'package:help_sum/src/features/auth/presentation/controller/notifiers/aut
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/custom_bottom_navigation_bar.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/profile_details_page.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/all_jobs_screen.dart';
-import 'package:help_sum/src/features/core/common/main_navigation/pages/merchant_home.dart';
+import 'package:help_sum/src/features/core/merchant/presentation/pages/merchant_home.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/all_booking_screen.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/income_history.dart';
-import 'package:help_sum/src/features/core/merchant/presentation/pages/service-categories_page.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/service_categories_page.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 
 class MainNavigationPage extends ConsumerStatefulWidget {

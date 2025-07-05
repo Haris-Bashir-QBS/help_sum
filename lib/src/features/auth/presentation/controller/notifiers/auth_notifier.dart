@@ -36,12 +36,13 @@ class AuthNotifier extends _$AuthNotifier {
     final result = await _loginUseCase(params);
 
     result.match((failure) => state = LoginError(failure.message), (
-      user,
+      userAndToken,
     ) async {
+      final (user, token) = userAndToken;
       _currentUser = user;
-      await LocalStorageService().saveUser(
-        UserModel.fromEntity(user),
-      ); // ✅ Save to local storage
+      await LocalStorageService().saveUser(UserModel.fromEntity(user));
+      await LocalStorageService().saveAccessToken(token); 
+
       state = LoginSuccess(user);
     });
   }
@@ -62,9 +63,8 @@ class AuthNotifier extends _$AuthNotifier {
 
     result.match((failure) => state = OtpError(failure.message), (user) async {
       _currentUser = user;
-      await LocalStorageService().saveUser(
-        UserModel.fromEntity(user),
-      ); // ✅ Save to local storage
+      await LocalStorageService().saveUser(UserModel.fromEntity(user));
+
       state = OtpSuccess(user);
     });
   }

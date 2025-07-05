@@ -4,12 +4,12 @@ import 'package:help_sum/src/widgets/custom_text.dart';
 
 class CategoryCard extends StatelessWidget {
   final String title;
-  final String icon;
+  final String? icon;
   final VoidCallback onTap;
   const CategoryCard({
     super.key,
     required this.title,
-    required this.icon,
+    this.icon,
     required this.onTap,
   });
 
@@ -26,7 +26,10 @@ class CategoryCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(icon, width: 40, height: 40),
+            if (icon != null && icon!.isNotEmpty)
+              Image.asset(icon!, width: 40, height: 40)
+            else
+              Icon(Icons.category, size: 40.sp, color: Colors.grey[600]),
             SizedBox(height: 5.0.h),
             CustomText(
               text: title,

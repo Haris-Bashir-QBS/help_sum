@@ -7,7 +7,7 @@ import 'package:help_sum/src/features/auth/data/models/request/signup_request_mo
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 
 abstract interface class AuthRepository {
-  Future<Either<Failure, UserEntity>> login({
+  Future<Either<Failure, (UserEntity, String)>> login({
     required LoginRequestModel params,
   });
 

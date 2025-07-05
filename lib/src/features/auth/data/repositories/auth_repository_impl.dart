@@ -16,12 +16,12 @@ class AuthRepositoryImplementation implements AuthRepository {
   AuthRepositoryImplementation({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, UserEntity>> login({
+  Future<Either<Failure, (UserEntity, String)>> login({
     required LoginRequestModel params,
   }) async {
     try {
-      final UserModel user = await remoteDataSource.login(params: params);
-      return right(user);
+      final (user, token) = await remoteDataSource.login(params: params);
+      return right((user, token));
     } on Failure catch (e) {
       return left(Failure(message: e.message));
     }
