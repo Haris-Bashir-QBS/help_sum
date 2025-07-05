@@ -8,7 +8,7 @@ import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/category_card.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/heading_with_view_all.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/home_service_provider_card.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_providers.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_provider.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_state.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/entities/category_entity.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
@@ -70,10 +70,7 @@ class _ServiceCategoriesPageState extends ConsumerState<ServiceCategoriesPage> {
     );
   }
 
-  Widget _categoryGrid(
-    BuildContext context,
-    AsyncValue<CategoryState> categoryAsync,
-  ) {
+  Widget _categoryGrid(BuildContext context, CategoryState categoryAsync) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -89,8 +86,7 @@ class _ServiceCategoriesPageState extends ConsumerState<ServiceCategoriesPage> {
     );
   }
 
-  Widget _buildCategoryContent(AsyncValue<CategoryState> categoryAsync) {
-    var state = categoryAsync.value;
+  Widget _buildCategoryContent(CategoryState state) {
     if (state is GetCategoriesLoading) {
       return _buildLoadingWidget();
     }

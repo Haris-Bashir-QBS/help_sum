@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/category_card.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_providers.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_provider.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_state.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
@@ -67,15 +67,7 @@ class _AllCategoriesListingPageState
     );
   }
 
-  Widget _buildBody(AsyncValue<CategoryState> categoryAsync) {
-    // Handle CategoryState states
-    final state = categoryAsync.value;
-    if (state == null) {
-      return const Center(
-        child: CircularProgressIndicator(color: AppPalette.primaryColor),
-      );
-    }
-
+  Widget _buildBody(CategoryState state) {
     if (state is GetCategoriesLoading) {
       return const Center(
         child: CircularProgressIndicator(color: AppPalette.primaryColor),

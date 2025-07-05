@@ -13,26 +13,16 @@ class GetCategoriesLoaded extends CategoryState {
   final List<CategoryEntity> categories;
   final bool hasMore;
   final int totalCount;
-  final CategoriesResponseEntity response;
 
   GetCategoriesLoaded({
     required this.categories,
     required this.hasMore,
     required this.totalCount,
-    required this.response,
   });
 }
 
 class GetCategoriesError extends CategoryState {
   final String message;
-  final List<CategoryEntity> categories;
-  final bool hasMore;
-  final int totalCount;
 
-  GetCategoriesError({
-    required this.message,
-    this.categories = const [],
-    this.hasMore = false,
-    this.totalCount = 0,
-  });
+  GetCategoriesError({required this.message});
 }
