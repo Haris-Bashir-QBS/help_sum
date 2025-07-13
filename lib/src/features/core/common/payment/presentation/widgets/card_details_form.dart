@@ -16,6 +16,7 @@ class CardDetailsForm extends StatefulWidget {
   final TextEditingController cvvController;
   final TextEditingController tipController;
   final TextEditingController emailController;
+  final bool showTipAndEmail;
 
   const CardDetailsForm({
     super.key,
@@ -25,6 +26,7 @@ class CardDetailsForm extends StatefulWidget {
     required this.cvvController,
     required this.tipController,
     required this.emailController,
+    this.showTipAndEmail = false,
   });
 
   @override
@@ -35,7 +37,6 @@ class _CardDetailsFormState extends State<CardDetailsForm> {
   @override
   void initState() {
     super.initState();
-    // No need to parse initial date here, picker will handle it
   }
 
   @override
@@ -113,33 +114,35 @@ class _CardDetailsFormState extends State<CardDetailsForm> {
                 ),
               ],
             ),
-            SizedBox(height: 16.h),
-            CustomText(
-              text: AppTexts.enterTip,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-            ),
-            SizedBox(height: 8.h),
-            CustomTextFormField.card(
-              controller: widget.tipController,
-              hint: AppTexts.tipHint,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            ),
-            SizedBox(height: 16.h),
-            CustomText(
-              text: AppTexts.enterEmail,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-            ),
-            SizedBox(height: 8.h),
-            CustomTextFormField.card(
-              controller: widget.emailController,
-              hint: AppTexts.emailHint,
-              keyboardType: TextInputType.emailAddress,
-              validator: AppValidators.validateEmail(),
-            ),
-            SizedBox(height: 16.h),
+            if (widget.showTipAndEmail) ...[
+              SizedBox(height: 16.h),
+              CustomText(
+                text: AppTexts.enterTip,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+              ),
+              SizedBox(height: 8.h),
+              CustomTextFormField.card(
+                controller: widget.tipController,
+                hint: AppTexts.tipHint,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              ),
+              SizedBox(height: 16.h),
+              CustomText(
+                text: AppTexts.enterEmail,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+              ),
+              SizedBox(height: 8.h),
+              CustomTextFormField.card(
+                controller: widget.emailController,
+                hint: AppTexts.emailHint,
+                keyboardType: TextInputType.emailAddress,
+                validator: AppValidators.validateEmail(),
+              ),
+              SizedBox(height: 16.h),
+            ],
           ],
         ),
       ),

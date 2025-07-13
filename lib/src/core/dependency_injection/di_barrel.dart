@@ -14,6 +14,14 @@ import '../../features/core/consumer/explore_services/data/datasources/remote/ca
 import '../../features/core/consumer/explore_services/data/repositories/category_repository_impl.dart';
 import '../../features/core/consumer/explore_services/domain/repositories/category_repository.dart';
 import '../../features/core/consumer/explore_services/domain/usecases/get_categories_usecase.dart';
+import '../../features/core/common/payment/data/datasources/remote/payment_remote_datasource.dart';
+import '../../features/core/common/payment/data/datasources/remote/payment_remote_datasource_impl.dart';
+import '../../features/core/common/payment/data/repositories/payment_repository_impl.dart';
+import '../../features/core/common/payment/domain/repositories/payment_repository.dart';
+import '../../features/core/common/payment/domain/usecases/add_card_usecase.dart';
+import '../../features/core/common/payment/domain/usecases/get_cards_usecase.dart';
+import '../../features/core/common/payment/domain/usecases/delete_card_usecase.dart';
+import '../../features/core/common/payment/domain/usecases/set_default_card_usecase.dart';
 import '../network/client/dio_client.dart';
 
 part 'di_container.dart';

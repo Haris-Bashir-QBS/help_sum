@@ -42,6 +42,9 @@ class ProfileDetailsPage extends StatelessWidget {
                               _buildBasicInfoCard(context, user),
                               26.verticalSpace,
                               _buildContactInfoCard(context, user),
+                              26.verticalSpace,
+                              if (user.role == 'consumer')
+                                _buildPaymentCard(context),
                             ]
                             : [
                               _buildMerchantProfileHeader(context, user),
@@ -85,6 +88,18 @@ class ProfileDetailsPage extends StatelessWidget {
       ],
       onPressed: () {
         context.pushNamed(AppRoutes.editContactInfo);
+      },
+    );
+  }
+
+  Widget _buildPaymentCard(BuildContext context) {
+    return InfoCard(
+      title: AppTexts.paymentMethods,
+      children: [
+        InfoRow(label: AppTexts.manageCards, value: AppTexts.addOrRemoveCards),
+      ],
+      onPressed: () {
+        context.pushNamed(AppRoutes.addCard);
       },
     );
   }
