@@ -1,3 +1,6 @@
+import 'package:help_sum/src/core/errors/api_exceptions.dart';
+import 'package:help_sum/src/features/auth/data/models/response/upload_file_response.dart';
+import 'package:help_sum/src/features/auth/domain/entities/grouped_category_entity.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 
 sealed class AuthState {}
@@ -44,6 +47,18 @@ class OtpError extends AuthState {
   OtpError(this.message);
 }
 
+class UpdateProfileLoading extends AuthState {}
+
+class UpdateProfileSuccess extends AuthState {
+  final UserEntity userEntity;
+  UpdateProfileSuccess(this.userEntity);
+}
+
+class UpdateProfielError extends AuthState {
+  final String message;
+  UpdateProfielError(this.message);
+}
+
 class ResendOtpLoading extends AuthState {}
 
 class ResendOtpSuccess extends AuthState {
@@ -64,4 +79,75 @@ class UserState {
   UserState copyWith({UserEntity? user}) {
     return UserState(user: user ?? this.user);
   }
+}
+
+class ServicesLoading extends AuthState {}
+
+class ServicesSuccess extends AuthState {
+  final bool isSearching;
+  final bool savingSkills;
+  final List<GroupedCategoryEntity> cats;
+  final List<ServiceEntity> selectedServices;
+  final List<GroupedCategoryEntity> filteredServices;
+
+  ServicesSuccess(
+    this.cats, {
+    this.selectedServices = const [],
+    this.filteredServices = const [],
+    this.isSearching = false,
+    this.savingSkills = false,
+  });
+}
+
+class ServicesError extends AuthState {
+  final String message;
+  ServicesError(this.message);
+}
+
+class ScheduleLoading extends AuthState {}
+
+class ScheduleSuccess extends AuthState {}
+
+class ScheduleError extends AuthState {}
+
+class RatesLoading extends AuthState {}
+
+class RatesSuccess extends AuthState {}
+
+class RatesError extends AuthState {}
+
+class DescriptionLoading extends AuthState {}
+
+class DescriptionSuccess extends AuthState {}
+
+class DescriptionError extends AuthState {}
+
+class UploadingFileLoading extends AuthState {}
+
+class UploadingFileSuccess extends AuthState {
+  final List<UploadedFileEntity> files;
+  UploadingFileSuccess(this.files);
+}
+
+class UploadingFileError extends AuthState {
+  final Failure failure;
+  UploadingFileError(this.failure);
+}
+
+class SavePortfolioLoading extends AuthState {}
+
+class SavePortfolioSuccess extends AuthState {}
+
+class SavePortfolioError extends AuthState {
+  final Failure failure;
+  SavePortfolioError(this.failure);
+}
+
+class SaveBasicInfoLoading extends AuthState {}
+
+class SaveBasicInfoSuccess extends AuthState {}
+
+class SaveBasicInfoError extends AuthState {
+  final Failure failure;
+  SaveBasicInfoError(this.failure);
 }

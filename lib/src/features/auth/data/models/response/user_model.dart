@@ -1,7 +1,8 @@
+import 'package:help_sum/src/features/auth/data/models/request/schdule_request_model.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
-  const UserModel({
+  UserModel({
     super.id,
     super.role,
     super.image,
@@ -60,7 +61,7 @@ class UserModel extends UserEntity {
               .toList(),
       schedule:
           (json['schedule'] as List?)
-              ?.map((e) => Map<String, dynamic>.from(e))
+              ?.map((e) => Schedule.fromJson(e as Map<String, dynamic>))
               .toList(),
     );
   }
@@ -117,7 +118,7 @@ class UserModel extends UserEntity {
     'isDeleted': isDeleted,
     'isBlocked': isBlocked,
     'services': services,
-    'schedule': schedule,
+    'schedule': schedule?.map((e) => e.toJson()).toList(),
   };
 }
 

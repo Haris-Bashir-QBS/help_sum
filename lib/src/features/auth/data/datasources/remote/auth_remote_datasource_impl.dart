@@ -5,8 +5,13 @@ import 'package:help_sum/src/features/auth/data/datasources/remote/auth_remote_d
 import 'package:help_sum/src/features/auth/data/models/request/otp_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/resend_otp_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/signup_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/login_response_model.dart';
+import 'package:help_sum/src/features/auth/data/models/response/services_groupped_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/signup_response_model.dart';
+import 'package:help_sum/src/features/auth/data/models/response/upload_file_response.dart';
+import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 
 import '../../../../../core/constants/app_errors.dart';
 import '../../../../../core/errors/api_exceptions.dart';
@@ -95,6 +100,74 @@ class AuthRemoteDataSourceImplementation implements AuthRemoteDataSource {
       );
       if (response.isOk) {
         return response.data['message'] ?? "";
+      } else {
+        throw ServerException(
+          statusCode: response.statusCode,
+          message: response.data['message'] ?? AppErrors.somethingWentWrong,
+        );
+      }
+    });
+  }
+
+  @override
+  Future<UserEntity> updateProfile({
+    required UpdateProfileRequest params,
+  }) async {
+    return await ApiErrorHandler.executeGuarded(() async {
+      final response = await _client.put(
+        endpoint: ApiEndpoints.updateProfile.value,
+        data: params.toJson(),
+      );
+      log("Response: ${response.data}");
+      if (response.isOk) {
+        UserModel user = UserModel.fromJson(response.data['data']);
+        return user;
+      } else {
+        throw ServerException(
+          statusCode: response.statusCode,
+          message: response.data['message'] ?? AppErrors.somethingWentWrong,
+        );
+      }
+    });
+  }
+
+  @override
+  Future<List<UploadedFileModel>> uploadFile({
+    required UploadFileRequest params,
+  }) async {
+    return await ApiErrorHandler.executeGuarded(() async {
+      // final formData = FormData.fromMap(params.toFormData());
+      final response = await _client.post(
+        endpoint: ApiEndpoints.uploadFile.value,
+        data: params.toFormData(),
+      );
+      log("Response: ${response.data}");
+      if (response.isOk) {
+        if (response.data['files'] != null) {
+          return (response.data['files'] as List)
+              .map((e) => UploadedFileModel.fromJson(e))
+              .toList();
+        }
+        return [];
+      } else {
+        throw ServerException(
+          statusCode: response.statusCode,
+          message: response.data['message'] ?? AppErrors.somethingWentWrong,
+        );
+      }
+    });
+  }
+
+  @override
+  Future<List<GroupedCategoryModel>> getGroupedServices() async {
+    return await ApiErrorHandler.executeGuarded(() async {
+      final response = await _client.get(
+        endpoint: ApiEndpoints.serviceGrouped.value,
+      );
+
+      if (response.isOk) {
+        final data = response.data['data']['data'] as List<dynamic>? ?? [];
+        return data.map((e) => GroupedCategoryModel.fromJson(e)).toList();
       } else {
         throw ServerException(
           statusCode: response.statusCode,

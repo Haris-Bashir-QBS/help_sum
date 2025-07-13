@@ -50,7 +50,10 @@ void _registerAuthUsecases() {
     ..registerLazySingleton(() => LoginUseCase(sl()))
     ..registerLazySingleton(() => SignupUseCase(sl()))
     ..registerLazySingleton(() => ResendOtpUsecase(sl()))
-    ..registerLazySingleton(() => OtpUseCase(sl()));
+    ..registerLazySingleton(() => OtpUseCase(sl()))
+    ..registerLazySingleton(() => UpdateUserProfileUsecase(sl()))
+    ..registerLazySingleton(() => UploadFileUseCase(sl()))
+    ..registerLazySingleton(() => GetGroupedServicesUseCase(sl()));
   // ..registerLazySingleton(() => VerifyOtpUseCase(sl()))
   // ..registerLazySingleton(() => ChangePasswordUsecase(sl()))
   // ..registerLazySingleton(() => ForgetPasswordUsecase(sl()))

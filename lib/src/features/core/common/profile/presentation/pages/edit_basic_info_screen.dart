@@ -1,26 +1,35 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/utils/app_validators.dart';
+import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/controller/user_state_provider.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_card.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_row.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
+import 'package:help_sum/src/widgets/custom_toast.dart';
+import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 
-class EditBasicInfoScreen extends StatefulWidget {
+class EditBasicInfoScreen extends ConsumerStatefulWidget {
   final UserEntity user;
 
   const EditBasicInfoScreen({super.key, required this.user});
 
   @override
-  State<EditBasicInfoScreen> createState() => _EditBasicInfoScreenState();
+  ConsumerState<EditBasicInfoScreen> createState() =>
+      _EditBasicInfoScreenState();
 }
 
-class _EditBasicInfoScreenState extends State<EditBasicInfoScreen> {
+class _EditBasicInfoScreenState extends ConsumerState<EditBasicInfoScreen> {
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _emailController;
@@ -76,7 +85,7 @@ class _EditBasicInfoScreenState extends State<EditBasicInfoScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Manahil Shahid',
+                    '${widget.user.firstName} ${widget.user.lastName}',
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
@@ -131,8 +140,18 @@ class _EditBasicInfoScreenState extends State<EditBasicInfoScreen> {
 
   void _saveChanges() {
     if (_formKey.currentState?.validate() ?? false) {
-      // TODO: Implement save logic
-      Navigator.pop(context);
+      ref
+          .read(authNotifierProvider.notifier)
+          .updateInfo(
+            context,
+            UpdateProfileRequest(
+              firstName: _firstNameController.text,
+              lastName: _lastNameController.text,
+              email: _emailController.text,
+              phone: _phoneController.text,
+            ),
+          );
+      // Navigator.pop(context);
     }
   }
 
@@ -140,85 +159,99 @@ class _EditBasicInfoScreenState extends State<EditBasicInfoScreen> {
   //   return ProfileHeader(user: widget.user);
   // }
 
+  void _listener() {
+    ref.listen<AuthState>(authNotifierProvider, (prev, next) {
+      if (next is SaveBasicInfoSuccess) {
+        context.pop();
+      } else if (next is SaveBasicInfoError) {
+        CustomToast.errorToast(context: context, message: next.failure.message);
+      } else if (next is SaveBasicInfoError) {
+        CustomToast.errorToast(context: context, message: next.failure.message);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        // title: AppTexts.editBasicInformation,
-        title: AppTexts.account,
-      ),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: EdgeInsets.all(16.w),
-          child: Column(
-            children: [
-              if (appRole == AppRole.merchant) ...[
-                _buildMerchantProfileHeader(context),
-                30.verticalSpace,
-              ],
-
-              InfoCard(
-                title:
-                    appRole == AppRole.merchant
-                        ? "Personal Details"
-                        : AppTexts.basicInformation,
-                children: [
-                  InfoRow(
-                    label: AppTexts.firstName,
-                    value: widget.user.firstName ?? "",
-                    isEditable: true,
-                    controller: _firstNameController,
-                    validator: AppValidators.validateFullName(),
-                    onChanged: (value) {
-                      _formKey.currentState?.validate();
-                    },
-                  ),
-                  InfoRow(
-                    label: AppTexts.lastName,
-                    value: widget.user.lastName ?? "",
-                    isEditable: true,
-                    controller: _lastNameController,
-                    validator: AppValidators.validateFullName(),
-                    onChanged: (value) {
-                      _formKey.currentState?.validate();
-                    },
-                  ),
-
-                  if (appRole == AppRole.merchant) ...[
-                    InfoRow(
-                      label: AppTexts.emailAddress,
-                      value: widget.user.email ?? "",
-                      isEditable: true,
-                      controller: _emailController,
-                      validator: AppValidators.validateEmail(),
-                      onChanged: (value) {
-                        _formKey.currentState?.validate();
-                      },
-                    ),
-
-                    InfoRow(
-                      label: AppTexts.phoneNumber,
-                      value: widget.user.phone ?? "",
-                      isEditable: true,
-                      controller: _phoneController,
-                      validator: AppValidators.validatePhoneNumber(),
-                      onChanged: (value) {
-                        _formKey.currentState?.validate();
-                      },
-                    ),
-                  ],
+    _listener();
+    final isLoading = ref.watch(authNotifierProvider) is SaveBasicInfoLoading;
+    return ModalProgressHUD(
+      inAsyncCall: isLoading,
+      child: Scaffold(
+        appBar: CustomAppBar(title: AppTexts.account),
+        body: Form(
+          key: _formKey,
+          child: Padding(
+            padding: EdgeInsets.all(16.w),
+            child: Column(
+              children: [
+                if (appRole == AppRole.merchant) ...[
+                  _buildMerchantProfileHeader(context),
+                  30.verticalSpace,
                 ],
-                onPressed: () {},
-              ),
-              const Spacer(),
-              CustomButton(
-                text: AppTexts.saveChanges,
-                textColor: Colors.white,
-                color: AppPalette.primaryColor,
-                onPressed: _saveChanges,
-              ),
-            ],
+
+                InfoCard(
+                  title:
+                      appRole == AppRole.merchant
+                          ? "Personal Details"
+                          : AppTexts.basicInformation,
+                  children: [
+                    InfoRow(
+                      label: AppTexts.firstName,
+                      value: widget.user.firstName ?? "",
+                      isEditable: true,
+                      controller: _firstNameController,
+                      validator: AppValidators.validateFullName(),
+                      onChanged: (value) {
+                        _formKey.currentState?.validate();
+                      },
+                    ),
+                    InfoRow(
+                      label: AppTexts.lastName,
+                      value: widget.user.lastName ?? "",
+                      isEditable: true,
+                      controller: _lastNameController,
+                      validator: AppValidators.validateFullName(),
+                      onChanged: (value) {
+                        _formKey.currentState?.validate();
+                      },
+                    ),
+
+                    if (appRole == AppRole.merchant) ...[
+                      InfoRow(
+                        label: AppTexts.emailAddress,
+                        value: widget.user.email ?? "",
+                        isEditable: true,
+                        controller: _emailController,
+                        validator: AppValidators.validateEmail(),
+                        onChanged: (value) {
+                          _formKey.currentState?.validate();
+                        },
+                      ),
+
+                      InfoRow(
+                        label: AppTexts.phoneNumber,
+                        value: widget.user.phone ?? "",
+                        isEditable: true,
+                        controller: _phoneController,
+                        validator: AppValidators.validatePhoneNumber(),
+                        onChanged: (value) {
+                          _formKey.currentState?.validate();
+                        },
+                      ),
+                    ],
+                  ],
+                  onPressed: () {},
+                ),
+                const Spacer(),
+                CustomButton(
+                  text: AppTexts.saveChanges,
+                  textColor: Colors.white,
+                  color: AppPalette.primaryColor,
+                  onPressed: _saveChanges,
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,3 +1,5 @@
+import 'package:help_sum/src/features/auth/data/models/request/schdule_request_model.dart';
+
 class UserEntity {
   final String? id;
   final String? role;
@@ -16,15 +18,15 @@ class UserEntity {
   final bool? isMerchant;
   final bool? isNotification;
   final bool? isVerified;
-  final bool? isCompleted;
+  bool? isCompleted;
   final bool? isDeleted;
   final bool? isBlocked;
 
   // ✅ Add missing fields here
   final List<Map<String, dynamic>>? services;
-  final List<Map<String, dynamic>>? schedule;
+  final List<Schedule>? schedule;
 
-  const UserEntity({
+  UserEntity({
     this.id,
     this.role,
     this.image,

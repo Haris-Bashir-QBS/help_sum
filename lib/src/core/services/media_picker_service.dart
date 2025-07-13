@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
@@ -61,12 +62,12 @@ class MediaPickerService {
                           const SizedBox(width: 15.0),
                           Icon(
                             Icons.camera_enhance,
-                            color: context.primaryColor,
+                            color: AppPalette.primaryColor,
                           ),
                           const SizedBox(width: 15.0),
                           CustomText(
                             text: AppTexts.camera,
-                            color: context.primaryColor,
+                            color: AppPalette.primaryColor,
                             fontSize: 18.0,
                           ),
                         ],
@@ -89,11 +90,11 @@ class MediaPickerService {
                       child: Row(
                         children: [
                           const SizedBox(width: 15.0),
-                          Icon(Icons.image, color: context.primaryColor),
+                          Icon(Icons.image, color: AppPalette.primaryColor),
                           const SizedBox(width: 15.0),
                           CustomText(
                             text: AppTexts.photos,
-                            color: context.primaryColor,
+                            color: AppPalette.primaryColor,
                             fontSize: 18.0,
                           ),
                         ],
@@ -120,12 +121,12 @@ class MediaPickerService {
                           const SizedBox(width: 15.0),
                           Icon(
                             Icons.file_copy_sharp,
-                            color: context.primaryColor,
+                            color: AppPalette.primaryColor,
                           ),
                           const SizedBox(width: 15.0),
                           CustomText(
                             text: AppTexts.file,
-                            color: context.primaryColor,
+                            color: AppPalette.primaryColor,
                             fontSize: 18.0,
                           ),
                         ],
@@ -283,8 +284,8 @@ class MediaPickerService {
         }
       }
       onMediaChanged(multiImagesPath);
-      if (!context.mounted) return;
-      context.pop();
+      // if (!context.mounted) return;
+      // context.pop();
     } on PlatformException {
       // AppDialogs.showToast(
       //     message: e.message ?? AppStrings.SOMETHING_WENT_WRONG_ERROR);
@@ -302,7 +303,7 @@ class MediaPickerService {
         AndroidUiSettings(
           toolbarTitle: "Edit Photo",
           toolbarColor: context.primaryColor,
-          toolbarWidgetColor: Colors.white,
+          toolbarWidgetColor: Colors.blue,
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false,
         ),

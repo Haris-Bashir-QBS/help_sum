@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
-import 'package:help_sum/src/core/constants/print_logs.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_validators.dart';
 import 'package:help_sum/src/features/auth/data/models/request/login_request_model.dart';
@@ -40,14 +40,20 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   void _listener() {
     ref.listen<AuthState>(authNotifierProvider, (prev, next) {
       if (next is LoginSuccess) {
-        printLogs(next.user.isVerified);
         if (next.user.isVerified == false) {
           context.goNamed(
             AppRoutes.verifyOtp,
             extra: {'userId': next.user.id, 'phone': next.user.phone},
           );
         } else {
-          context.goNamed(AppRoutes.mainNavigation);
+          // context.goNamed(AppRoutes.mainNavigation);
+
+          if (next.user.role != AppRole.consumer.name &&
+              next.user.isCompleted == false) {
+            context.goNamed(AppRoutes.selectSkill);
+          } else {
+            context.goNamed(AppRoutes.mainNavigation);
+          }
         }
 
         // ref.read(authNotifierProvider.notifier).reset();
@@ -177,7 +183,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         phoneNumber: _phoneController.text,
         password: _passwordController.text,
       );
-      ref.read(authNotifierProvider.notifier).login(params);
+      ref.read(authNotifierProvider.notifier).login(params, context: context);
     }
   }
 

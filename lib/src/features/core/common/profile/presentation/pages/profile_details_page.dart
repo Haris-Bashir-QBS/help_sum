@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
@@ -14,9 +15,14 @@ import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
-class ProfileDetailsPage extends StatelessWidget {
+class ProfileDetailsPage extends ConsumerStatefulWidget {
   const ProfileDetailsPage({super.key});
 
+  @override
+  ConsumerState<ProfileDetailsPage> createState() => _ProfileDetailsPageState();
+}
+
+class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,22 +40,18 @@ class ProfileDetailsPage extends StatelessWidget {
                   padding: EdgeInsets.all(16.w),
                   child: Column(
                     children:
-                        //user.role == AppRole.consumer.name
-                        true
+                        user.role == AppRole.consumer.name
                             ? [
                               ProfileHeader(user: user),
                               SizedBox(height: 24.h),
                               _buildBasicInfoCard(context, user),
                               26.verticalSpace,
                               _buildContactInfoCard(context, user),
-                              26.verticalSpace,
-                              if (user.role == 'consumer')
-                                _buildPaymentCard(context),
                             ]
                             : [
                               _buildMerchantProfileHeader(context, user),
                               SizedBox(height: 16.h),
-                              _buildMerchantDetails(context),
+                              _buildMerchantDetails(context, user),
                             ],
                   ),
                 ),
@@ -88,18 +90,6 @@ class ProfileDetailsPage extends StatelessWidget {
       ],
       onPressed: () {
         context.pushNamed(AppRoutes.editContactInfo);
-      },
-    );
-  }
-
-  Widget _buildPaymentCard(BuildContext context) {
-    return InfoCard(
-      title: AppTexts.paymentMethods,
-      children: [
-        InfoRow(label: AppTexts.manageCards, value: AppTexts.addOrRemoveCards),
-      ],
-      onPressed: () {
-        context.pushNamed(AppRoutes.addCard);
       },
     );
   }
@@ -186,7 +176,7 @@ class ProfileDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMerchantDetails(BuildContext context) {
+  Widget _buildMerchantDetails(BuildContext context, UserEntity user) {
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFFF9F9F9),
@@ -199,7 +189,7 @@ class ProfileDetailsPage extends StatelessWidget {
             context,
             icon: Icons.monetization_on_outlined,
             title: 'Rates Per hour',
-            subtitle: '\$1200/hr',
+            subtitle: '\$${user.hourlyRate}/hr',
             onTap: () => context.pushNamed(AppRoutes.rates),
           ),
           const Divider(),
@@ -207,7 +197,10 @@ class ProfileDetailsPage extends StatelessWidget {
             context,
             icon: Icons.diamond_outlined,
             title: 'Skill',
-            subtitle: 'Mechanic, Tyre Change',
+            subtitle:
+                user.services != null && user.services!.isNotEmpty
+                    ? user.services!.map((e) => e['name']).join(',').toString()
+                    : 'No Services Added',
             onTap: () => context.pushNamed(AppRoutes.selectSkill, extra: true),
           ),
           const Divider(),
@@ -224,12 +217,12 @@ class ProfileDetailsPage extends StatelessWidget {
             context,
             icon: Icons.description_outlined,
             title: 'Description',
-            subtitle: 'I am a Mechanic who fixes vehicles a...',
+            subtitle: user.description ?? "No description added",
             onTap: () => context.pushNamed(AppRoutes.changeDescriptipon),
             hasWarning: true,
           ),
           const Divider(),
-          _buildWorkPhotosGallery(context),
+          _buildWorkPhotosGallery(context, user),
         ],
       ),
     );
@@ -294,9 +287,11 @@ class ProfileDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildWorkPhotosGallery(BuildContext context) {
+  Widget _buildWorkPhotosGallery(BuildContext context, UserEntity user) {
     return InkWell(
-      onTap: () => debugPrint('Gallery Tapped'),
+      onTap: () {
+        context.pushNamed(AppRoutes.portfolio);
+      },
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 16.h),
         child: Column(
@@ -324,15 +319,12 @@ class ProfileDetailsPage extends StatelessWidget {
               ],
             ),
             SizedBox(height: 12.h),
-            JobImageSlider(
-              showDivider: false,
-              imageUrls: [
-                'https://picsum.photos/id/237/200/300',
-                'https://picsum.photos/id/238/200/300',
-                'https://picsum.photos/id/239/200/300',
-                'https://picsum.photos/id/240/200/300',
-              ],
-            ),
+            user.media?.isNotEmpty == true
+                ? JobImageSlider(showDivider: false, imageUrls: user.media!)
+                : Padding(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: CustomText(text: 'No media added '),
+                ),
           ],
         ),
       ),

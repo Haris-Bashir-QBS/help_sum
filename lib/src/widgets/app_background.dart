@@ -9,15 +9,21 @@ class AppBackground extends StatelessWidget {
     this.onTap,
     this.title = '',
     required this.body,
+    this.bottomWidget,
+    this.actions = const [],
   });
   final String title;
   final Widget body;
+  final Widget? bottomWidget;
   final Function()? onTap;
+  final List<Widget> actions;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: bottomWidget,
       appBar: AppBar(
+        actions: actions,
         leading: InkWell(onTap: onTap, child: Image.asset(AppAssets.cross)),
         backgroundColor: Color(0xFFF9F9F9),
         titleSpacing: 1,

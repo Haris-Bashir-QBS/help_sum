@@ -42,7 +42,7 @@ class JobImageSlider extends StatelessWidget {
             itemCount: imageUrls.length,
             padding: EdgeInsets.symmetric(
               horizontal: AppDimensions.paddingAllSides.w,
-            ),
+            ),  
             itemBuilder: (context, index) {
               final imageUrl = imageUrls[index];
               final tag = 'job_image_hero_' + index.toString();

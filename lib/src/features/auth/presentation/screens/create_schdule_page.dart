@@ -3,23 +3,29 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
+import 'package:help_sum/src/features/auth/data/models/request/schdule_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/request/time_slot_model.dart';
+import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/controller/user_state_provider.dart';
 import 'package:help_sum/src/widgets/animated_dialog.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
-// Note: Assuming your custom widgets are in this path.
-// import 'package:help_sum/src/widgets/custom_button.dart';
-// import 'package:help_sum/src/widgets/custom_text.dart';
+import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SelectScheduleScreen extends StatefulWidget {
+class SelectScheduleScreen extends ConsumerStatefulWidget {
   const SelectScheduleScreen({super.key, this.isEdit = false});
   final bool isEdit;
 
   @override
-  SelectScheduleScreenState createState() => SelectScheduleScreenState();
+  ConsumerState<SelectScheduleScreen> createState() =>
+      _SelectScheduleScreenState();
 }
 
-class SelectScheduleScreenState extends State<SelectScheduleScreen> {
+class _SelectScheduleScreenState extends ConsumerState<SelectScheduleScreen> {
   final List<String> days = [
     'Monday',
     'Tuesday',
@@ -29,7 +35,7 @@ class SelectScheduleScreenState extends State<SelectScheduleScreen> {
     'Saturday',
     'Sunday',
   ];
-  // Initialize map with all days set to false
+
   late Map<String, bool> selectedDays;
   Map<String, TimeOfDay> startTimes = {};
   Map<String, TimeOfDay> endTimes = {};
@@ -40,8 +46,39 @@ class SelectScheduleScreenState extends State<SelectScheduleScreen> {
     super.initState();
     selectedDays = {for (var day in days) day: false};
     for (var day in days) {
-      startTimes[day] = const TimeOfDay(hour: 15, minute: 3);
-      endTimes[day] = const TimeOfDay(hour: 16, minute: 3);
+      startTimes[day] = const TimeOfDay(hour: 08, minute: 0);
+      endTimes[day] = const TimeOfDay(hour: 18, minute: 0);
+    }
+
+    final user = ref.read(currentUserProvider).user;
+    if (widget.isEdit && user != null && user.schedule != null) {
+      print(user.schedule.toString());
+      for (var schedule in user.schedule!) {
+        final day = schedule.dayOfWeek;
+        if (day != null && selectedDays.containsKey(day)) {
+          selectedDays[day] = true;
+
+          if (schedule.timeSlots != null && schedule.timeSlots!.isNotEmpty) {
+            final slot = schedule.timeSlots![0];
+            final startTimeStr = slot.startTime;
+            final endTimeStr = slot.endTime;
+
+            try {
+              final startTime = TimeOfDay.fromDateTime(
+                DateFormat('HH:mm').parse(startTimeStr!),
+              );
+              final endTime = TimeOfDay.fromDateTime(
+                DateFormat('HH:mm').parse(endTimeStr!),
+              );
+
+              startTimes[day] = startTime;
+              endTimes[day] = endTime;
+            } catch (e) {
+              debugPrint("Time parsing error: $e");
+            }
+          }
+        }
+      }
     }
   }
 
@@ -52,36 +89,39 @@ class SelectScheduleScreenState extends State<SelectScheduleScreen> {
       context: context,
       initialTime: initialTime,
       builder: (context, child) {
-        return Theme(
-          data: ThemeData(
-            timePickerTheme: TimePickerThemeData(
-              backgroundColor: Color(0xFF303030),
-              hourMinuteTextColor: Colors.white,
-              dayPeriodTextColor: Colors.white,
-              entryModeIconColor: Color(0xFFFF8E01),
-              dialHandColor: Color(0xFFFF8E01),
-              dialBackgroundColor: Colors.grey.shade800,
-              dialTextColor: WidgetStateColor.resolveWith(
-                (states) =>
-                    states.contains(WidgetState.selected)
-                        ? Colors.black
-                        : Colors.white,
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: Theme(
+            data: ThemeData(
+              timePickerTheme: TimePickerThemeData(
+                backgroundColor: const Color(0xFF303030),
+                hourMinuteTextColor: Colors.white,
+                dayPeriodTextColor: Colors.white,
+                entryModeIconColor: const Color(0xFFFF8E01),
+                dialHandColor: const Color(0xFFFF8E01),
+                dialBackgroundColor: Colors.grey.shade800,
+                dialTextColor: MaterialStateColor.resolveWith(
+                  (states) =>
+                      states.contains(MaterialState.selected)
+                          ? Colors.black
+                          : Colors.white,
+                ),
+                hourMinuteColor: MaterialStateColor.resolveWith(
+                  (states) =>
+                      states.contains(MaterialState.selected)
+                          ? const Color(0xFFFF8E01)
+                          : Colors.grey.shade800,
+                ),
               ),
-              hourMinuteColor: WidgetStateColor.resolveWith(
-                (states) =>
-                    states.contains(WidgetState.selected)
-                        ? Color(0xFFFF8E01)
-                        : Colors.grey.shade800,
+              colorScheme: const ColorScheme.dark(
+                primary: Color(0xFFFF8E01),
+                onPrimary: Colors.black,
+                surface: Color(0xFF303030),
+                onSurface: Colors.white,
               ),
             ),
-            colorScheme: const ColorScheme.dark(
-              primary: Color(0xFFFF8E01),
-              onPrimary: Colors.black,
-              surface: Color(0xFF303030),
-              onSurface: Colors.white,
-            ),
+            child: child!,
           ),
-          child: child!,
         );
       },
     );
@@ -119,17 +159,20 @@ class SelectScheduleScreenState extends State<SelectScheduleScreen> {
   String _formatTime(TimeOfDay time) {
     final now = DateTime.now();
     final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-    return DateFormat('h:mm a').format(dt);
+    return DateFormat('HH:mm').format(dt); // 24-hour format
   }
 
   void _handleDone() {
-    final selected = selectedDays.entries
-        .where((entry) => entry.value)
-        .map((e) => e.key);
+    final selected =
+        selectedDays.entries
+            .where((entry) => entry.value)
+            .map((e) => e.key)
+            .toList();
+
     if (selected.isEmpty) {
       AnimatedStatusDialog.show(
         context: context,
-        icon: SizedBox(),
+        icon: const SizedBox(),
         title: "Please select at least one day.",
         isSuccess: true,
       );
@@ -140,44 +183,51 @@ class SelectScheduleScreenState extends State<SelectScheduleScreen> {
       if (!_isTimeValid(day)) {
         AnimatedStatusDialog.show(
           context: context,
-          icon: SizedBox(),
-          title: "Error: End time must be after start time for $day.",
+          icon: const SizedBox(),
+          title: "End time must be after start time for $day.",
           isSuccess: true,
         );
         return;
       }
     }
-    // Save or submit logic here
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   const SnackBar(content: Text("Schedule saved successfully")),
-    // );
-    AnimatedStatusDialog.show(
-      context: context,
-      isShowTimer: true,
-      sucessOnly: true,
-      title: "Congratulations!",
-      message:
-          widget.isEdit
-              ? "Skills updated successfully"
-              : "Your account is ready.You will\n be redirected to home page\n in a few seconds",
 
-      onBack: () {
-        context.goNamed(AppRoutes.mainNavigation);
-      },
-      isSuccess: true,
-    );
-    // Example of what data you might send:
-    final scheduleData = {
-      for (var day in selected)
-        day: {
-          'start': _formatTime(startTimes[day]!),
-          'end': _formatTime(endTimes[day]!),
-        },
-    };
-    print(scheduleData);
+    final List<Schedule> scheduleData =
+        selected.map((day) {
+          return Schedule(
+            dayOfWeek: day,
+            timeSlots: [
+              TimeSlot(
+                startTime: _formatTime(startTimes[day]!),
+                endTime: _formatTime(endTimes[day]!),
+              ),
+            ],
+          );
+        }).toList();
+
+    ref
+        .read(authNotifierProvider.notifier)
+        .updateSchdule(
+          context,
+          UpdateProfileRequest(schedule: scheduleData),
+          onSuccess: () {
+            AnimatedStatusDialog.show(
+              context: context,
+              isShowTimer: true,
+              sucessOnly: true,
+              title: "Congratulations!",
+              message:
+                  widget.isEdit
+                      ? "Schedule updated successfully"
+                      : "Your account is ready.\nYou will be redirected to home page\nin a few seconds.",
+              onBack: () {
+                context.goNamed(AppRoutes.mainNavigation);
+              },
+              isSuccess: true,
+            );
+          },
+        );
   }
 
-  // Correctly handles toggling all days on or off
   void _toggleSelectAll(bool? value) {
     setState(() {
       selectAll = value ?? false;
@@ -187,112 +237,108 @@ class SelectScheduleScreenState extends State<SelectScheduleScreen> {
     });
   }
 
-  // Correctly handles selecting/deselecting a single day
   void _onDaySelected(String day, bool? value) {
     setState(() {
       selectedDays[day] = value ?? false;
-      // If any day is unselected, "Select All" should be unselected.
-      // If all days are selected, "Select All" should be selected.
-      selectAll = selectedDays.values.every((isSelected) => isSelected);
+      selectAll = selectedDays.values.every((selected) => selected);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: const BackButton(),
-        title: const Text(
-          "Select your schedule",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+    final state = ref.watch(authNotifierProvider);
+
+    return ModalProgressHUD(
+      inAsyncCall: state is ScheduleLoading,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: const BackButton(),
+          title: const Text(
+            "Select your schedule",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          foregroundColor: Colors.black,
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        foregroundColor: Colors.black,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-        child: Column(
-          children: [
-            _buildScheduleRow(
-              "Select all",
-              selectAll,
-              _toggleSelectAll,
-              isHeader: true,
-            ),
-            const Divider(),
-            Expanded(
-              child: ListView.separated(
-                itemCount: days.length,
-                separatorBuilder: (context, index) => const Divider(),
-                itemBuilder: (context, index) {
-                  final day = days[index];
-                  return _buildScheduleRow(
-                    day,
-                    selectedDays[day]!,
-                    (value) => _onDaySelected(day, value),
-                    onStartTimeTap: () => _pickTime(day, true),
-                    onEndTimeTap: () => _pickTime(day, false),
-                    startTime: _formatTime(startTimes[day]!),
-                    endTime: _formatTime(endTimes[day]!),
-                  );
-                },
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+          child: Column(
+            children: [
+              _buildScheduleRow(
+                "Select all",
+                selectAll,
+                _toggleSelectAll,
+                isHeader: true,
               ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Icon(Icons.info_outline, color: Colors.orange, size: 18),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    "Note: End time cannot be less than or equal to start time",
-                    style: TextStyle(color: Colors.orange, fontSize: 13),
-                  ),
-                ),
-              ],
-            ),
-            if (widget.isEdit) ...[
-              20.verticalSpace,
-              SizedBox(
-                width: .44.sw,
-                child: CustomButton(
-                  color: AppPalette.primaryColor,
-                  textColor: AppPalette.fillColor,
-                  text: "Save Changes",
-                  onPressed: () => _handleDone(),
-                ),
-              ),
-            ],
-
-            if (!widget.isEdit) ...[
-              const SizedBox(height: 24),
-              SizedBox(
-                width: .44.sw,
-                child: CustomButton(
-                  color: AppPalette.primaryColor,
-                  textColor: AppPalette.fillColor,
-                  text: "Done",
-                  onPressed: () => _handleDone(),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-              SizedBox(
-                width: .44.sw,
-                child: CustomButton(
-                  color: AppPalette.primaryColor,
-                  textColor: AppPalette.fillColor,
-                  text: "Skip",
-                  onPressed: () {
-                    context.goNamed(AppRoutes.mainNavigation);
+              const Divider(),
+              Expanded(
+                child: ListView.separated(
+                  itemCount: days.length,
+                  separatorBuilder: (_, __) => const Divider(),
+                  itemBuilder: (_, index) {
+                    final day = days[index];
+                    return _buildScheduleRow(
+                      day,
+                      selectedDays[day]!,
+                      (value) => _onDaySelected(day, value),
+                      startTime: _formatTime(startTimes[day]!),
+                      endTime: _formatTime(endTimes[day]!),
+                      onStartTimeTap: () => _pickTime(day, true),
+                      onEndTimeTap: () => _pickTime(day, false),
+                    );
                   },
                 ),
               ),
+              const SizedBox(height: 12),
+              Row(
+                children: const [
+                  Icon(Icons.info_outline, color: Colors.orange, size: 18),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      "Note: End time cannot be less than or equal to start time",
+                      style: TextStyle(color: Colors.orange, fontSize: 13),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              if (widget.isEdit) ...[
+                SizedBox(
+                  width: .44.sw,
+                  child: CustomButton(
+                    color: AppPalette.primaryColor,
+                    textColor: AppPalette.fillColor,
+                    text: "Save Changes",
+                    onPressed: _handleDone,
+                  ),
+                ),
+              ] else ...[
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: .44.sw,
+                  child: CustomButton(
+                    color: AppPalette.primaryColor,
+                    textColor: AppPalette.fillColor,
+                    text: "Done",
+                    onPressed: _handleDone,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: .44.sw,
+                  child: CustomButton(
+                    color: AppPalette.primaryColor,
+                    textColor: AppPalette.fillColor,
+                    text: "Skip",
+                    onPressed: () => context.goNamed(AppRoutes.mainNavigation),
+                  ),
+                ),
+              ],
               const SizedBox(height: 10),
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -313,9 +359,7 @@ class SelectScheduleScreenState extends State<SelectScheduleScreen> {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () {
-              onChanged(!isSelected);
-            },
+            onTap: () => onChanged(!isSelected),
             child: Container(
               height: 18,
               width: 18,
@@ -324,9 +368,7 @@ class SelectScheduleScreenState extends State<SelectScheduleScreen> {
                 border: Border.all(color: AppPalette.greyColor),
               ),
               child: AnimatedContainer(
-                duration: Duration(milliseconds: 500),
-                height: 18,
-                width: 18,
+                duration: const Duration(milliseconds: 500),
                 decoration: BoxDecoration(
                   color: isSelected ? AppPalette.primaryColor : null,
                   shape: BoxShape.circle,
@@ -335,19 +377,11 @@ class SelectScheduleScreenState extends State<SelectScheduleScreen> {
             ),
           ),
           10.horizontalSpace,
-          // Using a styled Checkbox for correct toggle behavior
-          // Checkbox(
-          //   value: isSelected,
-          //   onChanged: onChanged,
-          //   shape: const CircleBorder(), // Makes the checkbox circular
-          //   activeColor: Colors.blue,
-          // ),
           Expanded(
             child: CustomText(
               text: title,
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
-              // style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ),
           if (!isHeader)
@@ -366,29 +400,21 @@ class SelectScheduleScreenState extends State<SelectScheduleScreen> {
 
   Widget _buildTimePicker(String label, String time, VoidCallback onTap) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomText(text: label, fontWeight: FontWeight.bold, fontSize: 12.sp),
-        10.verticalSpace,
-        InkWell(
+        CustomText(text: label, fontSize: 11.sp, color: Colors.grey),
+        GestureDetector(
           onTap: onTap,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8).r,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: Color(0xFFA9A9A9),
-              borderRadius: BorderRadius.circular(8),
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(6),
             ),
-            child: CustomText(
-              text: time,
-              fontSize: 12.sp,
-              color: AppPalette.whiteColor,
-              fontWeight: FontWeight.bold,
-              // style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-            ),
+            child: CustomText(text: time, fontSize: 13.sp),
           ),
         ),
       ],
     );
   }
 }
-
-// NOTE: The following are placeholder widgets. Use your own implementations.

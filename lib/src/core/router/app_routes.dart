@@ -12,6 +12,7 @@ class AppRoutes {
   static const String changePassword = 'change_password';
   static const String verifyOtp = 'verify_otp';
   static const String onboarding = 'onboarding';
+  static const String portfolio = 'portfolio';
   static const String selectSkill = 'select_skill';
   static const String mainNavigation = 'main_navigation';
   static const String changeDescriptipon = 'change_description';

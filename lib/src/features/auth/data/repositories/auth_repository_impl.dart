@@ -2,6 +2,10 @@ import 'package:fpdart/fpdart.dart';
 import 'package:help_sum/src/features/auth/data/models/request/otp_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/resend_otp_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/signup_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/response/services_groupped_model.dart';
+import 'package:help_sum/src/features/auth/data/models/response/upload_file_response.dart';
 import 'package:help_sum/src/features/auth/domain/repositories/auth_repository.dart';
 
 import '../../../../core/errors/api_exceptions.dart';
@@ -41,6 +45,18 @@ class AuthRepositoryImplementation implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, List<UploadedFileEntity>>> uploadFile({
+    required UploadFileRequest params,
+  }) async {
+    try {
+      final files = await remoteDataSource.uploadFile(params: params);
+      return right(files);
+    } on Failure catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
+  @override
   Future<Either<Failure, UserEntity>> verifyOtp({
     required OtpRequestModel params,
   }) async {
@@ -59,6 +75,30 @@ class AuthRepositoryImplementation implements AuthRepository {
     try {
       final String message = await remoteDataSource.resendOtp(params: params);
       return right(message);
+    } on Failure catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserEntity>> updateProfile({
+    required UpdateProfileRequest params,
+  }) async {
+    try {
+      final UserEntity user = await remoteDataSource.updateProfile(
+        params: params,
+      );
+      return right(user);
+    } on Failure catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<GroupedCategoryModel>>> getServices() async {
+    try {
+      final categories = await remoteDataSource.getGroupedServices();
+      return right(categories);
     } on Failure catch (e) {
       return left(Failure(message: e.message));
     }

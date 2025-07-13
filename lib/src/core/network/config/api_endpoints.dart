@@ -7,6 +7,8 @@ enum ApiEndpoints {
   verifyOtp,
   resendCode,
   logout,
+  uploadFile,
+  serviceGrouped,
 
   /// ================= Categories =======================
   categories,
@@ -15,7 +17,8 @@ enum ApiEndpoints {
   addCard,
   getCards,
   deleteCard,
-  setDefaultCard;
+  setDefaultCard,
+  updateProfile;
 
   String get value {
     switch (this) {
@@ -31,6 +34,12 @@ enum ApiEndpoints {
       case ApiEndpoints.resendCode:
         return "/$_auth/resend-otp";
 
+      case ApiEndpoints.updateProfile:
+        return "/$_auth/update-user";
+
+      case ApiEndpoints.uploadFile:
+        return "/upload/";
+
       /// ================= Categories =======================
       case ApiEndpoints.categories:
         return "/category";
@@ -44,6 +53,8 @@ enum ApiEndpoints {
         return "/card"; // Will be appended with /:cardId
       case ApiEndpoints.setDefaultCard:
         return "/card"; // Will be appended with /:cardId
+      case ApiEndpoints.serviceGrouped:
+        return '/service/grouped';
     }
   }
 }

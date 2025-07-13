@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
+import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/print_logs.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
-import 'package:help_sum/src/widgets/custom_toast.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -26,17 +27,28 @@ class _SplashPageState extends ConsumerState<SplashPage>
   late Animation<Color?> _textColorAnimation;
 
   void _listener() {
-    ref.listen<AuthState>(authNotifierProvider, (prev, next) {
+    ref.listen<AuthState>(authNotifierProvider, (prev, next) async {
       log(next.toString());
       if (next is LoginSuccess) {
         printLogs(next.user.id, tag: "User Verified");
+
         if (next.user.isVerified == false) {
-          context.goNamed(
-            AppRoutes.verifyOtp,
-            extra: {'userId': next.user.id, 'phone': next.user.phone},
-          );
+          await LocalStorageService().clearAll();
+          context.goNamed(AppRoutes.roleSelection);
+          // context.goNamed(
+          //   AppRoutes.verifyOtp,
+          //   extra: {'userId': next.user.id, 'phone': next.user.phone},
+          // );
         } else {
-          context.goNamed(AppRoutes.mainNavigation);
+          if (next.user.role != AppRole.consumer.name) {
+            if (next.user.isCompleted == false) {
+              context.goNamed(AppRoutes.selectSkill);
+            } else {
+              context.goNamed(AppRoutes.mainNavigation);
+            }
+          } else {
+            context.goNamed(AppRoutes.mainNavigation);
+          }
         }
       }
 
