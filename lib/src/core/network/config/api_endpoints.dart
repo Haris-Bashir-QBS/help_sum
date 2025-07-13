@@ -20,6 +20,9 @@ enum ApiEndpoints {
   setDefaultCard,
   updateProfile;
 
+  /// ================= Services =======================
+  getServicesByCategory;
+
   String get value {
     switch (this) {
       /// ================= Authentication =======================
@@ -55,6 +58,10 @@ enum ApiEndpoints {
         return "/card"; // Will be appended with /:cardId
       case ApiEndpoints.serviceGrouped:
         return '/service/grouped';
+
+      /// ================= Services =======================
+      case ApiEndpoints.getServicesByCategory:
+        return "/service/category"; // Will be appended with /:categoryId
     }
   }
 }

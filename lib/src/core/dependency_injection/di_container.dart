@@ -84,7 +84,9 @@ void _registerCategoryRepositories() {
 }
 
 void _registerCategoryUsecases() {
-  sl.registerLazySingleton(() => GetCategoriesUseCase(sl()));
+  sl
+    ..registerLazySingleton(() => GetCategoriesUseCase(sl()))
+    ..registerLazySingleton(() => GetServicesByCategoryUseCase(sl()));
 }
 
 /// ------------------------

@@ -25,6 +25,7 @@ import '../../features/core/common/payment/domain/usecases/add_card_usecase.dart
 import '../../features/core/common/payment/domain/usecases/get_cards_usecase.dart';
 import '../../features/core/common/payment/domain/usecases/delete_card_usecase.dart';
 import '../../features/core/common/payment/domain/usecases/set_default_card_usecase.dart';
+import '../../features/core/consumer/explore_services/domain/usecases/get_services_by_category_usecase.dart';
 import '../network/client/dio_client.dart';
 
 part 'di_container.dart';

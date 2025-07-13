@@ -9,6 +9,7 @@ import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/core/router/app_router.dart';
 import 'package:help_sum/src/core/constants/app_secrets.dart';
+import 'package:help_sum/src/core/themes/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
