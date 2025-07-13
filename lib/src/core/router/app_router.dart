@@ -15,10 +15,11 @@ import 'package:help_sum/src/features/core/common/main_navigation/domain/model/j
 import 'package:help_sum/src/features/core/common/main_navigation/pages/main_navigation_page.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_categories_listing_page.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_service_providers_listing_page.dart';
-import 'package:help_sum/src/features/core/common/payment/screens/card_details_screen.dart';
-import 'package:help_sum/src/features/core/common/payment/screens/payment_method_screen.dart';
-import 'package:help_sum/src/features/core/common/payment/screens/payment_result_screen.dart';
-import 'package:help_sum/src/features/core/common/payment/screens/rate_merchant_screen.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/screens/add_card_screen.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/screens/card_details_screen.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/screens/payment_method_screen.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/screens/payment_result_screen.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/screens/rate_merchant_screen.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/edit_contact_info_screen.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/profile_details_page.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/create_request_screen.dart';
@@ -63,6 +64,7 @@ final GoRouter appRouter = GoRouter(
     // Payment routes
     _paymentMethod(),
     _cardDetails(),
+    _addCard(),
     _paymentResult(),
     _rateScreen(),
     // Profile routes
@@ -359,6 +361,14 @@ GoRoute _cardDetails() {
     path: '/card-details',
     name: AppRoutes.cardDetails,
     builder: (context, state) => const CardDetailsScreen(),
+  );
+}
+
+GoRoute _addCard() {
+  return GoRoute(
+    path: '/add-card',
+    name: AppRoutes.addCard,
+    builder: (context, state) => const AddCardScreen(),
   );
 }
 

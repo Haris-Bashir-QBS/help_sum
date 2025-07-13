@@ -9,7 +9,13 @@ enum ApiEndpoints {
   logout,
 
   /// ================= Categories =======================
-  categories;
+  categories,
+
+  /// ================= Payment =======================
+  addCard,
+  getCards,
+  deleteCard,
+  setDefaultCard;
 
   String get value {
     switch (this) {
@@ -28,6 +34,16 @@ enum ApiEndpoints {
       /// ================= Categories =======================
       case ApiEndpoints.categories:
         return "/category";
+
+      /// ================= Payment =======================
+      case ApiEndpoints.addCard:
+        return "/card";
+      case ApiEndpoints.getCards:
+        return "/card";
+      case ApiEndpoints.deleteCard:
+        return "/card"; // Will be appended with /:cardId
+      case ApiEndpoints.setDefaultCard:
+        return "/card"; // Will be appended with /:cardId
     }
   }
 }

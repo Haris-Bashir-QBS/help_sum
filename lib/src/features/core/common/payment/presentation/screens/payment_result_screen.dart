@@ -4,9 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
-import 'package:help_sum/src/features/core/common/payment/widgets/payment_result_action_button.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
+
+import '../widgets/payment_result_action_button.dart';
 
 class PaymentResultScreen extends StatelessWidget {
   final bool isSuccess;

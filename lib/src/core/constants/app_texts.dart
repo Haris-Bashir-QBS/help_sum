@@ -137,6 +137,25 @@ class AppTexts {
   static const String cardHolder = 'Card Holder';
   static const String confirmPayment = 'Confirm Payment';
 
+  // Payment Processing
+  static const String processingPayment = 'Processing Payment...';
+  static const String cardAddedSuccessfully = 'Card added successfully!';
+  static const String failedToCreateCardToken = 'Failed to create card token';
+  static const String errorProcessingCard = 'Error processing card';
+  static const String invalidExpiryDateFormat = 'Invalid expiry date format';
+
+  // Add Card Screen
+  static const String addCard = 'Add Card';
+  static const String addNewCard = 'Add New Card';
+  static const String savedCards = 'Saved Cards';
+  static const String noCardsAdded = 'No cards added';
+  static const String addYourFirstCard = 'Add your first card to get started';
+
+  // Payment Methods
+  static const String paymentMethods = 'Payment Methods';
+  static const String manageCards = 'Manage Cards';
+  static const String addOrRemoveCards = 'Add or remove payment cards';
+
   // Rate Merchant Screen
   static const String rateMerchant = 'Rate Merchant';
   static const String pleaseGiveReview = 'Please give review';
