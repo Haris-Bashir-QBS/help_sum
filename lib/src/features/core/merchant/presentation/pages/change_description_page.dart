@@ -2,13 +2,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import 'package:help_sum/src/core/themes/app_dimensions.dart';
 =======
+=======
+>>>>>>> Stashed changes
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/features/auth/data/models/request/update_profile_model.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/controller/user_state_provider.dart';
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import 'package:help_sum/src/widgets/app_background.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';

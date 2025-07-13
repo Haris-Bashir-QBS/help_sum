@@ -21,10 +21,18 @@ class SelectScheduleScreen extends ConsumerStatefulWidget {
 
   @override
 <<<<<<< Updated upstream:lib/src/features/auth/presentation/pages/consumer/create_schdule.dart
+<<<<<<< Updated upstream:lib/src/features/auth/presentation/pages/consumer/create_schdule.dart
   _SelectScheduleScreenState createState() => _SelectScheduleScreenState();
 }
 
 class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
+=======
+  ConsumerState<SelectScheduleScreen> createState() =>
+      SelectScheduleScreenState();
+}
+
+class SelectScheduleScreenState extends ConsumerState<SelectScheduleScreen> {
+>>>>>>> Stashed changes:lib/src/features/auth/presentation/screens/create_schdule_page.dart
 =======
   ConsumerState<SelectScheduleScreen> createState() =>
       SelectScheduleScreenState();
@@ -159,6 +167,7 @@ class SelectScheduleScreenState extends ConsumerState<SelectScheduleScreen> {
       }
     }
 <<<<<<< Updated upstream:lib/src/features/auth/presentation/pages/consumer/create_schdule.dart
+<<<<<<< Updated upstream:lib/src/features/auth/presentation/pages/consumer/create_schdule.dart
     // Save or submit logic here
     // ScaffoldMessenger.of(context).showSnackBar(
     //   const SnackBar(content: Text("Schedule saved successfully")),
@@ -171,6 +180,8 @@ class SelectScheduleScreenState extends ConsumerState<SelectScheduleScreen> {
           widget.isEdit
               ? "Skills updated successfully"
               : "Your account is ready.You will\n be redirected to home page\n in a few seconds",
+=======
+>>>>>>> Stashed changes:lib/src/features/auth/presentation/screens/create_schdule_page.dart
 =======
 >>>>>>> Stashed changes:lib/src/features/auth/presentation/screens/create_schdule_page.dart
 
@@ -257,6 +268,7 @@ class SelectScheduleScreenState extends ConsumerState<SelectScheduleScreen> {
                 isHeader: true,
               ),
 <<<<<<< Updated upstream:lib/src/features/auth/presentation/pages/consumer/create_schdule.dart
+<<<<<<< Updated upstream:lib/src/features/auth/presentation/pages/consumer/create_schdule.dart
             ),
             const SizedBox(height: 12),
             Row(
@@ -306,6 +318,8 @@ class SelectScheduleScreenState extends ConsumerState<SelectScheduleScreen> {
                   text: "Skip",
                   onPressed: () => Navigator.pop(context),
 =======
+=======
+>>>>>>> Stashed changes:lib/src/features/auth/presentation/screens/create_schdule_page.dart
               const Divider(),
               Expanded(
                 child: ListView.separated(
