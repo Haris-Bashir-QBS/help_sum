@@ -18,7 +18,7 @@ enum ApiEndpoints {
   getCards,
   deleteCard,
   setDefaultCard,
-  updateProfile;
+  updateProfile,
 
   /// ================= Services =======================
   getServicesByCategory;
