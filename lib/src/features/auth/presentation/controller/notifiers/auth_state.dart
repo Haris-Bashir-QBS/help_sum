@@ -3,6 +3,7 @@ import 'package:help_sum/src/features/auth/data/models/request/upload_file.dart'
 import 'package:help_sum/src/features/auth/domain/entities/services_gropped_entity.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/entities/category_entity.dart';
+import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 
 sealed class AuthState {}
 

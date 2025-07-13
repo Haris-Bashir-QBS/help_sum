@@ -11,6 +11,7 @@ import 'package:help_sum/src/features/auth/domain/entities/services_gropped_enti
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/response/category_model.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/entities/category_entity.dart';
+import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 
 abstract interface class AuthRepository {
   Future<Either<Failure, (UserEntity, String)>> login({

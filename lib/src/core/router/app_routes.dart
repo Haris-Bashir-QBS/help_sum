@@ -23,6 +23,7 @@ class AppRoutes {
   //============================== Payment ==============================
   static const String paymentMethod = 'payment-method';
   static const String cardDetails = 'card-details';
+  static const String addCard = 'add-card';
   static const String paymentConfirmation = 'payment-confirmation';
   static const String paymentResult = 'payment-result';
   static const String rateScreen = 'rate-screen';

@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/core/router/app_router.dart';
+import 'package:help_sum/src/core/constants/app_secrets.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  Stripe.publishableKey = AppSecrets.stripePublicKey;
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  await initializeDI();
+
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

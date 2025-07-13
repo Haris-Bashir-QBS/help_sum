@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
-import 'package:help_sum/src/core/themes/app_dimensions.dart';
 import 'package:help_sum/src/core/utils/app_utils.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/service_provider_card.dart';
@@ -20,6 +19,8 @@ import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_image_slider.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
+
+import '../../../../../../core/constants/app_dimensions.dart';
 
 class BookingDetailPage extends StatelessWidget {
   final JobModel job;

@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 
+import '../../widgets/custom_text.dart';
+
 class SessionManager {
   SessionManager._();
 
@@ -28,7 +30,7 @@ class SessionManager {
                     context.goNamed(AppRoutes.login);
                     // logoutUser();
                   },
-                  child: Text(AppTexts.backToLogin),
+                  child: CustomText(text: AppTexts.backToLogin),
                 ),
               ],
             ),
@@ -41,8 +43,7 @@ class SessionManager {
     onSuccess.call();
   }
 
-
   static Future<void> _clearData() async {
-    // Clear User  
+    // Clear User
   }
 }

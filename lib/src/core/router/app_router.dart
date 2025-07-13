@@ -3,20 +3,20 @@ import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/observers/navigator_observer.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/services/session_service.dart';
-import 'package:help_sum/src/features/auth/presentation/pages/consumer/create_schdule.dart';
-import 'package:help_sum/src/features/auth/presentation/pages/consumer/select_skill.dart';
-import 'package:help_sum/src/features/auth/presentation/pages/login_page.dart';
-import 'package:help_sum/src/features/auth/presentation/pages/role_selection.dart';
-import 'package:help_sum/src/features/auth/presentation/pages/signup_page.dart';
+import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
+import 'package:help_sum/src/features/auth/presentation/screens/select_skill_page.dart';
+import 'package:help_sum/src/features/auth/presentation/screens/login_page.dart';
+import 'package:help_sum/src/features/auth/presentation/screens/role_selection.dart';
+import 'package:help_sum/src/features/auth/presentation/screens/signup_page.dart';
 import 'package:help_sum/src/features/core/common/intro/spash/pages/splash_page.dart';
-import 'package:help_sum/src/features/auth/presentation/pages/otp_verification_page.dart';
+import 'package:help_sum/src/features/auth/presentation/screens/otp_verification_page.dart';
 import 'package:help_sum/src/features/core/common/intro/onboarding/pages/onboarding_page.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/main_navigation_page.dart';
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
-import 'package:help_sum/src/features/core/common/main_navigation/pages/all_categories_listing_page.dart';
-import 'package:help_sum/src/features/core/common/main_navigation/pages/all_service_providers_listing_page.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_categories_listing_page.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_service_providers_listing_page.dart';
 =======
 =======
 >>>>>>> Stashed changes
@@ -24,30 +24,32 @@ import 'package:help_sum/src/features/core/common/profile/presentation/pages/por
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_categories_listing_page.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_service_providers_listing_page.dart';
 >>>>>>> Stashed changes
-import 'package:help_sum/src/features/core/common/payment/screens/card_details_screen.dart';
-import 'package:help_sum/src/features/core/common/payment/screens/payment_method_screen.dart';
-import 'package:help_sum/src/features/core/common/payment/screens/payment_result_screen.dart';
-import 'package:help_sum/src/features/core/common/payment/screens/rate_merchant_screen.dart';
-import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/create_request_screen.dart';
-import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/immediate_book_screen.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/screens/add_card_screen.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/screens/card_details_screen.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/screens/payment_method_screen.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/screens/payment_result_screen.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/screens/rate_merchant_screen.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/pages/edit_contact_info_screen.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/pages/profile_details_page.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/create_request_screen.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/find_merchant_screen.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/immediate_book_screen.dart';
 import 'package:help_sum/src/features/core/merchant/domain/models/service_provider_model.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/job_detail_screen.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/change_description_page.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/change_rate_page.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/manage_job_page.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/merchant_profile_page.dart';
-import 'package:help_sum/src/features/core/common/profile/pages/profile_details_page.dart';
-import 'package:help_sum/src/features/core/common/profile/pages/edit_basic_info_screen.dart';
-import 'package:help_sum/src/features/core/common/profile/pages/edit_contact_info_screen.dart';
-import 'package:help_sum/src/features/core/common/profile/models/user_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/booking_detail_page.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/other_options_page.dart';
 import 'package:help_sum/src/features/core/common/chat/pages/chat_screen.dart';
 import 'package:help_sum/src/features/core/common/map_tracking/pages/map_tracking_page.dart';
-import 'package:help_sum/src/features/core/consumer/find_merchant/presentation/pages/find_merchant_screen.dart';
+
+import '../../features/auth/presentation/screens/create_schdule_page.dart';
+import '../../features/core/common/profile/presentation/pages/edit_basic_info_screen.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/${AppRoutes.mainNavigation}',
+  initialLocation: '/${AppRoutes.splash}',
   navigatorKey: SessionManager.navigatorKey,
   observers: [UnFocusOnNavigateObserver()],
   routes: <RouteBase>[
@@ -72,6 +74,7 @@ final GoRouter appRouter = GoRouter(
     // Payment routes
     _paymentMethod(),
     _cardDetails(),
+    _addCard(),
     _paymentResult(),
     _rateScreen(),
     // Profile routes
@@ -229,10 +232,15 @@ GoRoute _verifyOtp() {
     path: '/verify-otp',
     name: AppRoutes.verifyOtp,
     pageBuilder: (context, state) {
-      final phoneNumber = state.extra as String?;
+      final data = state.extra as Map<String, dynamic>;
+      final phoneNumber = data['phone'] as String?;
+      final userId = data['userId'] as String?;
       return CustomTransitionPage(
         key: state.pageKey,
-        child: OtpVerificationPage(phoneNumber: phoneNumber ?? ''),
+        child: OtpVerificationPage(
+          phoneNumber: phoneNumber ?? '',
+          userId: userId ?? '',
+        ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(0.0, 1.0);
           const end = Offset.zero;
@@ -376,6 +384,14 @@ GoRoute _cardDetails() {
   );
 }
 
+GoRoute _addCard() {
+  return GoRoute(
+    path: '/add-card',
+    name: AppRoutes.addCard,
+    builder: (context, state) => const AddCardScreen(),
+  );
+}
+
 GoRoute _paymentResult() {
   return GoRoute(
     path: "/${AppRoutes.paymentResult}",
@@ -411,7 +427,7 @@ GoRoute _editBasicInfo() {
     path: '/edit-basic-info',
     name: AppRoutes.editBasicInfo,
     builder: (context, state) {
-      final user = state.extra as UserModel;
+      final user = state.extra as UserEntity;
       return EditBasicInfoScreen(user: user);
     },
   );
@@ -422,7 +438,7 @@ GoRoute _editContactInfo() {
     path: '/edit-contact-info',
     name: AppRoutes.editContactInfo,
     builder: (context, state) {
-      final user = state.extra as UserModel;
+      final user = state.extra as UserEntity;
       return EditContactInfoScreen(user: user);
     },
   );

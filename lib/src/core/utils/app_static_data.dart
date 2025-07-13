@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
+import 'package:help_sum/src/core/models/common/category_model.dart';
+import 'package:help_sum/src/core/models/common/onboarding_slider_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/merchant/domain/models/service_provider_model.dart';
 
@@ -53,15 +55,18 @@ class AppStaticData {
   ];
 
   static const List<CategoryData> categories = [
-    CategoryData(name: AppTexts.officeWorkers, iconPath: AppAssets.officeWorker),
-    CategoryData(name: AppTexts.education,iconPath: AppAssets.education),
+    CategoryData(
+      name: AppTexts.officeWorkers,
+      iconPath: AppAssets.officeWorker,
+    ),
+    CategoryData(name: AppTexts.education, iconPath: AppAssets.education),
     CategoryData(name: AppTexts.eventPlanner, iconPath: AppAssets.eventPlanner),
     CategoryData(name: AppTexts.mechanic, iconPath: AppAssets.mechanic),
     CategoryData(name: AppTexts.health, iconPath: AppAssets.health),
     CategoryData(name: AppTexts.dailyWorkers, iconPath: AppAssets.dailyWorkers),
     CategoryData(name: AppTexts.artist, iconPath: AppAssets.artist),
     CategoryData(name: AppTexts.personalCare, iconPath: AppAssets.perosnalCare),
-    CategoryData(name: AppTexts.careTakers,iconPath: AppAssets.careTaker),
+    CategoryData(name: AppTexts.careTakers, iconPath: AppAssets.careTaker),
     CategoryData(name: AppTexts.technicians, iconPath: AppAssets.technician),
   ];
 
@@ -208,25 +213,45 @@ class AppStaticData {
       status: JobStatus.rejected,
     ),
   ];
-}
 
-class OnboardingSlideData {
-  final String imagePath;
-  final String title;
-  final String description;
-  final bool isLastPage;
+  static final List<NavigationDestination> consumerDestinations = [
+    NavigationDestination(
+      icon: Image.asset(AppAssets.consumerHistoryUnfocused),
+      selectedIcon: Image.asset(AppAssets.consumerHistoryFocused),
+      label: '',
+    ),
+    NavigationDestination(
+      icon: Image.asset(AppAssets.consumerDashboardUnfocused),
+      selectedIcon: Image.asset(AppAssets.consumerDashboardFocused),
+      label: '',
+    ),
+    NavigationDestination(
+      icon: Image.asset(AppAssets.consumerProfileUnfocused),
+      selectedIcon: Image.asset(AppAssets.consumerProfileFocused),
+      label: '',
+    ),
+  ];
 
-  const OnboardingSlideData({
-    required this.imagePath,
-    required this.title,
-    required this.description,
-    required this.isLastPage,
-  });
-}
-
-class CategoryData {
-  final String name;
-  final String iconPath;
-
-  const CategoryData({required this.name, required this.iconPath});
+  static final List<NavigationDestination> merchantDestinations = [
+    NavigationDestination(
+      icon: Image.asset(AppAssets.merchantJobsUnfocused),
+      selectedIcon: Image.asset(AppAssets.merchantJobsFocused),
+      label: '',
+    ),
+    NavigationDestination(
+      icon: Image.asset(AppAssets.merchantDashboardUnfocused),
+      selectedIcon: Image.asset(AppAssets.merchantDashboardFocused),
+      label: '',
+    ),
+    NavigationDestination(
+      icon: Image.asset(AppAssets.merchantHistoryUnfocused),
+      selectedIcon: Image.asset(AppAssets.merchantHistoryFocused),
+      label: '',
+    ),
+    NavigationDestination(
+      icon: Image.asset(AppAssets.merchantProfileUnfocused),
+      selectedIcon: Image.asset(AppAssets.merchantProfileFocused),
+      label: '',
+    ),
+  ];
 }

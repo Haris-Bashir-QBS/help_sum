@@ -22,6 +22,7 @@ import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/custom_text_formfield.dart';
 import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 
+import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/constants/app_palette.dart';
 
 class ChangeDescriptionPage extends ConsumerStatefulWidget {

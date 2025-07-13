@@ -14,6 +14,15 @@ enum ApiEndpoints {
   /// ================= Categories =======================
   categories;
 
+  /// ================= Categories =======================
+  categories,
+
+  /// ================= Payment =======================
+  addCard,
+  getCards,
+  deleteCard,
+  setDefaultCard;
+
   String get value {
     switch (this) {
       /// ================= Authentication =======================
@@ -39,6 +48,19 @@ enum ApiEndpoints {
         return "/category";
       case ApiEndpoints.serviceGrouped:
         return '/service/grouped';
+      /// ================= Categories =======================
+      case ApiEndpoints.categories:
+        return "/category";
+
+      /// ================= Payment =======================
+      case ApiEndpoints.addCard:
+        return "/card";
+      case ApiEndpoints.getCards:
+        return "/card";
+      case ApiEndpoints.deleteCard:
+        return "/card"; // Will be appended with /:cardId
+      case ApiEndpoints.setDefaultCard:
+        return "/card"; // Will be appended with /:cardId
     }
   }
 }

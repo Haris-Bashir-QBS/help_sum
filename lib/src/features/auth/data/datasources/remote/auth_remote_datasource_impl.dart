@@ -15,6 +15,8 @@ import 'package:help_sum/src/features/auth/data/models/response/signup_response_
 import 'package:help_sum/src/features/auth/domain/entities/services_gropped_entity.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/response/category_model.dart';
+import 'package:help_sum/src/features/auth/data/models/response/login_response_model.dart';
+import 'package:help_sum/src/features/auth/data/models/response/signup_response_model.dart';
 
 import '../../../../../core/constants/app_errors.dart';
 import '../../../../../core/errors/api_exceptions.dart';

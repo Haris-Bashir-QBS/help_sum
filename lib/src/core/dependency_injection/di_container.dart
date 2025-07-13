@@ -7,6 +7,7 @@ Future<void> initializeDI() async {
   await _initCoreDependencies();
   await _initAuthDependencies();
   await _initCategoryDependencies();
+  await _initPaymentDependencies();
 }
 
 /// ------------------------
@@ -53,6 +54,7 @@ void _registerAuthUsecases() {
     ..registerLazySingleton(() => UpdateUserProfileUsecase(sl()))
     ..registerLazySingleton(() => UploadFileUseCase(sl()))
     ..registerLazySingleton(() => GetGroupedServicesUseCase(sl()));
+    ..registerLazySingleton(() => OtpUseCase(sl()));
   // ..registerLazySingleton(() => VerifyOtpUseCase(sl()))
   // ..registerLazySingleton(() => ChangePasswordUsecase(sl()))
   // ..registerLazySingleton(() => ForgetPasswordUsecase(sl()))
@@ -84,4 +86,34 @@ void _registerCategoryRepositories() {
 
 void _registerCategoryUsecases() {
   sl.registerLazySingleton(() => GetCategoriesUseCase(sl()));
+}
+
+/// ------------------------
+/// PAYMENT DEPENDENCIES
+/// ------------------------
+
+Future<void> _initPaymentDependencies() async {
+  _registerPaymentRemoteDatasources();
+  _registerPaymentRepositories();
+  _registerPaymentUsecases();
+}
+
+void _registerPaymentRemoteDatasources() {
+  sl.registerLazySingleton<PaymentRemoteDataSource>(
+    () => PaymentRemoteDataSourceImplementation(client: sl()),
+  );
+}
+
+void _registerPaymentRepositories() {
+  sl.registerLazySingleton<PaymentRepository>(
+    () => PaymentRepositoryImplementation(remoteDataSource: sl()),
+  );
+}
+
+void _registerPaymentUsecases() {
+  sl
+    ..registerLazySingleton(() => AddCardUseCase(sl()))
+    ..registerLazySingleton(() => GetCardsUseCase(sl()))
+    ..registerLazySingleton(() => DeleteCardUseCase(sl()))
+    ..registerLazySingleton(() => SetDefaultCardUseCase(sl()));
 }

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/core/use_cases/use_case.dart';
+import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
+import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/features/auth/data/models/request/login_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/otp_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/resend_otp_request_model.dart';
@@ -14,6 +16,8 @@ import 'package:help_sum/src/features/auth/data/models/response/user_model.dart'
 import 'package:help_sum/src/features/auth/domain/entities/services_gropped_entity.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/get_groupped_services_usecase.dart';
+import 'package:help_sum/src/features/auth/data/models/response/user_model.dart';
+import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/login_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/otp_use_case.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/resend_otp_usecase.dart';
@@ -23,6 +27,8 @@ import 'package:help_sum/src/features/auth/domain/usecases/upload_file_use_case.
 import 'package:help_sum/src/widgets/custom_toast.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../../../core/common/profile/presentation/controller/user_state_provider.dart';
 import 'auth_state.dart';
 part 'auth_notifier.g.dart';
@@ -36,6 +42,9 @@ class AuthNotifier extends _$AuthNotifier {
   late final ResendOtpUsecase _resendOtpUsecase = sl();
   late final GetGroupedServicesUseCase _getGroupedServicesUseCase = sl();
   late final UpdateUserProfileUsecase _updateUserProfileUsecase = sl();
+  late final OtpUseCase _otpUseCase = sl();
+  late final ResendOtpUsecase _resendOtpUsecase = sl();
+  // late final LocalStorageService _localStorageService = sl();
 
   // User entity
   UserEntity? _currentUser;
@@ -123,6 +132,10 @@ class AuthNotifier extends _$AuthNotifier {
     LoginRequestModel params, {
     required BuildContext context,
   }) async {
+  @override
+  AuthState build() => AuthInitial();
+
+  Future<void> login(LoginRequestModel params) async {
     state = LoginLoading();
     final result = await _loginUseCase(params);
 
@@ -133,6 +146,8 @@ class AuthNotifier extends _$AuthNotifier {
       _currentUser = user;
       await LocalStorageService().saveAccessToken(token);
       await LocalStorageService().saveUser(UserModel.fromEntity(user));
+      await LocalStorageService().saveUser(UserModel.fromEntity(user));
+      await LocalStorageService().saveAccessToken(token); 
 
       state = LoginSuccess(user);
     });
@@ -316,6 +331,10 @@ class AuthNotifier extends _$AuthNotifier {
       _currentUser = savedUserModel;
       ref.read(currentUserProvider.notifier).setUser(savedUserModel);
       log("Current User: ${_currentUser?.role.toString()}");
+    final savedUserModel = LocalStorageService().user;
+    if (savedUserModel != null) {
+      _currentUser = savedUserModel;
+      ref.read(currentUserProvider.notifier).setUser(savedUserModel);
       state = LoginSuccess(_currentUser!);
     } else {
       state = AuthInitial();
