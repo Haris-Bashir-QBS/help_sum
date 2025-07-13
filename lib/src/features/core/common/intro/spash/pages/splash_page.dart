@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
+import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+<<<<<<< Updated upstream
+=======
+import 'package:help_sum/src/core/services/local_storage_service.dart';
+import 'package:help_sum/src/core/services/session_service.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
+import 'package:help_sum/src/widgets/custom_toast.dart';
+>>>>>>> Stashed changes
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -17,6 +26,43 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
   late Animation<double> _scaleAnimation;
   late Animation<Color?> _textColorAnimation;
 
+<<<<<<< Updated upstream
+=======
+  void _listener() {
+    ref.listen<AuthState>(authNotifierProvider, (prev, next) async {
+      log(next.toString());
+      if (next is LoginSuccess) {
+        printLogs(next.user.id, tag: "User Verified");
+
+        
+
+        if (next.user.isVerified == false) {
+          await LocalStorageService().clearAll();
+          context.goNamed(AppRoutes.roleSelection);
+          // context.goNamed(
+          //   AppRoutes.verifyOtp,
+          //   extra: {'userId': next.user.id, 'phone': next.user.phone},
+          // );
+        } else {
+          if (next.user.role != AppRole.consumer.name) {
+            if (next.user.isCompleted == false) {
+              context.goNamed(AppRoutes.selectSkill);
+            } else {
+              context.goNamed(AppRoutes.mainNavigation);
+            }
+          } else {
+            context.goNamed(AppRoutes.mainNavigation);
+          }
+        }
+      }
+
+      if (next is AuthInitial) {
+        context.goNamed(AppRoutes.roleSelection);
+      }
+    });
+  }
+
+>>>>>>> Stashed changes
   @override
   void initState() {
     super.initState();

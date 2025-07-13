@@ -3,23 +3,35 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
+import 'package:help_sum/src/features/auth/data/models/request/schedule_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/request/time_slot_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/request/update_profile_model.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
 import 'package:help_sum/src/widgets/animated_dialog.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
-// Note: Assuming your custom widgets are in this path.
-// import 'package:help_sum/src/widgets/custom_button.dart';
-// import 'package:help_sum/src/widgets/custom_text.dart';
+import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SelectScheduleScreen extends StatefulWidget {
+class SelectScheduleScreen extends ConsumerStatefulWidget {
   const SelectScheduleScreen({super.key, this.isEdit = false});
   final bool isEdit;
 
   @override
+<<<<<<< Updated upstream:lib/src/features/auth/presentation/pages/consumer/create_schdule.dart
   _SelectScheduleScreenState createState() => _SelectScheduleScreenState();
 }
 
 class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
+=======
+  ConsumerState<SelectScheduleScreen> createState() =>
+      SelectScheduleScreenState();
+}
+
+class SelectScheduleScreenState extends ConsumerState<SelectScheduleScreen> {
+>>>>>>> Stashed changes:lib/src/features/auth/presentation/screens/create_schdule_page.dart
   final List<String> days = [
     'Monday',
     'Tuesday',
@@ -29,7 +41,6 @@ class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
     'Saturday',
     'Sunday',
   ];
-  // Initialize map with all days set to false
   late Map<String, bool> selectedDays;
   Map<String, TimeOfDay> startTimes = {};
   Map<String, TimeOfDay> endTimes = {};
@@ -147,6 +158,7 @@ class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
         return;
       }
     }
+<<<<<<< Updated upstream:lib/src/features/auth/presentation/pages/consumer/create_schdule.dart
     // Save or submit logic here
     // ScaffoldMessenger.of(context).showSnackBar(
     //   const SnackBar(content: Text("Schedule saved successfully")),
@@ -159,24 +171,49 @@ class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
           widget.isEdit
               ? "Skills updated successfully"
               : "Your account is ready.You will\n be redirected to home page\n in a few seconds",
+=======
+>>>>>>> Stashed changes:lib/src/features/auth/presentation/screens/create_schdule_page.dart
 
-      onBack: () {
-        context.goNamed(AppRoutes.mainNavigation);
-      },
-      isSuccess: true,
-    );
-    // Example of what data you might send:
-    final scheduleData = {
-      for (var day in selected)
-        day: {
-          'start': _formatTime(startTimes[day]!),
-          'end': _formatTime(endTimes[day]!),
-        },
-    };
-    print(scheduleData);
+    final List<Schedule> scheduleData = [];
+
+    for (var day in selected) {
+      final shedule = Schedule(
+        dayOfWeek: day,
+        timeSlots: [
+          TimeSlot(
+            startTime: _formatTime(startTimes[day]!),
+            endTime: _formatTime(endTimes[day]!),
+          ),
+        ],
+      );
+      scheduleData.add(shedule);
+    }
+
+    ref
+        .read(authNotifierProvider.notifier)
+        .updateSchdule(
+          context,
+          UpdateProfileRequest(schedule: scheduleData),
+          onSuccess: () {
+            AnimatedStatusDialog.show(
+              context: context,
+              isShowTimer: true,
+              sucessOnly: true,
+              title: "Congratulations!",
+              message:
+                  widget.isEdit
+                      ? "Schedule updated successfully"
+                      : "Your account is ready.You will\n be redirected to home page\n in a few seconds",
+
+              onBack: () {
+                context.goNamed(AppRoutes.mainNavigation);
+              },
+              isSuccess: true,
+            );
+          },
+        );
   }
 
-  // Correctly handles toggling all days on or off
   void _toggleSelectAll(bool? value) {
     setState(() {
       selectAll = value ?? false;
@@ -186,57 +223,40 @@ class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
     });
   }
 
-  // Correctly handles selecting/deselecting a single day
   void _onDaySelected(String day, bool? value) {
     setState(() {
       selectedDays[day] = value ?? false;
-      // If any day is unselected, "Select All" should be unselected.
-      // If all days are selected, "Select All" should be selected.
       selectAll = selectedDays.values.every((isSelected) => isSelected);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: const BackButton(),
-        title: const Text(
-          "Select your schedule",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+    // You can use ref here for Riverpod providers if needed
+    return ModalProgressHUD(
+      inAsyncCall: ref.watch(authNotifierProvider) is ScheduleLoading,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: const BackButton(),
+          title: const Text(
+            "Select your schedule",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          foregroundColor: Colors.black,
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        foregroundColor: Colors.black,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-        child: Column(
-          children: [
-            _buildScheduleRow(
-              "Select all",
-              selectAll,
-              _toggleSelectAll,
-              isHeader: true,
-            ),
-            const Divider(),
-            Expanded(
-              child: ListView.separated(
-                itemCount: days.length,
-                separatorBuilder: (context, index) => const Divider(),
-                itemBuilder: (context, index) {
-                  final day = days[index];
-                  return _buildScheduleRow(
-                    day,
-                    selectedDays[day]!,
-                    (value) => _onDaySelected(day, value),
-                    onStartTimeTap: () => _pickTime(day, true),
-                    onEndTimeTap: () => _pickTime(day, false),
-                    startTime: _formatTime(startTimes[day]!),
-                    endTime: _formatTime(endTimes[day]!),
-                  );
-                },
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+          child: Column(
+            children: [
+              _buildScheduleRow(
+                "Select all",
+                selectAll,
+                _toggleSelectAll,
+                isHeader: true,
               ),
+<<<<<<< Updated upstream:lib/src/features/auth/presentation/pages/consumer/create_schdule.dart
             ),
             const SizedBox(height: 12),
             Row(
@@ -285,11 +305,82 @@ class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
                   textColor: AppPalette.fillColor,
                   text: "Skip",
                   onPressed: () => Navigator.pop(context),
+=======
+              const Divider(),
+              Expanded(
+                child: ListView.separated(
+                  itemCount: days.length,
+                  separatorBuilder: (context, index) => const Divider(),
+                  itemBuilder: (context, index) {
+                    final day = days[index];
+                    return _buildScheduleRow(
+                      day,
+                      selectedDays[day]!,
+                      (value) => _onDaySelected(day, value),
+                      onStartTimeTap: () => _pickTime(day, true),
+                      onEndTimeTap: () => _pickTime(day, false),
+                      startTime: _formatTime(startTimes[day]!),
+                      endTime: _formatTime(endTimes[day]!),
+                    );
+                  },
+>>>>>>> Stashed changes:lib/src/features/auth/presentation/screens/create_schdule_page.dart
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Icon(Icons.info_outline, color: Colors.orange, size: 18),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      "Note: End time cannot be less than or equal to start time",
+                      style: TextStyle(color: Colors.orange, fontSize: 13),
+                    ),
+                  ),
+                ],
+              ),
+              if (widget.isEdit) ...[
+                20.verticalSpace,
+                SizedBox(
+                  width: .44.sw,
+                  child: CustomButton(
+                    color: AppPalette.primaryColor,
+                    textColor: AppPalette.fillColor,
+                    text: "Save Changes",
+                    onPressed: () => _handleDone(),
+                  ),
+                ),
+              ],
+
+              if (!widget.isEdit) ...[
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: .44.sw,
+                  child: CustomButton(
+                    color: AppPalette.primaryColor,
+                    textColor: AppPalette.fillColor,
+                    text: "Done",
+                    onPressed: () => _handleDone(),
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: .44.sw,
+                  child: CustomButton(
+                    color: AppPalette.primaryColor,
+                    textColor: AppPalette.fillColor,
+                    text: "Skip",
+                    onPressed: () {
+                      context.goNamed(AppRoutes.mainNavigation);
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -332,19 +423,11 @@ class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
             ),
           ),
           10.horizontalSpace,
-          // Using a styled Checkbox for correct toggle behavior
-          // Checkbox(
-          //   value: isSelected,
-          //   onChanged: onChanged,
-          //   shape: const CircleBorder(), // Makes the checkbox circular
-          //   activeColor: Colors.blue,
-          // ),
           Expanded(
             child: CustomText(
               text: title,
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
-              // style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ),
           if (!isHeader)
@@ -379,7 +462,6 @@ class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
               fontSize: 12.sp,
               color: AppPalette.whiteColor,
               fontWeight: FontWeight.bold,
-              // style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
             ),
           ),
         ),
@@ -387,5 +469,3 @@ class _SelectScheduleScreenState extends State<SelectScheduleScreen> {
     );
   }
 }
-
-// NOTE: The following are placeholder widgets. Use your own implementations.

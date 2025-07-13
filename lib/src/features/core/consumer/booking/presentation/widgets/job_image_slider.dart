@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/widgets/custom_imageview.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class JobImageSlider extends StatelessWidget {
@@ -16,6 +17,7 @@ class JobImageSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(imageUrls);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -37,7 +39,8 @@ class JobImageSlider extends StatelessWidget {
         5.verticalSpace,
         SizedBox(
           height: 100.h,
-          child: ListView.builder(
+          child: ListView.separated(
+            separatorBuilder: (context, index) => SizedBox(width: 10),
             scrollDirection: Axis.horizontal,
             itemCount: imageUrls.length,
             padding: EdgeInsets.symmetric(
@@ -63,19 +66,25 @@ class JobImageSlider extends StatelessWidget {
                 },
                 child: Hero(
                   tag: tag,
-                  child: Container(
-                    margin: EdgeInsets.only(right: 10.w),
-                    width: 100.w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        AppDimensions.appBorderRadius.r,
-                      ),
-                      image: DecorationImage(
-                        image: NetworkImage(imageUrl),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                  child: CustomImageView(
+                    // height: 50,
+                    width: 90,
+                    imageType: ImageType.network,
+                    imagePath: imageUrl,
                   ),
+                  // child: Container(
+                  //   margin: EdgeInsets.only(right: 10.w),
+                  //   width: 100.w,
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(
+                  //       AppDimensions.appBorderRadius.r,
+                  //     ),
+                  //     image: DecorationImage(
+                  //       image: NetworkImage(imageUrl),
+                  //       fit: BoxFit.cover,
+                  //     ),
+                  //   ),
+                  // ),
                 ),
               );
             },
@@ -109,7 +118,15 @@ class EnlargedImageView extends StatelessWidget {
         // Ensure the GestureDetector covers the entire screen
         behavior: HitTestBehavior.opaque,
         child: SizedBox.expand(
-          child: Center(child: Hero(tag: tag, child: Image.network(imageUrl))),
+          child: Center(
+            child: Hero(
+              tag: tag,
+              child: CustomImageView(
+                imageType: ImageType.network,
+                imagePath: imageUrl,
+              ),
+            ),
+          ),
         ),
       ),
     );

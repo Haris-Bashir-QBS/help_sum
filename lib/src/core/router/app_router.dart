@@ -13,8 +13,14 @@ import 'package:help_sum/src/features/auth/presentation/pages/otp_verification_p
 import 'package:help_sum/src/features/core/common/intro/onboarding/pages/onboarding_page.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/main_navigation_page.dart';
+<<<<<<< Updated upstream
 import 'package:help_sum/src/features/core/common/main_navigation/pages/all_categories_listing_page.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/all_service_providers_listing_page.dart';
+=======
+import 'package:help_sum/src/features/core/common/profile/presentation/pages/portfolio_screen.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_categories_listing_page.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_service_providers_listing_page.dart';
+>>>>>>> Stashed changes
 import 'package:help_sum/src/features/core/common/payment/screens/card_details_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/payment_method_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/screens/payment_result_screen.dart';
@@ -53,6 +59,7 @@ final GoRouter appRouter = GoRouter(
     _onboarding(),
     _changeDescription(),
     _changeRates(),
+    _portfolioScreen(),
 
     _mainNavigation(),
     _allCategoriesListing(),
@@ -259,6 +266,16 @@ GoRoute _selectSkill() {
       final isEdit = state.extra as bool?;
 
       return SkillSelectionScreen(isEdit: isEdit ?? false);
+    },
+  );
+}
+
+GoRoute _portfolioScreen() {
+  return GoRoute(
+    path: '/portfolio',
+    name: AppRoutes.portfolio,
+    builder: (context, state) {
+      return PortfolioScreen();
     },
   );
 }

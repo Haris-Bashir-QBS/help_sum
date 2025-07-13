@@ -31,6 +31,7 @@ class AppRoutes {
   static const String account = 'account';
   static const String editBasicInfo = 'edit-basic-info';
   static const String editContactInfo = 'edit-contact-info';
+  static const String portfolio = 'portfolio';
   //============================== Booking ==============================
   static const String bookingDetail = 'booking-detail';
   static const String otherOptions = 'other-options';
