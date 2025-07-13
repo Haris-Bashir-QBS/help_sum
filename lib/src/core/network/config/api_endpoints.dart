@@ -15,7 +15,10 @@ enum ApiEndpoints {
   addCard,
   getCards,
   deleteCard,
-  setDefaultCard;
+  setDefaultCard,
+
+  /// ================= Services =======================
+  getServicesByCategory;
 
   String get value {
     switch (this) {
@@ -44,6 +47,10 @@ enum ApiEndpoints {
         return "/card"; // Will be appended with /:cardId
       case ApiEndpoints.setDefaultCard:
         return "/card"; // Will be appended with /:cardId
+
+      /// ================= Services =======================
+      case ApiEndpoints.getServicesByCategory:
+        return "/service/category"; // Will be appended with /:categoryId
     }
   }
 }

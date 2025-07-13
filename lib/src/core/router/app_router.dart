@@ -15,6 +15,8 @@ import 'package:help_sum/src/features/core/common/main_navigation/domain/model/j
 import 'package:help_sum/src/features/core/common/main_navigation/pages/main_navigation_page.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_categories_listing_page.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_service_providers_listing_page.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/services_per_category_page.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/category_route_params.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/screens/add_card_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/screens/card_details_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/screens/payment_method_screen.dart';
@@ -77,6 +79,7 @@ final GoRouter appRouter = GoRouter(
     _findMerchant(),
     _createRequest(),
     _immediateBooking(),
+    _servicesPerCategory(),
     _jobDetail(),
     _manageJob(),
   ],
@@ -445,5 +448,21 @@ GoRoute _mapTracking() {
     path: '/map-tracking',
     name: AppRoutes.mapTracking,
     builder: (context, state) => const MapTrackingPage(),
+  );
+}
+
+GoRoute _servicesPerCategory() {
+  return GoRoute(
+    path: '/services-per-category',
+    name: AppRoutes.servicesPerCategory,
+    builder: (context, state) {
+      final CategoryRouteParams params = CategoryRouteParams.fromMap(
+        state.extra as Map<String, dynamic>,
+      );
+      return ServicesPerCategoryPage(
+        categoryId: params.categoryId,
+        categoryName: params.categoryName,
+      );
+    },
   );
 }

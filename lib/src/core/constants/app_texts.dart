@@ -248,6 +248,12 @@ class AppTexts {
     "Other",
   ];
 
+  // Services Related Texts
+  static const String searchServices = "Search services...";
+  static const String noServicesFound = "No services found";
+  static const String noServicesAvailable = "No services available";
+  static const String retry = "Retry";
+
   static const String continuee = "Continue";
   static const String actionCompletedSuccessfully =
       "Action completed successfully";

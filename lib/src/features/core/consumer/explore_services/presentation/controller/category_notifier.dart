@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/entities/category_entity.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_categories_usecase.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_categories_params.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_state.dart';
 
 class CategoryNotifier extends StateNotifier<CategoryState> {

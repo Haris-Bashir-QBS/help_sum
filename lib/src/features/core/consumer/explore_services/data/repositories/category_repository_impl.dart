@@ -2,8 +2,10 @@ import 'package:fpdart/fpdart.dart';
 import 'package:help_sum/src/core/errors/api_exceptions.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/datasources/remote/category_remote_datasource.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/entities/categories_response_entity.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/response/services_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/repositories/category_repository.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_categories_usecase.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_categories_params.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_services_params.dart';
 
 class CategoryRepositoryImpl implements CategoryRepository {
   final CategoryRemoteDataSource remoteDataSource;
@@ -28,6 +30,18 @@ class CategoryRepositoryImpl implements CategoryRepository {
       );
 
       return right(entity);
+    } on Failure catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ServicesResponseModel>> getServicesByCategory(
+    GetServicesParams params,
+  ) async {
+    try {
+      final response = await remoteDataSource.getServicesByCategory(params);
+      return right(response);
     } on Failure catch (e) {
       return left(Failure(message: e.message));
     }

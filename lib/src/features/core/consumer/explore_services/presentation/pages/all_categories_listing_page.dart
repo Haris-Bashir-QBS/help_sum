@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
-import 'package:help_sum/src/features/core/common/main_navigation/widgets/category_card.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/category_card.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_provider.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_state.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/category_skeleton.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/services_per_category_page.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/category_route_params.dart';
 
 class AllCategoriesListingPage extends ConsumerStatefulWidget {
   const AllCategoriesListingPage({super.key});
@@ -69,8 +74,9 @@ class _AllCategoriesListingPageState
 
   Widget _buildBody(CategoryState state) {
     if (state is GetCategoriesLoading) {
-      return const Center(
-        child: CircularProgressIndicator(color: AppPalette.primaryColor),
+      return Padding(
+        padding: EdgeInsets.all(16.w),
+        child: const CategorySkeleton(),
       );
     }
 
@@ -121,7 +127,14 @@ class _AllCategoriesListingPageState
                   title: category.name,
                   icon: category.icon,
                   onTap: () {
-                    // Handle category tap
+                    final params = CategoryRouteParams(
+                      categoryId: category.id,
+                      categoryName: category.name,
+                    );
+                    context.pushNamed(
+                      AppRoutes.servicesPerCategory,
+                      extra: params.toMap(),
+                    );
                   },
                 );
               },

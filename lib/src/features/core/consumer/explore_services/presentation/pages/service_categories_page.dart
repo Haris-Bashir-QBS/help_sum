@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
-import 'package:help_sum/src/features/core/common/main_navigation/widgets/category_card.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/category_card.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/heading_with_view_all.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/home_service_provider_card.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_provider.dart';
@@ -13,6 +13,7 @@ import 'package:help_sum/src/features/core/consumer/explore_services/presentatio
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/entities/category_entity.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/category_skeleton.dart';
 
 class ServiceCategoriesPage extends ConsumerStatefulWidget {
   const ServiceCategoriesPage({super.key});
@@ -103,12 +104,7 @@ class _ServiceCategoriesPageState extends ConsumerState<ServiceCategoriesPage> {
   }
 
   Widget _buildLoadingWidget() {
-    return SizedBox(
-      height: 200.h,
-      child: const Center(
-        child: CircularProgressIndicator(color: AppPalette.primaryColor),
-      ),
-    );
+    return const CategorySkeleton();
   }
 
   Widget _buildErrorWidget(String message) {
@@ -139,7 +135,7 @@ class _ServiceCategoriesPageState extends ConsumerState<ServiceCategoriesPage> {
         crossAxisCount: 3,
         crossAxisSpacing: 10.w,
         mainAxisSpacing: 10.h,
-        childAspectRatio: 1.0,
+        childAspectRatio: 1,
       ),
       itemCount: displayCategories.length,
       itemBuilder: (context, index) {

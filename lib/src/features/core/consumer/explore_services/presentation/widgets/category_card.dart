@@ -19,7 +19,9 @@ class CategoryCard extends StatelessWidget {
       onTap: onTap,
       child: Card(
         color: Colors.white,
-        elevation: 3.0,
+        elevation: 8.0,
+        margin: EdgeInsets.zero,
+        shadowColor: Colors.black.withOpacity(0.2),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0.r),
         ),
@@ -29,7 +31,7 @@ class CategoryCard extends StatelessWidget {
             if (icon != null && icon!.isNotEmpty)
               Image.asset(icon!, width: 40, height: 40)
             else
-              Icon(Icons.category, size: 40.sp, color: Colors.grey[600]),
+              Icon(Icons.photo, size: 40.sp, color: Colors.grey[600]),
             SizedBox(height: 5.0.h),
             CustomText(
               text: title,

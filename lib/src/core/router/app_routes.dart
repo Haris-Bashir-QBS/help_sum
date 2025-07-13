@@ -42,6 +42,7 @@ class AppRoutes {
   static const String findMerchant = '/findMerchant';
   static const String createRequest = '/createRequest';
   static const String immediateBooking = '/immediateBooking';
+  static const String servicesPerCategory = '/servicesPerCategory';
   //
   static const String jobDetail = '/JobDetail';
   static const String manageJob = '/manageJob';
