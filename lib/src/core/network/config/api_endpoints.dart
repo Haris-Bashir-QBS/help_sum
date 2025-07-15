@@ -21,7 +21,9 @@ enum ApiEndpoints {
   updateProfile,
 
   /// ================= Services =======================
-  getServicesByCategory;
+  getServicesByCategory,
+  merchantsNearby,
+  createJob;
 
   String get value {
     switch (this) {
@@ -62,6 +64,10 @@ enum ApiEndpoints {
       /// ================= Services =======================
       case ApiEndpoints.getServicesByCategory:
         return "/service/category"; // Will be appended with /:categoryId
+      case ApiEndpoints.merchantsNearby:
+        return "/job/merchants/nearby";
+      case ApiEndpoints.createJob:
+        return "/job";
     }
   }
 }

@@ -14,6 +14,7 @@ import 'package:help_sum/src/features/core/common/intro/onboarding/pages/onboard
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/main_navigation_page.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/portfolio_screen.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/Booking_route_params.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_categories_listing_page.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_service_providers_listing_page.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/services_per_category_page.dart';
@@ -28,12 +29,11 @@ import 'package:help_sum/src/features/core/common/profile/presentation/pages/pro
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/create_request_screen.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/find_merchant_screen.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/immediate_book_screen.dart';
-import 'package:help_sum/src/features/core/merchant/domain/models/service_provider_model.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/job_detail_screen.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/change_description_page.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/change_rate_page.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/manage_job_page.dart';
-import 'package:help_sum/src/features/core/merchant/presentation/pages/merchant_profile_page.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/merchant_view_profile_page.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/booking_detail_page.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/other_options_page.dart';
 import 'package:help_sum/src/features/core/common/chat/pages/chat_screen.dart';
@@ -41,6 +41,7 @@ import 'package:help_sum/src/features/core/common/map_tracking/pages/map_trackin
 
 import '../../features/auth/presentation/screens/create_schdule_page.dart';
 import '../../features/core/common/profile/presentation/pages/edit_basic_info_screen.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/create_job_route_model.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/${AppRoutes.splash}',
@@ -114,7 +115,10 @@ GoRoute _findMerchant() {
   return GoRoute(
     path: '/find-merchant',
     name: AppRoutes.findMerchant,
-    builder: (context, state) => const FindMerchantScreen(),
+    builder: (context, state) {
+      BookingRouteParams? params = state.extra as BookingRouteParams?;
+      return FindMerchantScreen(bookingRouteParams: params);
+    },
   );
 }
 
@@ -130,7 +134,10 @@ GoRoute _createRequest() {
   return GoRoute(
     path: '/create-request',
     name: AppRoutes.createRequest,
-    builder: (context, state) => const CreateRequestScreen(),
+    builder: (context, state) {
+      final args = state.extra as CreateJobRouteModel;
+      return CreateRequestScreen(args: args);
+    },
   );
 }
 
@@ -326,10 +333,10 @@ GoRoute _merchantProfile() {
     path: '/merchant-profile',
     name: AppRoutes.merchantProfile,
     pageBuilder: (context, state) {
-      final serviceProvider = state.extra as ServiceProviderModel;
+      final createJobArgs = state.extra as CreateJobRouteModel;
       return CustomTransitionPage(
         key: state.pageKey,
-        child: MerchantProfilePage(serviceProvider: serviceProvider),
+        child: MerchantViewProfilePage(routeModel: createJobArgs),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(0.0, 1.0);
           const end = Offset.zero;

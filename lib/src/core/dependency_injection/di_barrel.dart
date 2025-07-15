@@ -6,6 +6,11 @@ import 'package:help_sum/src/features/auth/domain/usecases/otp_use_case.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/resend_otp_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/update_user_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/upload_file_usecase.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/datasources/remote/merchant_view_profile_remote_datasource.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/datasources/remote/merchant_view_profile_remote_datasource_impl.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/repositories/merchant_view_profile_repository_impl.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/domain/repositories/merchant_view_profile_repository.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_merchant_view_profile_usecase.dart';
 
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';
 import '../../features/auth/data/datasources/remote/auth_remote_datasource_impl.dart';
@@ -26,6 +31,12 @@ import '../../features/core/common/payment/domain/usecases/get_cards_usecase.dar
 import '../../features/core/common/payment/domain/usecases/delete_card_usecase.dart';
 import '../../features/core/common/payment/domain/usecases/set_default_card_usecase.dart';
 import '../../features/core/consumer/explore_services/domain/usecases/get_services_by_category_usecase.dart';
+import '../../features/core/consumer/explore_services/domain/usecases/get_nearby_merchants_usecase.dart';
 import '../network/client/dio_client.dart';
+import '../../features/core/consumer/booking/data/datasources/booking_remote_datasource.dart';
+import '../../features/core/consumer/booking/data/datasources/booking_remote_datasource_impl.dart';
+import '../../features/core/consumer/booking/data/repositories/booking_repository.dart';
+import '../../features/core/consumer/booking/data/repositories/booking_repository_impl.dart';
+import '../../features/core/consumer/booking/domain/usecases/create_job_usecase.dart';
 
 part 'di_container.dart';

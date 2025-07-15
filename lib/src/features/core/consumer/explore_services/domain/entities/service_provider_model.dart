@@ -76,4 +76,4 @@ class ServiceProviderModel {
       'completedJobsLabel': completedJobsLabel,
     };
   }
-} 
+}

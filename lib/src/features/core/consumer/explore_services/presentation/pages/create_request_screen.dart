@@ -10,15 +10,22 @@ import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/custom_text_formfield.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:help_sum/src/features/core/consumer/booking/data/models/job_request_model.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/controller/create_job_provider.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/controller/create_job_notifier.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/create_job_route_model.dart';
 
-class CreateRequestScreen extends StatefulWidget {
-  const CreateRequestScreen({super.key});
+class CreateRequestScreen extends ConsumerStatefulWidget {
+  final CreateJobRouteModel args;
+  const CreateRequestScreen({super.key, required this.args});
 
   @override
-  State<CreateRequestScreen> createState() => _CreateRequestScreenState();
+  ConsumerState<CreateRequestScreen> createState() =>
+      _CreateRequestScreenState();
 }
 
-class _CreateRequestScreenState extends State<CreateRequestScreen> {
+class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
   final TextEditingController _workTimeController = TextEditingController();
@@ -26,6 +33,10 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
   final TextEditingController _descriptionController = TextEditingController();
 
   DateTime? selectedDate;
+  String? _address;
+  String? _city;
+  String? _state;
+  List<String> _media = [];
 
   Future<void> _pickDate() async {
     final picked = await showDatePicker(
@@ -110,6 +121,16 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final createJobState = ref.watch(createJobProvider);
+    ref.listen(createJobProvider, (previous, next) {
+      if (next is CreateJobSuccess) {
+        AppUtils.showSnackBar(context, next.response.message);
+        _clearForm();
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      } else if (next is CreateJobError) {
+        AppUtils.showSnackBar(context, next.message);
+      }
+    });
     return Scaffold(
       appBar: AppBar(title: const Text('Create Request')),
       body: SafeArea(
@@ -148,12 +169,16 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: CustomButton(
-                text: AppTexts.next,
+                text:
+                    createJobState is CreateJobLoading
+                        ? 'Loading...'
+                        : AppTexts.next,
                 textColor: Colors.white,
                 color: Colors.blue,
-                onPressed: () {
-                  _showConfirmationDialog();
-                },
+                onPressed:
+                    createJobState is CreateJobLoading
+                        ? () {}
+                        : _showConfirmationDialog,
               ),
             ),
             30.verticalSpace,
@@ -170,24 +195,38 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
       title: AppTexts.areYouSureToPostThisJob,
       primaryButtonText: AppTexts.yes,
       onPrimaryTap: () {
-        _showAcknowledgeDialog();
+        _submitJobRequest();
       },
       secondaryButtonText: AppTexts.no,
-      onSecondaryTap: () {},
     );
   }
 
-  void _showAcknowledgeDialog() {
-    AnimatedStatusDialog.show(
-      context: context,
-      isSuccess: true,
-      icon: Image.asset(AppAssets.successIcon, width: 130, height: 130),
-      title: AppTexts.requestSuccessSubtitle,
-      message: "",
-      primaryButtonText: AppTexts.continuee,
-      onPrimaryTap: () {
-        context.pop();
-      },
+  void _submitJobRequest() {
+    final jobRequest = JobRequestModel(
+      merchantId: widget.args.merchantId,
+      serviceId: widget.args.serviceId,
+      title: 'Testing Job',
+      description: _descriptionController.text,
+      address: _address ?? 'gulshan',
+      city: _city ?? 'karachi',
+      state: _state ?? 'sindh',
+      lat: widget.args.lat,
+      long: widget.args.long,
+      date: _dateController.text,
+      time: _timeController.text,
+      estimatedWorkTime: int.tryParse(_workTimeController.text) ?? 0,
+      offer: _offerController.text,
+      media: _media,
     );
+    ref.read(createJobProvider.notifier).createJob(jobRequest);
+  }
+
+  void _clearForm() {
+    _dateController.clear();
+    _timeController.clear();
+    _workTimeController.clear();
+    _offerController.clear();
+    _descriptionController.clear();
+    // Optionally clear other fields
   }
 }
