@@ -136,6 +136,7 @@ class AuthNotifier extends _$AuthNotifier {
       _currentUser = user;
       await LocalStorageService().saveAccessToken(token);
       await LocalStorageService().saveUser(UserModel.fromEntity(user));
+      ref.read(currentUserProvider.notifier).setUser(user);
       state = LoginSuccess(user);
     });
   }
@@ -167,7 +168,7 @@ class AuthNotifier extends _$AuthNotifier {
     result.match((failure) => state = OtpError(failure.message), (user) async {
       _currentUser = user;
       await LocalStorageService().saveUser(UserModel.fromEntity(user));
-
+      ref.read(currentUserProvider.notifier).setUser(_currentUser!);
       state = OtpSuccess(user);
     });
   }

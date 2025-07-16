@@ -82,7 +82,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
         InfoRow(label: AppTexts.lastName, value: user.lastName ?? ""),
       ],
       onPressed: () {
-        context.pushNamed(AppRoutes.editBasicInfo, extra: user.isVerified);
+        context.pushNamed(AppRoutes.editBasicInfo, extra: user);
       },
     );
   }
@@ -99,7 +99,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
         InfoRow(label: AppTexts.phoneNumber, value: user.phone ?? ""),
       ],
       onPressed: () {
-        context.pushNamed(AppRoutes.editContactInfo);
+        context.pushNamed(AppRoutes.editBasicInfo, extra: user);
       },
     );
   }

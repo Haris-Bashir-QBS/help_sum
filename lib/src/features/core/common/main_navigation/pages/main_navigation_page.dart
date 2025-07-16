@@ -42,6 +42,7 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
         ProfileDetailsPage(),
       ]);
     } else if (userRole == AppRole.merchant.name) {
+      _selectedIndex = 1;
       _pages.addAll([
         const AllJobsScreen(),
         MerchantHome(),
