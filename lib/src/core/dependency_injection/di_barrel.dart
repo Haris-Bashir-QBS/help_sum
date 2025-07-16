@@ -13,6 +13,11 @@ import 'package:help_sum/src/features/core/consumer/explore_services/data/dataso
 import 'package:help_sum/src/features/core/consumer/explore_services/data/repositories/merchant_view_profile_repository_impl.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/repositories/merchant_view_profile_repository.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_merchant_view_profile_usecase.dart';
+import 'package:help_sum/src/features/core/merchant/data/data_sources/remote/merchant_jobs_remote_source.dart';
+import 'package:help_sum/src/features/core/merchant/data/data_sources/remote/merchant_jobs_remote_source_impl.dart';
+import 'package:help_sum/src/features/core/merchant/data/repositories/merchant_jobs_repository_impl.dart';
+import 'package:help_sum/src/features/core/merchant/domain/repositories/merchant_jobs_repository.dart';
+import 'package:help_sum/src/features/core/merchant/domain/usecases/fetch_jobs_by_type_merchant.dart';
 
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';
 import '../../features/auth/data/datasources/remote/auth_remote_datasource_impl.dart';

@@ -6,6 +6,7 @@ import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
+import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
@@ -382,8 +383,10 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
         text: "Sign out",
         textColor: Colors.white,
         color: const Color(0xFF0D6EFD),
-        onPressed: () {
-          context.pushNamed(AppRoutes.roleSelection, extra: true);
+        onPressed: () async {
+          await LocalStorageService().clearAll();
+          ref.read(currentUserProvider.notifier).clearUser();
+          context.go(AppRoutes.roleSelection, extra: true);
           debugPrint('Signing out...');
         },
       ),

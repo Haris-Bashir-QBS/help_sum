@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -7,18 +8,18 @@ import 'package:help_sum/src/core/enums/job_status.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
-import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_card.dart';
+import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
 import 'package:help_sum/src/widgets/app_tab_bar.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 
-class AllJobsScreen extends StatefulWidget {
+class AllJobsScreen extends ConsumerStatefulWidget {
   const AllJobsScreen({super.key});
 
   @override
-  State<AllJobsScreen> createState() => _AllJobsScreenState();
+  ConsumerState<AllJobsScreen> createState() => _AllJobsScreenState();
 }
 
-class _AllJobsScreenState extends State<AllJobsScreen> {
+class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   final tabs = [
     'All',
     'On Going',
@@ -38,6 +39,7 @@ class _AllJobsScreenState extends State<AllJobsScreen> {
   @override
   void initState() {
     jobs = AppStaticData.dummyJobs;
+    ref.read(merchantJobsNotifierProvider.notifier).getAllJobsByType();
     super.initState();
   }
 

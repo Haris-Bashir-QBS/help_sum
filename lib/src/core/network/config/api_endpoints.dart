@@ -20,6 +20,7 @@ enum ApiEndpoints {
   setDefaultCard,
   updateProfile,
   merchantSetup,
+  jobMerchantByType,
 
   /// ================= Services =======================
   getServicesByCategory,
@@ -74,6 +75,8 @@ enum ApiEndpoints {
         return "/job/consumer/all";
       case ApiEndpoints.merchantSetup:
         return "/$_auth/merchant-account-setup";
+      case ApiEndpoints.jobMerchantByType:
+        return '/job/merchant/all';
     }
   }
 }
