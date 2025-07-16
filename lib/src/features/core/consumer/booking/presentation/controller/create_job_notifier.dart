@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_request_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/domain/usecases/create_job_usecase.dart';
-import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 
 abstract class CreateJobState {}
 

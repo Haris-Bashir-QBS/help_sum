@@ -20,4 +20,14 @@ class BookingRepositoryImpl implements BookingRepository {
       return left(Failure(message: e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, JobResponseModel>> fetchJobsByType(String type) async {
+    try {
+      final response = await remoteDataSource.fetchJobsByType(type);
+      return right(response);
+    } on Failure catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
 }

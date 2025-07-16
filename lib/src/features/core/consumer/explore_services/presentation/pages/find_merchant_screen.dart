@@ -144,7 +144,7 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                               onMerchantTap: (merchant) {
                                 if (widget.bookingRouteParams != null) {
                                   context.pushNamed(
-                                    AppRoutes.createRequest,
+                                    AppRoutes.merchantProfile,
                                     extra: CreateJobRouteModel(
                                       merchantId: state.merchants.first.id,
                                       serviceId:

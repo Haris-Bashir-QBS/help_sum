@@ -23,7 +23,9 @@ enum ApiEndpoints {
   /// ================= Services =======================
   getServicesByCategory,
   merchantsNearby,
-  createJob;
+  createJob,
+  fetchJobs
+  ;
 
   String get value {
     switch (this) {
@@ -68,6 +70,8 @@ enum ApiEndpoints {
         return "/job/merchants/nearby";
       case ApiEndpoints.createJob:
         return "/job";
+        case ApiEndpoints.fetchJobs:
+         return "/job/consumer/all";
     }
   }
 }

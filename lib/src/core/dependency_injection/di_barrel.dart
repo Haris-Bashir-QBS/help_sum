@@ -6,6 +6,7 @@ import 'package:help_sum/src/features/auth/domain/usecases/otp_use_case.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/resend_otp_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/update_user_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/upload_file_usecase.dart';
+import 'package:help_sum/src/features/core/consumer/booking/domain/usecases/fetch_jobs_by_type_usecase.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/datasources/remote/merchant_view_profile_remote_datasource.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/datasources/remote/merchant_view_profile_remote_datasource_impl.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/repositories/merchant_view_profile_repository_impl.dart';

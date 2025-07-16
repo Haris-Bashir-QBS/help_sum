@@ -9,7 +9,7 @@ import 'package:help_sum/src/features/core/merchant/presentation/pages/all_jobs_
 import 'package:help_sum/src/features/core/merchant/presentation/pages/merchant_home.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/all_booking_screen.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/income_history.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/Home_categories_page.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/home_categories_page.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 
 class MainNavigationPage extends ConsumerStatefulWidget {

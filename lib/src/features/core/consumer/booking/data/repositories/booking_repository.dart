@@ -5,4 +5,5 @@ import 'package:help_sum/src/features/core/consumer/booking/data/models/job_resp
 
 abstract class BookingRepository {
   Future<Either<Failure, JobResponseModel>> createJob(JobRequestModel params);
+  Future<Either<Failure, JobResponseModel>> fetchJobsByType(String type);
 }

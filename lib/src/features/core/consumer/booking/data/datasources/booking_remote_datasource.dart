@@ -3,4 +3,5 @@ import 'package:help_sum/src/features/core/consumer/booking/data/models/job_resp
 
 abstract class BookingRemoteDataSource {
   Future<JobResponseModel> createJob(JobRequestModel params);
+  Future<JobResponseModel> fetchJobsByType(String type);
 }

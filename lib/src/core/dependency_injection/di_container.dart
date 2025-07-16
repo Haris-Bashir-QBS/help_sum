@@ -130,6 +130,7 @@ Future<void> _initBookingDependencies() async {
     () => BookingRepositoryImpl(remoteDataSource: sl()),
   );
   sl.registerLazySingleton(() => CreateJobUseCase(sl()));
+  sl.registerLazySingleton(() => FetchJobsByTypeUseCase(sl()));
 }
 
 Future<void> _initMerchantViewProfileDependencies() async {
@@ -141,6 +142,3 @@ Future<void> _initMerchantViewProfileDependencies() async {
   );
   sl.registerLazySingleton(() => GetMerchantViewProfileUseCase(sl()));
 }
-
-GetMerchantViewProfileUseCase get getMerchantViewProfileUseCase =>
-    sl<GetMerchantViewProfileUseCase>();

@@ -21,26 +21,55 @@ class AppUtils {
     );
   }
 
-  /// Picks a time, restricts past time if needed (only for same-day selection).
-  static Future<TimeOfDay?> pickTime(
-    BuildContext context, {
-    bool restrictPast = false,
-  }) async {
-    final now = TimeOfDay.now();
-    final picked = await showTimePicker(context: context, initialTime: now);
+static Future<TimeOfDay?> pickTime(
+  BuildContext context, {
+  bool restrictPast = false,
+  TimeOfDay? initialTime,
+}) async {
+  final now = TimeOfDay.now();
+  final time = initialTime ?? now;
 
-    if (picked != null && restrictPast) {
-      final pickedMinutes = picked.hour * 60 + picked.minute;
-      final nowMinutes = now.hour * 60 + now.minute;
+  final picked = await showTimePicker(
+    context: context,
+    initialTime: time,
+    builder: (context, child) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          timePickerTheme: const TimePickerThemeData(
+            backgroundColor: Colors.white,
+            hourMinuteTextColor: Colors.black,
+            dialHandColor: Colors.blue,
+          ),
+          colorScheme: ColorScheme.light(
+            primary: Colors.blue, // OK/Cancel buttons
+            onPrimary: Colors.white,
+            onSurface: Colors.black,
+          ),
+        ),
+        child: child!,
+      );
+    },
+  );
 
-      if (pickedMinutes < nowMinutes) {
-        showSnackBar(context, 'Please select a future time');
-        return null;
-      }
+  if (picked != null && restrictPast) {
+    final pickedMinutes = picked.hour * 60 + picked.minute;
+    final nowMinutes = now.hour * 60 + now.minute;
+
+    if (pickedMinutes < nowMinutes) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a future time'),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return null;
     }
-
-    return picked;
   }
+
+  return picked;
+}
+
 
   static void showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(

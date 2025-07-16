@@ -1,7 +1,7 @@
 class JobResponseModel {
   final bool status;
   final int code;
-  final JobData data;
+  final JobListData data;
   final String message;
 
   JobResponseModel({
@@ -15,16 +15,67 @@ class JobResponseModel {
     return JobResponseModel(
       status: json['status'] ?? false,
       code: json['code'] ?? 0,
-      data: JobData.fromJson(json['data'] ?? {}),
+      data: JobListData.fromJson(json['data'] ?? {}),
       message: json['message'] ?? '',
     );
+  }
+}
+
+class JobListData {
+  final List<JobData> data;
+  final Pagination pagination;
+
+  JobListData({required this.data, required this.pagination});
+
+  factory JobListData.fromJson(Map<String, dynamic> json) {
+    return JobListData(
+      data:
+          (json['data'] as List<dynamic>? ?? [])
+              .map((e) => JobData.fromJson(e))
+              .toList(),
+      pagination: Pagination.fromJson(json['pagination'] ?? {}),
+    );
+  }
+}
+
+class Pagination {
+  final int total;
+  final int page;
+  final int limit;
+  final int totalPages;
+
+  Pagination({
+    required this.total,
+    required this.page,
+    required this.limit,
+    required this.totalPages,
+  });
+
+  factory Pagination.fromJson(Map<String, dynamic> json) {
+    return Pagination(
+      total: json['total'] ?? 0,
+      page: json['page'] ?? 1,
+      limit: json['limit'] ?? 10,
+      totalPages: json['totalPages'] ?? 1,
+    );
+  }
+}
+
+class ServiceInfo {
+  final String id;
+  final String name;
+
+  ServiceInfo({required this.id, required this.name});
+
+  factory ServiceInfo.fromJson(Map<String, dynamic> json) {
+    return ServiceInfo(id: json['_id'] ?? '', name: json['name'] ?? '');
   }
 }
 
 class JobData {
   final String consumerId;
   final String merchantId;
-  final String serviceId;
+  final ServiceInfo serviceId;
   final String title;
   final String description;
   final JobLocation location;
@@ -78,7 +129,7 @@ class JobData {
     return JobData(
       consumerId: json['consumerId'] ?? '',
       merchantId: json['merchantId'] ?? '',
-      serviceId: json['serviceId'] ?? '',
+      serviceId: ServiceInfo.fromJson(json['serviceId'] ?? {}),
       title: json['title'] ?? '',
       description: json['description'] ?? '',
       location: JobLocation.fromJson(json['location'] ?? {}),

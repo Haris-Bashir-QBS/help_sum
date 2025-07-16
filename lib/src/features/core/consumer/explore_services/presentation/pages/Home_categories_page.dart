@@ -180,7 +180,29 @@ class _ServiceCategoriesPageState extends ConsumerState<ServiceCategoriesPage> {
         if (categoryState is GetCategoriesLoading)
           const RecommendedMerchantsShimmer()
         else
-          Center(child: CustomText(text: "No Recommended Merchants Found")),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                20.verticalSpace,
+                Icon(
+                  Icons.search_off,
+                  size: 48,
+                  color: AppPalette.darkGreyColor,
+                ),
+                SizedBox(height: 12),
+                CustomText(
+                  text: AppTexts.noRecommendedMerchants,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  maxLines: 2,
+                  color: AppPalette.darkGreyColor,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
         // SizedBox(
         //   height: 150.h,
         //   child: ListView.builder(

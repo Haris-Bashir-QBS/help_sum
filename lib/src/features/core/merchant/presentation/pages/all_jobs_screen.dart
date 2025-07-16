@@ -59,14 +59,15 @@ class _AllJobsScreenState extends State<AllJobsScreen> {
       child: ListView.builder(
         itemCount: jobs.length,
         itemBuilder: (c, i) {
-          return BookingCard(
-            job: jobs[i],
-            showStatus: true,
-            index: i,
-            onTap: () {
-              _navigateToJobDetailScreen(i);
-            },
-          );
+          return Container();
+          // return BookingCard(
+          //   job: jobs[i],
+          //   showStatus: true,
+          //   index: i,
+          //   onTap: () {
+          //     _navigateToJobDetailScreen(i);
+          //   },
+          // );
         },
       ),
     );

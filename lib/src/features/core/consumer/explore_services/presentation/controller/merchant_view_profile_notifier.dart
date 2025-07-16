@@ -43,5 +43,5 @@ final merchantViewProfileProvider = StateNotifierProvider.family<
   MerchantViewProfileState,
   String
 >((ref, merchantId) {
-  return MerchantViewProfileNotifier(getMerchantViewProfileUseCase);
+  return MerchantViewProfileNotifier(sl());
 });
