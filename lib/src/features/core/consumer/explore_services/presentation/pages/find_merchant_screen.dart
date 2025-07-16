@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -5,23 +7,32 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/Booking_route_params.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/merchant_list_tab_view.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/recommended_service_provider_card.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/nearby_merchants_provider.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/nearby_merchants_state.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/create_job_route_model.dart';
+import 'package:help_sum/src/core/router/app_routes.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/merchant_list_shimmer.dart';
 
-class FindMerchantScreen extends StatefulWidget {
-  const FindMerchantScreen({super.key});
+class FindMerchantScreen extends ConsumerStatefulWidget {
+  final BookingRouteParams? bookingRouteParams;
+  const FindMerchantScreen({super.key, this.bookingRouteParams});
 
   @override
-  State<FindMerchantScreen> createState() => _FindMerchantScreenState();
+  ConsumerState<FindMerchantScreen> createState() => _FindMerchantScreenState();
 }
 
-class _FindMerchantScreenState extends State<FindMerchantScreen>
+class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
   GoogleMapController? _mapController;
+  final ScrollController _listScrollController = ScrollController();
 
   static const CameraPosition _initialCameraPosition = CameraPosition(
     target: LatLng(33.6844, 73.0479), // Example: Islamabad, Pakistan
@@ -29,36 +40,28 @@ class _FindMerchantScreenState extends State<FindMerchantScreen>
   );
   var showBottomButtons = false;
   var showRecommenededMerchants = false;
-  final List<Map<String, String>> _dummyMerchants = [
-    {
-      'name': 'Michael',
-      'rating': '4.3',
-      'distance': '5.5 Kilo Meter',
-      'price': '\$ 54 per hour',
-      'imageUrl': 'https://picsum.photos/id/237/200/200',
-    },
-    {
-      'name': 'James',
-      'rating': '4.2',
-      'distance': '5.5 Kilo Meter',
-      'price': '\$ 54 per hour',
-      'imageUrl': 'https://picsum.photos/id/238/200/200',
-    },
-    {
-      'name': 'Ahmed',
-      'rating': '4.2',
-      'distance': '5.5 Kilo Meter',
-      'price': '\$ 54 per hour',
-      'imageUrl': 'https://picsum.photos/id/239/200/200',
-    },
-  ];
+
+  // For demo: set these to your desired coordinates or get from user/location
+  final double lat = 24.90124049385213;
+  final double long = 67.10843870918309;
 
   @override
   void initState() {
+    log("Category Id is ${widget.bookingRouteParams?.categoryId}");
+    log("Service Id is ${widget.bookingRouteParams?.serviceId}");
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleTabSelection);
     _searchController.addListener(_handleSearchInput);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(nearbyMerchantsProvider.notifier)
+          .fetchNearbyMerchants(
+            lat: lat,
+            long: long,
+            serviceId: widget.bookingRouteParams?.serviceId,
+          );
+    });
   }
 
   void _handleTabSelection() {
@@ -111,26 +114,70 @@ class _FindMerchantScreenState extends State<FindMerchantScreen>
                   TabBarView(
                     controller: _tabController,
                     children: [
+                      Container(),
                       // Map Tab Content
-                      Stack(
-                        children: [
-                          GoogleMap(
-                            mapType: MapType.normal,
-                            initialCameraPosition: _initialCameraPosition,
-                            onMapCreated: (GoogleMapController controller) {
-                              _mapController = controller;
-                            },
-                          ),
-                        ],
-                      ),
+                      // Stack(
+                      //   children: [
+                      //     GoogleMap(
+                      //       mapType: MapType.normal,
+                      //       initialCameraPosition: _initialCameraPosition,
+                      //       onMapCreated: (GoogleMapController controller) {
+                      //         _mapController = controller;
+                      //       },
+                      //     ),
+                      //   ],
+                      // ),
                       // List Tab Content
-                      MerchantTabView(merchants: _dummyMerchants),
+                      Builder(
+                        builder: (context) {
+                          final state = ref.watch(nearbyMerchantsProvider);
+                          if (state is NearbyMerchantsLoading ||
+                              state is NearbyMerchantsInitial) {
+                            return const MerchantListShimmer();
+                          } else if (state is NearbyMerchantsError) {
+                            return Center(child: Text(state.message));
+                          } else if (state is NearbyMerchantsLoaded) {
+                            return MerchantTabView(
+                              merchants: state.merchants,
+                              scrollController: _listScrollController,
+                              hasMore: state.hasMore,
+                              onMerchantTap: (merchant) {
+                                if (widget.bookingRouteParams != null) {
+                                  context.pushNamed(
+                                    AppRoutes.merchantProfile,
+                                    extra: CreateJobRouteModel(
+                                      merchantId: state.merchants.first.id,
+                                      serviceId:
+                                          widget.bookingRouteParams!.serviceId,
+                                      categoryId:
+                                          widget.bookingRouteParams!.categoryId,
+                                      lat: lat.toString(),
+                                      long: long.toString(),
+                                    ),
+                                  );
+                                }
+                              },
+                              onEndReached: () {
+                                ref
+                                    .read(nearbyMerchantsProvider.notifier)
+                                    .loadMore(
+                                      lat: lat,
+                                      long: long,
+                                      serviceId:
+                                          widget.bookingRouteParams?.serviceId,
+                                    );
+                              },
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
                     ],
                   ),
                   if (showBottomButtons && _tabController.index == 0)
                     _buildBottomButtons(),
                   if (showRecommenededMerchants && _tabController.index == 0)
-                    _recommendedServiceproviders(),
+                    _recommendedServiceProviders(),
                 ],
               ),
             ),
@@ -160,7 +207,7 @@ class _FindMerchantScreenState extends State<FindMerchantScreen>
     );
   }
 
-  Widget _recommendedServiceproviders() {
+  Widget _recommendedServiceProviders() {
     return Positioned(
       bottom: 20,
       left: 0,
@@ -169,17 +216,44 @@ class _FindMerchantScreenState extends State<FindMerchantScreen>
         height: 150.h,
         child: ListView.separated(
           padding: EdgeInsets.only(left: 10.w),
-          itemCount: _dummyMerchants.length,
+          itemCount:
+              (ref.watch(nearbyMerchantsProvider) is NearbyMerchantsLoaded)
+                  ? (ref.watch(nearbyMerchantsProvider)
+                          as NearbyMerchantsLoaded)
+                      .merchants
+                      .length
+                  : 0,
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
-            final merchant = _dummyMerchants[index];
+            final state = ref.watch(nearbyMerchantsProvider);
+            final merchant =
+                (state is NearbyMerchantsLoaded)
+                    ? state.merchants[index]
+                    : null;
+            if (merchant == null) return const SizedBox.shrink();
             return RecommendedServiceProviderCard(
-              name: merchant['name']!,
-              rating: merchant['rating']!,
-              distance: merchant['distance']!,
-              pricePerHour: merchant['price']!,
-              imageUrl: merchant['imageUrl']!,
-              onTap: () {},
+              name: '${merchant.firstName} ${merchant.lastName}',
+              rating: null,
+              distance: 'N/A',
+              pricePerHour: '\$ ${merchant.hourlyRate} per hour',
+              imageUrl:
+                  merchant.image ??
+                  (merchant.media.isNotEmpty ? merchant.media.first : ''),
+              onTap: () {
+                if (widget.bookingRouteParams != null) {
+                  print("Hereeeeee");
+                  context.pushNamed(
+                    AppRoutes.createRequest,
+                    extra: CreateJobRouteModel(
+                      merchantId: merchant.id,
+                      serviceId: widget.bookingRouteParams!.serviceId,
+                      categoryId: widget.bookingRouteParams!.categoryId,
+                      lat: lat.toString(),
+                      long: long.toString(),
+                    ),
+                  );
+                }
+              },
             );
           },
           separatorBuilder: (BuildContext context, int index) {

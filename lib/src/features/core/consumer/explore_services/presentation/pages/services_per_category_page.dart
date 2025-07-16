@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
+import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/response/services_response_model.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/Booking_route_params.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/services_provider.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/services_state.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/service_card.dart';
@@ -141,9 +144,12 @@ class _ServicesPerCategoryPageState
               title: service.name,
               photo: service.photo,
               onTap: () {
-                // TODO: Navigate to service details
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Service: ${service.name}')),
+                context.pushNamed(
+                  AppRoutes.findMerchant,
+                  extra: BookingRouteParams(
+                    serviceId: service.id,
+                    categoryId: widget.categoryId,
+                  ),
                 );
               },
             );

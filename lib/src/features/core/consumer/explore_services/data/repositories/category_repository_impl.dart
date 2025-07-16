@@ -6,6 +6,8 @@ import 'package:help_sum/src/features/core/consumer/explore_services/data/models
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/repositories/category_repository.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_categories_params.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_services_params.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/response/merchant_response_model.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/request/Booking_request_model.dart';
 
 class CategoryRepositoryImpl implements CategoryRepository {
   final CategoryRemoteDataSource remoteDataSource;
@@ -41,6 +43,18 @@ class CategoryRepositoryImpl implements CategoryRepository {
   ) async {
     try {
       final response = await remoteDataSource.getServicesByCategory(params);
+      return right(response);
+    } on Failure catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, MerchantResponseModel>> getNearbyMerchants(
+    BookingRequestModel params,
+  ) async {
+    try {
+      final response = await remoteDataSource.getNearbyMerchants(params);
       return right(response);
     } on Failure catch (e) {
       return left(Failure(message: e.message));

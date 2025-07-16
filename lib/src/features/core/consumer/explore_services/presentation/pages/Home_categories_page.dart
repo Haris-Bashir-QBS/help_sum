@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/category_route_params.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/category_card.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/heading_with_view_all.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/home_service_provider_card.dart';
@@ -12,8 +13,12 @@ import 'package:help_sum/src/features/core/consumer/explore_services/presentatio
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_state.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/entities/category_entity.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/recommended_merchants_shimmer.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/category_skeleton.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/merchant_list_shimmer.dart';
+import 'package:help_sum/src/widgets/custom_text.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ServiceCategoriesPage extends ConsumerStatefulWidget {
   const ServiceCategoriesPage({super.key});
@@ -61,7 +66,7 @@ class _ServiceCategoriesPageState extends ConsumerState<ServiceCategoriesPage> {
                 children: [
                   _categoryGrid(context, categoryAsync),
                   SizedBox(height: 20.h),
-                  _recommendedSection(context),
+                  _recommendedMerchantsSection(context),
                 ],
               ),
             ),
@@ -144,14 +149,24 @@ class _ServiceCategoriesPageState extends ConsumerState<ServiceCategoriesPage> {
           title: category.name,
           icon: category.icon,
           onTap: () {
-            context.pushNamed(AppRoutes.findMerchant);
+            final params = CategoryRouteParams(
+              categoryId: category.id,
+              categoryName: category.name,
+            );
+            context.pushNamed(
+              AppRoutes.servicesPerCategory,
+              extra: params.toMap(),
+            );
+
+            //    context.pushNamed(AppRoutes.findMerchant);
           },
         );
       },
     );
   }
 
-  Widget _recommendedSection(BuildContext context) {
+  Widget _recommendedMerchantsSection(BuildContext context) {
+    final categoryState = ref.watch(categoryNotifierProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -162,24 +177,50 @@ class _ServiceCategoriesPageState extends ConsumerState<ServiceCategoriesPage> {
           },
         ),
         SizedBox(height: 15.h),
-        SizedBox(
-          height: 150.h,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: AppStaticData.serviceProviders.length,
-            itemBuilder: (context, index) {
-              final item = AppStaticData.serviceProviders[index];
-              return HomeServiceProviderCard(
-                title: item.name,
-                reviews: item.reviewsCount.toString(),
-                rating: item.rating.toString(),
-                onTap: () {
-                  context.pushNamed(AppRoutes.merchantProfile, extra: item);
-                },
-              );
-            },
+        if (categoryState is GetCategoriesLoading)
+          const RecommendedMerchantsShimmer()
+        else
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                20.verticalSpace,
+                Icon(
+                  Icons.search_off,
+                  size: 48,
+                  color: AppPalette.darkGreyColor,
+                ),
+                SizedBox(height: 12),
+                CustomText(
+                  text: AppTexts.noRecommendedMerchants,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  maxLines: 2,
+                  color: AppPalette.darkGreyColor,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
-        ),
+        // SizedBox(
+        //   height: 150.h,
+        //   child: ListView.builder(
+        //     scrollDirection: Axis.horizontal,
+        //     itemCount: AppStaticData.serviceProviders.length,
+        //     itemBuilder: (context, index) {
+        //       final item = AppStaticData.serviceProviders[index];
+        //       return HomeServiceProviderCard(
+        //         title: item.name,
+        //         reviews: item.reviewsCount.toString(),
+        //         rating: item.rating.toString(),
+        //         onTap: () {
+        //           //  context.pushNamed(AppRoutes.merchantProfile, extra: item);
+        //         },
+        //       );
+        //     },
+        //   ),
+        // ),
       ],
     );
   }

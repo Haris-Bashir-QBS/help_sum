@@ -22,7 +22,11 @@ enum ApiEndpoints {
   updateProfile,
 
   /// ================= Services =======================
-  getServicesByCategory;
+  getServicesByCategory,
+  merchantsNearby,
+  createJob,
+  fetchJobs
+  ;
 
   String get value {
     switch (this) {
@@ -63,8 +67,6 @@ enum ApiEndpoints {
       /// ================= Services =======================
       case ApiEndpoints.getServicesByCategory:
         return "/service/category"; // Will be appended with /:categoryId
-      case ApiEndpoints.merchantSetupDetails:
-        return "/$_auth/merchant-account-setup";
     }
   }
 }

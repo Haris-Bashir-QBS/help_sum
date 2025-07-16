@@ -5,7 +5,7 @@ import 'package:help_sum/src/widgets/custom_text.dart';
 
 class RecommendedServiceProviderCard extends StatelessWidget {
   final String name;
-  final String rating;
+  final String? rating;
   final String distance;
   final String pricePerHour;
   final String imageUrl;
@@ -14,7 +14,7 @@ class RecommendedServiceProviderCard extends StatelessWidget {
   const RecommendedServiceProviderCard({
     super.key,
     required this.name,
-    required this.rating,
+    this.rating,
     required this.distance,
     required this.pricePerHour,
     required this.imageUrl,
@@ -49,7 +49,18 @@ class RecommendedServiceProviderCard extends StatelessWidget {
                 alignment: Alignment.center,
                 child: CircleAvatar(
                   radius: 30.r,
-                  backgroundImage: NetworkImage(imageUrl),
+                  backgroundColor: AppPalette.lightGreyColor,
+                  backgroundImage:
+                      imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
+                  child:
+                      imageUrl.isEmpty
+                          ? Center(
+                            child: Icon(
+                              Icons.person,
+                              color: AppPalette.darkGreyColor,
+                            ),
+                          )
+                          : null,
                 ),
               ),
               8.horizontalSpace,
@@ -68,7 +79,7 @@ class RecommendedServiceProviderCard extends StatelessWidget {
                       Icon(Icons.star, color: AppPalette.starColor, size: 16.w),
                       4.horizontalSpace,
                       CustomText(
-                        text: rating,
+                        text: rating ?? "N/A",
                         fontSize: 12.sp,
                         color: AppPalette.blackColor,
                       ),
@@ -76,7 +87,7 @@ class RecommendedServiceProviderCard extends StatelessWidget {
                   ),
                   4.verticalSpace,
                   CustomText(
-                    text: distance,
+                    text: "Distance: $distance",
                     fontSize: 12.sp,
                     color: AppPalette.greyColor,
                   ),

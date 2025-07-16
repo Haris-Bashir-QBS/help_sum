@@ -8,6 +8,8 @@ Future<void> initializeDI() async {
   await _initAuthDependencies();
   await _initCategoryDependencies();
   await _initPaymentDependencies();
+  await _initBookingDependencies();
+  await _initMerchantViewProfileDependencies();
 }
 
 /// ------------------------
@@ -87,7 +89,8 @@ void _registerCategoryRepositories() {
 void _registerCategoryUsecases() {
   sl
     ..registerLazySingleton(() => GetCategoriesUseCase(sl()))
-    ..registerLazySingleton(() => GetServicesByCategoryUseCase(sl()));
+    ..registerLazySingleton(() => GetServicesByCategoryUseCase(sl()))
+    ..registerLazySingleton(() => GetNearbyMerchantsUseCase(sl()));
 }
 
 /// ------------------------
@@ -118,4 +121,25 @@ void _registerPaymentUsecases() {
     ..registerLazySingleton(() => GetCardsUseCase(sl()))
     ..registerLazySingleton(() => DeleteCardUseCase(sl()))
     ..registerLazySingleton(() => SetDefaultCardUseCase(sl()));
+}
+
+Future<void> _initBookingDependencies() async {
+  sl.registerLazySingleton<BookingRemoteDataSource>(
+    () => BookingRemoteDataSourceImpl(client: sl()),
+  );
+  sl.registerLazySingleton<BookingRepository>(
+    () => BookingRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton(() => CreateJobUseCase(sl()));
+  sl.registerLazySingleton(() => FetchJobsByTypeUseCase(sl()));
+}
+
+Future<void> _initMerchantViewProfileDependencies() async {
+  sl.registerLazySingleton<MerchantViewProfileRemoteDatasource>(
+    () => MerchantViewProfileRemoteDatasourceImpl(sl()),
+  );
+  sl.registerLazySingleton<MerchantViewProfileRepository>(
+    () => MerchantViewProfileRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(() => GetMerchantViewProfileUseCase(sl()));
 }

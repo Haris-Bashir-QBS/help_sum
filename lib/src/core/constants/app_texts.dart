@@ -219,6 +219,7 @@ class AppTexts {
   static const String description = 'Description:';
   static const String lowServiceCharges = 'Low service charges';
   static const String estimatedWorkTime = 'Estimated work time:';
+  static const String estimatedWorkTimeWithUnit = 'Estimated Work Time (hours)';
   static const String oneToTwoHours = '1-2 hr';
   static const String twoHundredDollars = '\$ 200';
   static const String offerDetails = 'Offer details:';
@@ -287,6 +288,7 @@ class AppTexts {
   static const String consumer = 'Consumer';
 
   static const String enterDescriptionAboutJob = 'Enter Description about Job';
+  static const String jobTitle = 'Job Title';
 
   static const String bookImmediately = 'Book Immediately';
   static const String createAnOffer = "Create an offer";
@@ -297,4 +299,7 @@ class AppTexts {
   static const String camera = 'Camera';
   static const String photos = 'Photos';
   static const String file = 'File';
+  static const String noReviewsYet = 'No reviews yet';
+  static const String noRecommendedMerchants =
+      'No recommended merchants found.';
 }

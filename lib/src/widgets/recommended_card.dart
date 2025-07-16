@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
-import 'package:help_sum/src/core/router/app_routes.dart';
-import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/image_view.dart';
 
@@ -31,15 +28,15 @@ class RecommendedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Find the service provider from AppStaticData
-        final serviceProvider = AppStaticData.serviceProviders.firstWhere(
-          (provider) => provider.name == name,
-          orElse: () => AppStaticData.serviceProviders.first,
-        );
-        context.pushNamed(
-          AppRoutes.merchantProfile,
-          extra: serviceProvider,
-        );
+        // // Find the service provider from AppStaticData
+        // final serviceProvider = AppStaticData.serviceProviders.firstWhere(
+        //   (provider) => provider.name == name,
+        //   orElse: () => AppStaticData.serviceProviders.first,
+        // );
+        // context.pushNamed(
+        //   AppRoutes.merchantProfile,
+        //   extra: serviceProvider,
+        // );
       },
       child: Container(
         width: 200.w,
