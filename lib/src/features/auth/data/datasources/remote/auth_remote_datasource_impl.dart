@@ -8,6 +8,7 @@ import 'package:help_sum/src/features/auth/data/models/request/signup_request_mo
 import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/login_response_model.dart';
+import 'package:help_sum/src/features/auth/data/models/response/merchant_setup_response_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/services_groupped_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/signup_response_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/upload_file_response.dart';
@@ -168,6 +169,23 @@ class AuthRemoteDataSourceImplementation implements AuthRemoteDataSource {
       if (response.isOk) {
         final data = response.data['data']['data'] as List<dynamic>? ?? [];
         return data.map((e) => GroupedCategoryModel.fromJson(e)).toList();
+      } else {
+        throw ServerException(
+          statusCode: response.statusCode,
+          message: response.data['message'] ?? AppErrors.somethingWentWrong,
+        );
+      }
+    });
+  }
+
+  @override
+  Future<MerchantSetupResponseModel> getMerchantSetupDetails() async {
+    return await ApiErrorHandler.executeGuarded(() async {
+      final response = await _client.get(
+        endpoint: ApiEndpoints.merchantSetupDetails.value,
+      );
+      if (response.isOk) {
+        return MerchantSetupResponseModel.fromJson(response.data);
       } else {
         throw ServerException(
           statusCode: response.statusCode,

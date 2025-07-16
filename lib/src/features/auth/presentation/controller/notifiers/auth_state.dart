@@ -1,6 +1,7 @@
 import 'package:help_sum/src/core/errors/api_exceptions.dart';
 import 'package:help_sum/src/features/auth/data/models/response/upload_file_response.dart';
 import 'package:help_sum/src/features/auth/domain/entities/grouped_category_entity.dart';
+import 'package:help_sum/src/features/auth/domain/entities/merchant_setup_respose_entitiy.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 
 sealed class AuthState {}
@@ -150,4 +151,16 @@ class SaveBasicInfoSuccess extends AuthState {}
 class SaveBasicInfoError extends AuthState {
   final Failure failure;
   SaveBasicInfoError(this.failure);
+}
+
+class MerchantSetupLoading extends AuthState {}
+
+class MerchantSetupSuccess extends AuthState {
+  final MerchantSetupResposeEntitiy merchantSetupResposeEntitiy;
+  MerchantSetupSuccess(this.merchantSetupResposeEntitiy);
+}
+
+class MerchantSetupError extends AuthState {
+  final Failure failure;
+  MerchantSetupError(this.failure);
 }

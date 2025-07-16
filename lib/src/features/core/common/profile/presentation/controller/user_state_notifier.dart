@@ -12,4 +12,8 @@ class UserStateNotifier extends StateNotifier<UserState> {
   void clearUser() {
     state = const UserState(user: null);
   }
+
+  void updateUser(UserEntity user) {
+    state = state.copyWith(user: user);
+  }
 }

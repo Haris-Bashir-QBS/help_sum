@@ -9,6 +9,7 @@ enum ApiEndpoints {
   logout,
   uploadFile,
   serviceGrouped,
+  merchantSetupDetails,
 
   /// ================= Categories =======================
   categories,
@@ -18,7 +19,7 @@ enum ApiEndpoints {
   getCards,
   deleteCard,
   setDefaultCard,
-  updateProfile;
+  updateProfile,
 
   /// ================= Services =======================
   getServicesByCategory;
@@ -62,6 +63,8 @@ enum ApiEndpoints {
       /// ================= Services =======================
       case ApiEndpoints.getServicesByCategory:
         return "/service/category"; // Will be appended with /:categoryId
+      case ApiEndpoints.merchantSetupDetails:
+        return "/$_auth/merchant-account-setup";
     }
   }
 }

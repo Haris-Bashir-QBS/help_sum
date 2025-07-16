@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:help_sum/src/core/services/local_storage_service.dart';
+import 'package:help_sum/src/features/auth/domain/usecases/fetch_merchant_setup_details.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/get_groupped_services_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/login_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/otp_use_case.dart';

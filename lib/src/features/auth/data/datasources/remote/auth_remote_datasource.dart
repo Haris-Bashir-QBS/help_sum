@@ -4,6 +4,7 @@ import 'package:help_sum/src/features/auth/data/models/request/resend_otp_reques
 import 'package:help_sum/src/features/auth/data/models/request/signup_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/response/merchant_setup_response_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/services_groupped_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/upload_file_response.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
@@ -20,4 +21,5 @@ abstract interface class AuthRemoteDataSource {
     required UploadFileRequest params,
   });
   Future<List<GroupedCategoryModel>> getGroupedServices();
+  Future<MerchantSetupResponseModel> getMerchantSetupDetails();
 }

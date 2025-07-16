@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:help_sum/src/features/auth/data/models/request/schdule_request_model.dart';
 
 class UserEntity {
@@ -50,6 +51,56 @@ class UserEntity {
     this.services,
     this.schedule,
   });
+
+  UserEntity copyWith({
+    String? id,
+    String? role,
+    String? image,
+    String? firstName,
+    String? lastName,
+    String? email,
+    String? phone,
+    LocationEntity? location,
+    String? description,
+    int? hourlyRate,
+    bool? status,
+    String? idCard,
+    List<String>? media,
+    bool? isConsumer,
+    bool? isMerchant,
+    bool? isNotification,
+    bool? isVerified,
+    bool? isCompleted,
+    bool? isDeleted,
+    bool? isBlocked,
+    List<Map<String, dynamic>>? services,
+    List<Schedule>? schedule,
+  }) {
+    return UserEntity(
+      id: id ?? this.id,
+      role: role ?? this.role,
+      image: image ?? this.image,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      location: location ?? this.location,
+      description: description ?? this.description,
+      hourlyRate: hourlyRate ?? this.hourlyRate,
+      status: status ?? this.status,
+      idCard: idCard ?? this.idCard,
+      media: media ?? this.media,
+      isConsumer: isConsumer ?? this.isConsumer,
+      isMerchant: isMerchant ?? this.isMerchant,
+      isNotification: isNotification ?? this.isNotification,
+      isVerified: isVerified ?? this.isVerified,
+      isCompleted: isCompleted ?? this.isCompleted,
+      isDeleted: isDeleted ?? this.isDeleted,
+      isBlocked: isBlocked ?? this.isBlocked,
+      services: services ?? this.services,
+      schedule: schedule ?? this.schedule,
+    );
+  }
 }
 
 class LocationEntity {
@@ -66,4 +117,20 @@ class LocationEntity {
     this.type,
     this.coordinates,
   });
+
+  LocationEntity copyWith({
+    String? city,
+    String? state,
+    String? address,
+    String? type,
+    List<int>? coordinates,
+  }) {
+    return LocationEntity(
+      city: city ?? this.city,
+      state: state ?? this.state,
+      address: address ?? this.address,
+      type: type ?? this.type,
+      coordinates: coordinates ?? this.coordinates,
+    );
+  }
 }

@@ -7,6 +7,9 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
+import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
+import 'package:help_sum/src/features/auth/presentation/screens/stripe_merchant_setup_screen.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/controller/user_state_provider.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_card.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_row.dart';
@@ -14,6 +17,7 @@ import 'package:help_sum/src/features/core/common/profile/presentation/widgets/p
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_image_slider.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
+import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 
 class ProfileDetailsPage extends ConsumerStatefulWidget {
   const ProfileDetailsPage({super.key});
@@ -33,31 +37,37 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
           if (user == null) {
             return Container(color: Colors.red, width: 1.sw, height: 200.h);
           }
-          return Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(16.w),
-                  child: Column(
-                    children:
-                        user.role == AppRole.consumer.name
-                            ? [
-                              ProfileHeader(user: user),
-                              SizedBox(height: 24.h),
-                              _buildBasicInfoCard(context, user),
-                              26.verticalSpace,
-                              _buildContactInfoCard(context, user),
-                            ]
-                            : [
-                              _buildMerchantProfileHeader(context, user),
-                              SizedBox(height: 16.h),
-                              _buildMerchantDetails(context, user),
-                            ],
+
+          return ModalProgressHUD(
+            inAsyncCall:
+                ref.watch(authNotifierProvider.notifier)
+                    is MerchantSetupLoading,
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(16.w),
+                    child: Column(
+                      children:
+                          user.role == AppRole.consumer.name
+                              ? [
+                                ProfileHeader(user: user),
+                                SizedBox(height: 24.h),
+                                _buildBasicInfoCard(context, user),
+                                26.verticalSpace,
+                                _buildContactInfoCard(context, user),
+                              ]
+                              : [
+                                _buildMerchantProfileHeader(context, user),
+                                SizedBox(height: 16.h),
+                                _buildMerchantDetails(context, user),
+                              ],
+                    ),
                   ),
                 ),
-              ),
-              _buildSignOutButton(context),
-            ],
+                _buildSignOutButton(context),
+              ],
+            ),
           );
         },
       ),
@@ -223,6 +233,40 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
           ),
           const Divider(),
           _buildWorkPhotosGallery(context, user),
+
+          if (user.isMerchant == false)
+            _buildMerchantInfoTile(
+              context,
+              icon: Icons.schedule,
+              title: 'Setup Stripe Merchant Account',
+              subtitle: 'to recieve payments',
+              onTap: () async {
+                final checkoutUrl = await ref
+                    .read(authNotifierProvider.notifier)
+                    .fetchStripeAccount(context);
+
+                if (checkoutUrl.isNotEmpty) {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) =>
+                              StripeMerchantSetupScreen(setupUrl: checkoutUrl),
+                    ),
+                  );
+
+                  if (result != null && result == true) {
+                    final updatedUser = user.copyWith(isMerchant: true);
+                    ref
+                        .read(currentUserProvider.notifier)
+                        .updateUser(updatedUser);
+                    // Handle the result if needed
+                    print("Stripe setup completed with result: $result");
+                  }
+                }
+              },
+            ),
+          const Divider(),
         ],
       ),
     );

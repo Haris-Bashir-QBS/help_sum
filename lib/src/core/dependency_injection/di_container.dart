@@ -53,6 +53,7 @@ void _registerAuthUsecases() {
     ..registerLazySingleton(() => OtpUseCase(sl()))
     ..registerLazySingleton(() => UpdateUserProfileUsecase(sl()))
     ..registerLazySingleton(() => UploadFileUseCase(sl()))
+    ..registerLazySingleton(() => FetchMerchantSetupDetails(sl()))
     ..registerLazySingleton(() => GetGroupedServicesUseCase(sl()));
   // ..registerLazySingleton(() => VerifyOtpUseCase(sl()))
   // ..registerLazySingleton(() => ChangePasswordUsecase(sl()))

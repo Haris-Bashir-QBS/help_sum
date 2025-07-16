@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/core/use_cases/use_case.dart';
+import 'package:help_sum/src/core/utils/app_utils.dart';
 import 'package:help_sum/src/features/auth/data/models/request/login_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/otp_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/resend_otp_request_model.dart';
@@ -13,6 +14,7 @@ import 'package:help_sum/src/features/auth/data/models/request/upload_file_reque
 import 'package:help_sum/src/features/auth/data/models/response/user_model.dart';
 import 'package:help_sum/src/features/auth/domain/entities/grouped_category_entity.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
+import 'package:help_sum/src/features/auth/domain/usecases/fetch_merchant_setup_details.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/get_groupped_services_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/login_usecase.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/otp_use_case.dart';
@@ -35,6 +37,7 @@ class AuthNotifier extends _$AuthNotifier {
   late final OtpUseCase _otpUseCase = sl();
   late final ResendOtpUsecase _resendOtpUsecase = sl();
   late final GetGroupedServicesUseCase _getGroupedServicesUseCase = sl();
+  late final FetchMerchantSetupDetails _fetchMerchantSetupDetails = sl();
   late final UpdateUserProfileUsecase _updateUserProfileUsecase = sl();
 
   // User entity
@@ -133,7 +136,6 @@ class AuthNotifier extends _$AuthNotifier {
       _currentUser = user;
       await LocalStorageService().saveAccessToken(token);
       await LocalStorageService().saveUser(UserModel.fromEntity(user));
-
       state = LoginSuccess(user);
     });
   }
@@ -224,6 +226,29 @@ class AuthNotifier extends _$AuthNotifier {
     );
   }
 
+  Future<void> updateLatLong(
+    BuildContext context,
+    UpdateProfileRequest params, {
+    Function()? onSuccess,
+  }) async {
+    final result = await _updateUserProfileUsecase(params);
+
+    result.match(
+      (failure) {
+        CustomToast.errorToast(context: context, message: failure.message);
+      },
+      (user) async {
+        _currentUser = user;
+        await LocalStorageService().saveUser(UserModel.fromEntity(user));
+        ref.read(currentUserProvider.notifier).setUser(user);
+
+        if (onSuccess != null) {
+          onSuccess();
+        }
+      },
+    );
+  }
+
   Future<void> updateRate(
     BuildContext context,
     UpdateProfileRequest params,
@@ -287,12 +312,45 @@ class AuthNotifier extends _$AuthNotifier {
     );
   }
 
+  /// Fetch Stripe Account URL
+  Future<String> fetchStripeAccount(BuildContext ctx) async {
+    AppUtils.showLoadingDialog(
+      context: ctx,
+      message: "Fetching Merchant Setup Details...",
+    );
+    final result = await _fetchMerchantSetupDetails(NoParams());
+    AppUtils.closeLoadingDialog(ctx);
+
+    return result.match(
+      (failure) {
+        state = MerchantSetupError(failure);
+        CustomToast.errorToast(context: ctx, message: failure.message);
+        return '';
+      },
+      (entity) {
+        if (entity.url != null) {
+          state = MerchantSetupSuccess(entity);
+        } else {
+          UserEntity? user = ref.read(currentUserProvider).user;
+
+          if (user != null) {
+            final updatedUser = user.copyWith(isMerchant: true);
+            ref.read(currentUserProvider.notifier).updateUser(updatedUser);
+          }
+
+          CustomToast.errorToast(context: ctx, message: entity.message ?? "");
+        }
+
+        return entity.url ?? '';
+      },
+    );
+  }
+
   Future<void> updateSchdule(
     BuildContext context,
     UpdateProfileRequest params, {
     Function()? onSuccess,
   }) async {
-    state = ScheduleLoading();
     final result = await _updateUserProfileUsecase(params);
     result.match(
       (failure) {

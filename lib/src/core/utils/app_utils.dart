@@ -3,6 +3,7 @@ import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
+import 'package:help_sum/src/widgets/custom_text.dart';
 
 class AppUtils {
   /// Picks a date with optional range.
@@ -51,6 +52,35 @@ class AppUtils {
   static String maskCardNumber(String cardNumber) {
     if (cardNumber.length < 4) return cardNumber;
     return '•••• •••• •••• ${cardNumber.substring(cardNumber.length - 4)}';
+  }
+
+  ///ShowLoading
+  static void showLoadingDialog({
+    required BuildContext context,
+    String message = "Please wait...",
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          content: Row(
+            children: [
+              const CircularProgressIndicator(color: AppPalette.primaryColor),
+              const SizedBox(width: 20),
+              Expanded(child: CustomText(text: message, maxLines: 3)),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  /// CLose Loading Dialog
+  static void closeLoadingDialog(BuildContext context) {
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
 
   static Future<void> selectExpiryDate(
