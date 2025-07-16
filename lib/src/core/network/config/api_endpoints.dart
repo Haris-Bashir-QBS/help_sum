@@ -9,7 +9,6 @@ enum ApiEndpoints {
   logout,
   uploadFile,
   serviceGrouped,
-  merchantSetupDetails,
 
   /// ================= Categories =======================
   categories,
@@ -20,13 +19,13 @@ enum ApiEndpoints {
   deleteCard,
   setDefaultCard,
   updateProfile,
+  merchantSetup,
 
   /// ================= Services =======================
   getServicesByCategory,
   merchantsNearby,
   createJob,
-  fetchJobs
-  ;
+  fetchJobs;
 
   String get value {
     switch (this) {
@@ -67,6 +66,14 @@ enum ApiEndpoints {
       /// ================= Services =======================
       case ApiEndpoints.getServicesByCategory:
         return "/service/category"; // Will be appended with /:categoryId
+      case ApiEndpoints.merchantsNearby:
+        return "/job/merchants/nearby";
+      case ApiEndpoints.createJob:
+        return "/job";
+      case ApiEndpoints.fetchJobs:
+        return "/job/consumer/all";
+      case ApiEndpoints.merchantSetup:
+        return "/$_auth/merchant-account-setup";
     }
   }
 }

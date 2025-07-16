@@ -182,7 +182,7 @@ class AuthRemoteDataSourceImplementation implements AuthRemoteDataSource {
   Future<MerchantSetupResponseModel> getMerchantSetupDetails() async {
     return await ApiErrorHandler.executeGuarded(() async {
       final response = await _client.get(
-        endpoint: ApiEndpoints.merchantSetupDetails.value,
+        endpoint: ApiEndpoints.merchantSetup.value,
       );
       if (response.isOk) {
         return MerchantSetupResponseModel.fromJson(response.data);
