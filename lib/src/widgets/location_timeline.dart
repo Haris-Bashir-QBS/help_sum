@@ -55,7 +55,13 @@ class TimelinePainter extends CustomPainter {
 }
 
 class LocationTimeline extends StatelessWidget {
-  const LocationTimeline({super.key});
+  final String? sourceLocation;
+  final String? destinationLocation;
+  const LocationTimeline({
+    super.key,
+    this.sourceLocation,
+    this.destinationLocation,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -85,15 +91,12 @@ class LocationTimeline extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildTextContainer(
-                  'Scheme 1 Road, Chaklala Cantt.',
-                  height: dotDiameter,
-                ),
+                _buildTextContainer(sourceLocation ?? "", height: dotDiameter),
                 // This SizedBox creates the space between the two timeline points.
                 // Its height directly controls the length of the connector line.
                 const SizedBox(height: 20),
                 _buildTextContainer(
-                  'House no 4783, lane 5 - lalazar - Rawalpindi',
+                  destinationLocation ?? "",
                   height: dotDiameter,
                 ),
               ],

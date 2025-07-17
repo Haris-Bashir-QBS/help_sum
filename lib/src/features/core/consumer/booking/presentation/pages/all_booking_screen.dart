@@ -8,6 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import '../controller/all_bookings_provider.dart';
 import '../widgets/booking_card.dart';
+import 'package:help_sum/src/widgets/custom_refresh_indicator.dart';
+import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
+import 'package:help_sum/src/core/constants/app_palette.dart';
 
 class AllBookingsPage extends ConsumerStatefulWidget {
   const AllBookingsPage({super.key});
@@ -24,7 +29,7 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
   static const List<String> jobTypes = [
     'all',
     'completed',
-    'inProgress',
+    'on going',
     'pending',
     'approved',
     'confirmation waiting',
@@ -34,6 +39,20 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _refreshJobs();
+    });
+  }
+
+  Future<void> _refreshJobs() async {
+    final type = jobTypes[selectedIndex];
+    final notifier = ref.read(allBookingsProvider(type).notifier);
+    await notifier.fetchJobs();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final type = jobTypes[selectedIndex];
     final jobsAsync = ref.watch(allBookingsProvider(type));
@@ -41,44 +60,55 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
       children: [
         _searchField(),
         20.verticalSpace,
-        _buildJobsTabbar(),
+        _buildJobsTabBar(),
         20.verticalSpace,
         Expanded(
-          child: jobsAsync.when(
-            data: (response) {
-              final jobs = response.data.data;
-              if (jobs.isEmpty) {
-                return Center(
-                  child: CustomText(
-                    text: 'No bookings found.',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                );
-              }
-              return ListView.separated(
-                itemCount: jobs.length,
-                itemBuilder: (c, i) {
-                  return BookingCard(
-                    job: jobs[i],
-                    showStatus: selectedIndex == 0,
-                    index: i,
-                    onTap: () {
-                      context.pushNamed(
-                        AppRoutes.bookingDetail,
-                        extra: {
-                          'job': jobs[i],
-                          'tabName': jobTypes[selectedIndex],
-                        },
-                      );
-                    },
+          child: CustomRefreshIndicator(
+            onRefresh: _refreshJobs,
+            child: jobsAsync.when(
+              data: (response) {
+                final jobs = response.data.data;
+                if (jobs.isEmpty) {
+                  return Center(
+                    child: CustomText(
+                      text: AppTexts.noBookingsFound, // Use AppTexts
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
                   );
-                },
-                separatorBuilder: (context, index) => 10.verticalSpace,
-              );
-            },
-            loading: () => Center(child: CircularProgressIndicator()),
-            error: (e, st) => Center(child: CustomText(text: 'Error: $e')),
+                }
+                return ListView.separated(
+                  itemCount: jobs.length,
+                  itemBuilder: (c, i) {
+                    return BookingCard(
+                      job: jobs[i],
+                      showStatus: selectedIndex == 0,
+                      index: i,
+                      onTap: () {
+                        context.pushNamed(
+                          AppRoutes.bookingDetail,
+                          extra: {
+                            'job': jobs[i],
+                            'tabName': jobTypes[selectedIndex],
+                          },
+                        );
+                      },
+                    );
+                  },
+                  separatorBuilder: (context, index) => 10.verticalSpace,
+                );
+              },
+              loading:
+                  () => Center(
+                    child: CircularProgressIndicator(
+                      color: AppPalette.primaryColor,
+                    ),
+                  ),
+              error:
+                  (e, st) => Center(
+                    child: CustomText(text: AppTexts.somethingWentWrong),
+                  ),
+            ),
           ),
         ),
       ],
@@ -97,12 +127,13 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
     );
   }
 
-  Widget _buildJobsTabbar() {
+  Widget _buildJobsTabBar() {
     return AppTabBar(
       selectedIndex: selectedIndex,
       tabs: jobTypes,
       onTapChanged: (index) {
         setState(() => selectedIndex = index);
+        _refreshJobs(); // Refresh jobs when tab changes
       },
     );
   }

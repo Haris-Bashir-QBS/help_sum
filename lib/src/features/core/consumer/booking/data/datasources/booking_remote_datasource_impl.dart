@@ -34,8 +34,8 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   Future<JobResponseModel> fetchJobsByType(String type) async {
     return await ApiErrorHandler.executeGuarded(() async {
       final response = await client.get(
-        endpoint: ApiEndpoints.fetchJobs.value,
-        queryParams: {'type': type},
+        endpoint: "${ApiEndpoints.fetchJobs.value}/$type",
+        // queryParams: {'type': type},
       );
       if (response.isOk) {
         return JobResponseModel.fromJson(response.data);

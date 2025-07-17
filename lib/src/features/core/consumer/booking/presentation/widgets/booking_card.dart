@@ -50,7 +50,7 @@ class BookingCard extends StatelessWidget {
                     ),
                   ),
                   CustomText(
-                    text: '#${index + 2}',
+                    text: '#${index + 1}',
                     fontSize: 16.sp,
                     fontWeight: FontWeight.normal,
                     color: AppPalette.hintColor,
@@ -75,7 +75,12 @@ class BookingCard extends StatelessWidget {
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: LocationTimeline(),
+              child: LocationTimeline(
+                sourceLocation:
+                    "${job.location.address} ${job.location.city} ${job.location.state}",
+                destinationLocation:
+                    "${job.location.address} ${job.location.city} ${job.location.state}",
+              ),
             ),
             16.verticalSpace,
 

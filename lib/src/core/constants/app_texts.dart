@@ -302,4 +302,5 @@ class AppTexts {
   static const String noReviewsYet = 'No reviews yet';
   static const String noRecommendedMerchants =
       'No recommended merchants found.';
+  static const String noBookingsFound = 'No bookings found.';
 }

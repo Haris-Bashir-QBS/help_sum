@@ -146,7 +146,7 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                                   context.pushNamed(
                                     AppRoutes.merchantProfile,
                                     extra: CreateJobRouteModel(
-                                      merchantId: state.merchants.first.id,
+                                      merchantId: merchant.id,
                                       serviceId:
                                           widget.bookingRouteParams!.serviceId,
                                       categoryId:

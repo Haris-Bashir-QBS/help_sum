@@ -1,3 +1,5 @@
+import 'package:help_sum/src/core/models/common/paginated_model.dart';
+
 class JobResponseModel {
   final bool status;
   final int code;
@@ -23,7 +25,7 @@ class JobResponseModel {
 
 class JobListData {
   final List<JobData> data;
-  final Pagination pagination;
+  final PaginationModel pagination;
 
   JobListData({required this.data, required this.pagination});
 
@@ -33,48 +35,14 @@ class JobListData {
           (json['data'] as List<dynamic>? ?? [])
               .map((e) => JobData.fromJson(e))
               .toList(),
-      pagination: Pagination.fromJson(json['pagination'] ?? {}),
+      pagination: PaginationModel.fromJson(json['pagination'] ?? {}),
     );
-  }
-}
-
-class Pagination {
-  final int total;
-  final int page;
-  final int limit;
-  final int totalPages;
-
-  Pagination({
-    required this.total,
-    required this.page,
-    required this.limit,
-    required this.totalPages,
-  });
-
-  factory Pagination.fromJson(Map<String, dynamic> json) {
-    return Pagination(
-      total: json['total'] ?? 0,
-      page: json['page'] ?? 1,
-      limit: json['limit'] ?? 10,
-      totalPages: json['totalPages'] ?? 1,
-    );
-  }
-}
-
-class ServiceInfo {
-  final String id;
-  final String name;
-
-  ServiceInfo({required this.id, required this.name});
-
-  factory ServiceInfo.fromJson(Map<String, dynamic> json) {
-    return ServiceInfo(id: json['_id'] ?? '', name: json['name'] ?? '');
   }
 }
 
 class JobData {
   final String consumerId;
-  final String merchantId;
+  final MerchantInfo merchantId;
   final ServiceInfo serviceId;
   final String title;
   final String description;
@@ -128,14 +96,14 @@ class JobData {
   factory JobData.fromJson(Map<String, dynamic> json) {
     return JobData(
       consumerId: json['consumerId'] ?? '',
-      merchantId: json['merchantId'] ?? '',
+      merchantId: MerchantInfo.fromJson(json['merchantId'] ?? {}),
       serviceId: ServiceInfo.fromJson(json['serviceId'] ?? {}),
       title: json['title'] ?? '',
       description: json['description'] ?? '',
       location: JobLocation.fromJson(json['location'] ?? {}),
       date: json['date'] ?? '',
       time: json['time'] ?? '',
-      estimatedWorkTime: json['estimatedWorkTime'] ?? '',
+      estimatedWorkTime: json['estimatedWorkTime'].toString(),
       offer: json['offer'] ?? 0,
       media: (json['media'] as List<dynamic>? ?? []).cast<String>(),
       isVerified: json['isVerified'] ?? false,
@@ -152,6 +120,28 @@ class JobData {
       updatedAt: json['updatedAt'] ?? '',
       v: json['__v'] ?? 0,
     );
+  }
+}
+
+class MerchantInfo {
+  final String id;
+  final String? email;
+
+  MerchantInfo({required this.id, this.email});
+
+  factory MerchantInfo.fromJson(Map<String, dynamic> json) {
+    return MerchantInfo(id: json['_id'] ?? '', email: json['email']);
+  }
+}
+
+class ServiceInfo {
+  final String id;
+  final String name;
+
+  ServiceInfo({required this.id, required this.name});
+
+  factory ServiceInfo.fromJson(Map<String, dynamic> json) {
+    return ServiceInfo(id: json['_id'] ?? '', name: json['name'] ?? '');
   }
 }
 
