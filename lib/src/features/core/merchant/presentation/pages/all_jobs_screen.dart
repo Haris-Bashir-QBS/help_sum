@@ -2,15 +2,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 
 import 'package:help_sum/src/core/enums/job_status.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_card.dart';
+import 'package:help_sum/src/features/core/merchant/domain/entities/merchant_job_request_resposne_entity.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
+import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_states.dart';
 import 'package:help_sum/src/widgets/app_tab_bar.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
+import 'package:help_sum/src/widgets/custom_text.dart';
 
 class AllJobsScreen extends ConsumerStatefulWidget {
   const AllJobsScreen({super.key});
@@ -20,18 +25,17 @@ class AllJobsScreen extends ConsumerStatefulWidget {
 }
 
 class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
-  final tabs = [
-    'All',
-    'On Going',
-    'Pending',
-    'Approved',
-    'Confirmation Waiting',
-    'Payment Waiting',
-    'Cancelled',
-    'Rejected',
-    'Completed',
+  static const List<String> jobTypes = [
+    'all',
+    'completed',
+    'inProgress',
+    'pending',
+    'approved',
+    'confirmation waiting',
+    'payment waiting',
+    'cancelled',
+    'rejected',
   ];
-
   final ScrollController scrollController = ScrollController();
   int selectedIndex = 0;
   List<JobModel> jobs = [];
@@ -39,46 +43,90 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   @override
   void initState() {
     jobs = AppStaticData.dummyJobs;
-    ref.read(merchantJobsNotifierProvider.notifier).getAllJobsByType();
+    ref
+        .read(merchantJobsNotifierProvider.notifier)
+        .getAllJobsByType(jobType: jobTypes.first);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(merchantJobsNotifierProvider);
+
     return Column(
       children: [
         CustomSearchField(),
         20.verticalSpace,
         _buildJobsTabbar(),
         20.verticalSpace,
-        _jobListView(),
+        _jobListView(state),
       ],
     );
   }
 
-  Widget _jobListView() {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: jobs.length,
-        itemBuilder: (c, i) {
-          return Container();
-          // return BookingCard(
-          //   job: jobs[i],
-          //   showStatus: true,
-          //   index: i,
-          //   onTap: () {
-          //     _navigateToJobDetailScreen(i);
-          //   },
-          // );
-        },
-      ),
-    );
+  Widget _jobListView(MerchantJobsState state) {
+    if (state is MerchantJobsLoading) {
+      return const Expanded(
+        child: Center(
+          child: CircularProgressIndicator(color: AppPalette.primaryColor),
+        ),
+      );
+    } else if (state is MerchantJobsError) {
+      return Expanded(child: Center(child: CustomText(text: state.message)));
+    } else if (state is MerchantJobsLoaded) {
+      final jobs = state.response.data;
+
+      if (jobs?.data?.isEmpty == true) {
+        return const Expanded(
+          child: Center(child: CustomText(text: "No Data Found")),
+        );
+      }
+
+      return Expanded(
+        child: ListView.builder(
+          itemCount: jobs?.data?.length ?? 0,
+          itemBuilder: (c, i) {
+            final job = jobs?.data?[i];
+            return JobCardMerchant(
+              job: job!,
+              showStatus: true,
+              index: i,
+              onTap: () => _navigateToJobDetailScreen(job),
+            );
+          },
+        ),
+      );
+    }
+
+    return const Expanded(child: SizedBox()); // fallback for initial state
   }
 
-  void _navigateToJobDetailScreen(int i) {
+  // Widget _jobListView(List<JobRequestEntity> _allJobs) {
+  //   return Expanded(
+  //     child:
+  //         _allJobs.isEmpty
+  //             ? Center(child: CustomText(text: "No Data Found"))
+  //             : ListView.builder(
+  //               itemCount: _allJobs.length,
+  //               itemBuilder: (c, i) {
+  //                 // return Container();
+  //                 return JobCardMerchant(
+  //                   job: _allJobs[i],
+  //                   showStatus: true,
+  //                   index: i,
+  //                   onTap: () {
+  //                     _navigateToJobDetailScreen(i);
+  //                   },
+  //                 );
+  //               },
+  //             ),
+  //   );
+  // }
+
+  void _navigateToJobDetailScreen(JobRequestEntity? job) {
     context.pushNamed(
       AppRoutes.jobDetail,
-      extra: {'job': jobs[i], 'tabName': tabs[selectedIndex]},
+      extra: {'job': job, 'tabName': jobTypes[selectedIndex]},
     );
   }
 
@@ -129,69 +177,75 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   _buildJobsTabbar() {
     return AppTabBar(
       selectedIndex: selectedIndex,
-      tabs: tabs,
+      tabs: jobTypes,
       onTapChanged: (index) {
-        switch (index) {
-          case 0:
-            jobs = AppStaticData.dummyJobs;
-            break;
-          case 1:
-            jobs =
-                AppStaticData.dummyJobs
-                    .where((e) => e.status == JobStatus.inProgress)
-                    .toList();
-          case 2:
-            jobs =
-                AppStaticData.dummyJobs
-                    .where((e) => e.status == JobStatus.pending)
-                    .toList();
+        // switch (index) {
+        //   case 0:
+        //     jobs = AppStaticData.dummyJobs;
+        //     break;
+        //   case 1:
+        //     jobs =
+        //         AppStaticData.dummyJobs
+        //             .where((e) => e.status == JobStatus.inProgress)
+        //             .toList();
+        //   case 2:
+        //     jobs =
+        //         AppStaticData.dummyJobs
+        //             .where((e) => e.status == JobStatus.pending)
+        //             .toList();
 
-            break;
-          case 3:
-            jobs =
-                AppStaticData.dummyJobs
-                    .where((e) => e.status == JobStatus.approved)
-                    .toList();
-            break;
-          case 4:
-            jobs =
-                AppStaticData.dummyJobs
-                    .where((e) => e.status == JobStatus.waitingConfirmation)
-                    .toList();
+        //     break;
+        //   case 3:
+        //     jobs =
+        //         AppStaticData.dummyJobs
+        //             .where((e) => e.status == JobStatus.approved)
+        //             .toList();
+        //     break;
+        //   case 4:
+        //     jobs =
+        //       AppStaticData.dummyJobs
+        //           .where((e) => e.status == JobStatus.waitingConfirmation)
+        //           .toList();
 
-            break;
+        //   break;
 
-          case 5:
-            jobs =
-                AppStaticData.dummyJobs
-                    .where((e) => e.status == JobStatus.waitingPayment)
-                    .toList();
+        // case 5:
+        //   jobs =
+        //       AppStaticData.dummyJobs
+        //           .where((e) => e.status == JobStatus.waitingPayment)
+        //           .toList();
 
-            break;
+        //   break;
 
-          case 6:
-            jobs =
-                AppStaticData.dummyJobs
-                    .where((e) => e.status == JobStatus.cancelled)
-                    .toList();
+        // case 6:
+        //   jobs =
+        //       AppStaticData.dummyJobs
+        //           .where((e) => e.status == JobStatus.cancelled)
+        //           .toList();
 
-            break;
-          case 7:
-            jobs =
-                AppStaticData.dummyJobs
-                    .where((e) => e.status == JobStatus.rejected)
-                    .toList();
-          case 8:
-            jobs =
-                AppStaticData.dummyJobs
-                    .where((e) => e.status == JobStatus.completed)
-                    .toList();
+        //   break;
+        // case 7:
+        //   jobs =
+        //       AppStaticData.dummyJobs
+        //           .where((e) => e.status == JobStatus.rejected)
+        //           .toList();
+        // case 8:
+        //   jobs =
+        //       AppStaticData.dummyJobs
+        //           .where((e) => e.status == JobStatus.completed)
+        //           .toList();
 
-            break;
-        }
+        //   break;
+        // // }
         setState(() {
           selectedIndex = index;
         });
+
+        ref
+            .read(merchantJobsNotifierProvider.notifier)
+            .getAllJobsByType(jobType: jobTypes[index], refresh: true);
+
+        print("object");
       },
     );
   }

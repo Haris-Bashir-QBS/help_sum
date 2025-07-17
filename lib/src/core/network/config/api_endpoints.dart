@@ -76,7 +76,7 @@ enum ApiEndpoints {
       case ApiEndpoints.merchantSetup:
         return "/$_auth/merchant-account-setup";
       case ApiEndpoints.jobMerchantByType:
-        return '/job/merchant/all';
+        return '/job/merchant';
     }
   }
 }

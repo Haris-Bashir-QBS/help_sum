@@ -20,7 +20,7 @@ class MerchantJobsRemoteSourceImpl implements MerchantJobsRemoteSource {
   ) async {
     return await ApiErrorHandler.executeGuarded(() async {
       final response = await client.get(
-        endpoint: ApiEndpoints.jobMerchantByType.value,
+        endpoint: "${ApiEndpoints.jobMerchantByType.value}/${params.jobType}",
         // queryParams: {'page': params.page, 'limit': params.limit},
       );
 
