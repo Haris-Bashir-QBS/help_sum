@@ -1,8 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
+import 'package:help_sum/src/core/enums/permission_status.dart';
+import 'package:help_sum/src/core/services/permission_manager.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class AppUtils {
@@ -230,5 +236,24 @@ class AppUtils {
       default:
         return JobStatus.all;
     }
+  }
+
+  static Future<LatLng?> getLocation() async {
+    final permission = await PermissionManager().requestLocationPermission();
+
+    log(permission.name.toString());
+
+    if (permission == PermissionState.granted) {
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: LocationSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 10,
+        ),
+      );
+      return LatLng(position.latitude, position.longitude);
+    } else if (permission == PermissionState.permnantlyDenied) {
+      return null;
+    }
+    return null;
   }
 }

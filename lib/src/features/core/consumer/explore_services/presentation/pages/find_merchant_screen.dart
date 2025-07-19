@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/core/utils/app_utils.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/Booking_route_params.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/merchant_list_tab_view.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/recommended_service_provider_card.dart';
@@ -42,8 +44,8 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
   var showRecommenededMerchants = false;
 
   // For demo: set these to your desired coordinates or get from user/location
-  final double lat = 24.90124049385213;
-  final double long = 67.10843870918309;
+  double lat = 0.0;
+  double long = 0.0;
 
   @override
   void initState() {
@@ -53,14 +55,27 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleTabSelection);
     _searchController.addListener(_handleSearchInput);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(nearbyMerchantsProvider.notifier)
-          .fetchNearbyMerchants(
-            lat: lat,
-            long: long,
-            serviceId: widget.bookingRouteParams?.serviceId,
-          );
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final position = await AppUtils.getLocation();
+
+      if (position != null) {
+        lat = position.latitude;
+        long = position.longitude;
+
+        ref
+            .read(nearbyMerchantsProvider.notifier)
+            .fetchNearbyMerchants(
+              lat: lat,
+              long: long,
+              serviceId: widget.bookingRouteParams?.serviceId,
+            );
+      } else {
+        log("Location not available");
+        CherryToast.info(
+          title: Text("Location not available"),
+          description: Text("Location is disabled on this device"),
+        ).show(context);
+      }
     });
   }
 
@@ -114,19 +129,19 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                   TabBarView(
                     controller: _tabController,
                     children: [
-                      Container(),
+                      // Container(),
                       // Map Tab Content
-                      // Stack(
-                      //   children: [
-                      //     GoogleMap(
-                      //       mapType: MapType.normal,
-                      //       initialCameraPosition: _initialCameraPosition,
-                      //       onMapCreated: (GoogleMapController controller) {
-                      //         _mapController = controller;
-                      //       },
-                      //     ),
-                      //   ],
-                      // ),
+                      Stack(
+                        children: [
+                          GoogleMap(
+                            mapType: MapType.normal,
+                            initialCameraPosition: _initialCameraPosition,
+                            onMapCreated: (GoogleMapController controller) {
+                              _mapController = controller;
+                            },
+                          ),
+                        ],
+                      ),
                       // List Tab Content
                       Builder(
                         builder: (context) {

@@ -384,9 +384,9 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
         textColor: Colors.white,
         color: const Color(0xFF0D6EFD),
         onPressed: () async {
+          context.goNamed(AppRoutes.roleSelection, extra: true);
           await LocalStorageService().clearAll();
           ref.read(currentUserProvider.notifier).clearUser();
-          context.go(AppRoutes.roleSelection, extra: true);
           debugPrint('Signing out...');
         },
       ),
