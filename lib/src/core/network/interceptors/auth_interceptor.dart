@@ -13,10 +13,10 @@ class AuthInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    // final accessToken = LocalStorageService().getAccessToken();
+    final accessToken = LocalStorageService().getAccessToken();
 
-    final accessToken =
-        await "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6bnVsbCwiX2lkIjoiNjg3Njk3MTg3NTAyOTZmMmFkYmNiNDNlIiwiaWF0IjoxNzUyNjk1NDA0LCJleHAiOjE3ODQyMzE0MDR9.s5PPYWbXewJRELC_JdQKs-jSj9L3aMeoy7cta0oHVZk";
+    // final accessToken =
+    //     await "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6bnVsbCwiX2lkIjoiNjg3Njk3MTg3NTAyOTZmMmFkYmNiNDNlIiwiaWF0IjoxNzUyNjk1NDA0LCJleHAiOjE3ODQyMzE0MDR9.s5PPYWbXewJRELC_JdQKs-jSj9L3aMeoy7cta0oHVZk";
     if (accessToken != null) {
       options.headers['Authorization'] = 'Bearer $accessToken';
     }
