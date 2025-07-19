@@ -1,3 +1,6 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
@@ -5,7 +8,6 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
 import 'package:help_sum/src/core/utils/app_utils.dart';
-import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/service_provider_card.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_status_header.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_timer.dart';
@@ -13,6 +15,8 @@ import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/offer_details_card.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/service_location_map.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/service_time_card.dart';
+import 'package:help_sum/src/features/core/merchant/domain/entities/merchant_job_request_resposne_entity.dart';
+import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/section_divider_text.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
@@ -20,25 +24,32 @@ import 'package:help_sum/src/widgets/animated_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_image_slider.dart';
-import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../../core/constants/app_dimensions.dart';
 
-class JobDetailPage extends StatefulWidget {
-  final JobModel job;
+class JobDetailPage extends ConsumerStatefulWidget {
+  final JobRequestEntity job;
   final String? tabName;
 
   const JobDetailPage({super.key, required this.job, this.tabName});
 
   @override
-  State<JobDetailPage> createState() => _JobDetailPageState();
+  ConsumerState<JobDetailPage> createState() => _JobDetailPageState();
 }
 
-class _JobDetailPageState extends State<JobDetailPage> {
+class _JobDetailPageState extends ConsumerState<JobDetailPage> {
   bool showManageJobButton = true;
+
+  @override
+  void initState() {
+    log(widget.job.status!);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final jobStatus = AppUtils.parseJobStatus(widget.job.status ?? "pending");
     print("job status is ${widget.job.status}");
     return Scaffold(
       appBar: CustomAppBar(title: AppTexts.bookingDetail),
@@ -48,8 +59,8 @@ class _JobDetailPageState extends State<JobDetailPage> {
           BookingStatusHeader(
             text: widget.tabName ?? "",
             showContractTag:
-                widget.job.status == JobStatus.inProgress ||
-                widget.job.status == JobStatus.pending,
+                jobStatus == JobStatus.inProgress ||
+                jobStatus == JobStatus.pending,
           ),
           10.verticalSpace,
           Expanded(
@@ -57,77 +68,89 @@ class _JobDetailPageState extends State<JobDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (widget.job.status == JobStatus.inProgress) ...[
+                  if (jobStatus == JobStatus.inProgress) ...[
                     const BookingTimer(),
                     // 20.verticalSpace,
                   ],
 
                   ServiceTimeCard(
-                    title: AppUtils.getServiceStartTimeTitle(widget.job.status),
+                    title: AppUtils.getServiceStartTimeTitle(jobStatus),
                     date: 'Tuesday, 11 November',
                     time: '3:10 PM',
                   ),
                   20.verticalSpace,
                   ServiceTimeCard(
-                    title: AppUtils.getServiceEndTimeTitle(widget.job.status),
+                    title: AppUtils.getServiceEndTimeTitle(jobStatus),
                     date: 'Thursday, 12 November',
                     time: '2:10 PM',
                   ),
                   20.verticalSpace,
-                  if (widget.job.status == JobStatus.cancelled ||
-                      widget.job.status == JobStatus.rejected)
-                    SectionDividerText(
-                      heading: "Job Description",
-                      text: "Pipe Repair",
-                    ),
-                  if (widget.job.status == JobStatus.cancelled)
+                  // if (jobStatus == JobStatus.cancelled ||
+                  //     jobStatus == JobStatus.rejected)
+                  SectionDividerText(
+                    heading: "Job Description",
+                    text: widget.job.description ?? "",
+                  ),
+                  if (jobStatus == JobStatus.cancelled)
                     SectionDividerText(
                       heading: "Cancelling Reason",
                       text: "Unsatisfied with merchant",
                     ),
 
-                  if (widget.job.status == JobStatus.waitingPayment ||
-                      widget.job.status == JobStatus.completed) ...[
+                  if (jobStatus == JobStatus.waitingPayment ||
+                      jobStatus == JobStatus.completed) ...[
                     SectionDividerText(heading: "Total Time", text: "00:06:13"),
                     SectionDividerText(heading: "Total Earning", text: "\$500"),
                   ],
-                  if (widget.job.status == JobStatus.pending) ...[
+                  if (jobStatus == JobStatus.pending) ...[
                     SectionDividerText(
                       heading: "Distance from service location:",
                       text: "0.2 km",
                     ),
                   ],
-                  if (widget.job.status != JobStatus.cancelled &&
-                      widget.job.status != JobStatus.rejected) ...[
+                  if (jobStatus != JobStatus.cancelled &&
+                      jobStatus != JobStatus.rejected) ...[
                     const OfferDetailsCard(),
                     10.verticalSpace,
                   ],
-                  if (widget.job.status == JobStatus.ongoing ||
-                      widget.job.status == JobStatus.approved ||
-                      widget.job.status == JobStatus.waitingConfirmation
+                  if (jobStatus == JobStatus.ongoing ||
+                      jobStatus == JobStatus.approved ||
+                      jobStatus == JobStatus.waitingConfirmation
                   //|| job.status == JobStatus.pending//
                   ) ...[
                     JobDetailsUpdateCard(
                       heading: "Job Details Update",
                       showMerchantNotes: true,
                       workLabel:
-                          widget.job.status == JobStatus.waitingPayment ||
-                                  widget.job.status == JobStatus.completed
+                          AppUtils.parseJobStatus(
+                                        widget.job.status ?? "pending",
+                                      ) ==
+                                      JobStatus.waitingPayment ||
+                                  AppUtils.parseJobStatus(
+                                        widget.job.status ?? "pending",
+                                      ) ==
+                                      JobStatus.completed
                               ? AppTexts.totalServiceTime
                               : null,
                       workValue:
-                          widget.job.status == JobStatus.waitingPayment ||
-                                  widget.job.status == JobStatus.completed
+                          AppUtils.parseJobStatus(
+                                        widget.job.status ?? "pending",
+                                      ) ==
+                                      JobStatus.waitingPayment ||
+                                  AppUtils.parseJobStatus(
+                                        widget.job.status ?? "pending",
+                                      ) ==
+                                      JobStatus.completed
                               ? AppTexts.threeHours
                               : null,
                     ),
                     20.verticalSpace,
                   ],
-                  if (widget.job.status == JobStatus.waitingConfirmation) ...[
+                  if (jobStatus == JobStatus.waitingConfirmation) ...[
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 14.w),
                       child: CustomButton(
-                        text: "Chat with usama",
+                        text: "Chat with ${widget.job.consumerId?.email}",
                         textColor: Colors.black,
                         color: Color(0xFF04DB00).withAlpha(40),
                         iconWidget: Image.asset(
@@ -143,7 +166,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                     ),
                     10.verticalSpace,
                   ],
-                  if (widget.job.status == JobStatus.rejected) ...[
+                  if (jobStatus == JobStatus.rejected) ...[
                     JobImageSlider(
                       imageUrls: [
                         'https://picsum.photos/id/237/200/300',
@@ -154,7 +177,7 @@ class _JobDetailPageState extends State<JobDetailPage> {
                     ),
                     20.verticalSpace,
                   ],
-                  if (widget.job.status != JobStatus.waitingPayment) ...[
+                  if (jobStatus != JobStatus.waitingPayment) ...[
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 14.w),
                       child: Divider(),
@@ -162,18 +185,18 @@ class _JobDetailPageState extends State<JobDetailPage> {
                     10.verticalSpace,
                     LocationMapView(
                       heading: "Service Location",
-                      latitude: 144,
-                      longitude: 146,
+                      latitude: widget.job.location?.coordinates?[1] ?? 0,
+                      longitude: widget.job.location?.coordinates?[0] ?? 0,
                     ),
                     10.verticalSpace,
                   ],
-                  if (widget.job.status == JobStatus.inProgress) ...[
+                  if (jobStatus == JobStatus.inProgress) ...[
                     _chatAndTrackConsumerButtons(context),
                   ],
-                  if (widget.job.status == JobStatus.cancelled ||
-                      widget.job.status == JobStatus.rejected)
+                  if (jobStatus == JobStatus.cancelled ||
+                      jobStatus == JobStatus.rejected)
                     ServiceProviderCard(
-                      title: widget.job.customerName,
+                      title: widget.job.consumerId?.email ?? "",
                       reviews: AppTexts.ratingAndReviews,
                       showMapIcon: false,
                       showChatIcon: false,
@@ -181,19 +204,19 @@ class _JobDetailPageState extends State<JobDetailPage> {
                       onTapChat: () {},
                       onTapMap: () {},
                     ),
-                  if (widget.job.status == JobStatus.pending) ...[
+                  if (jobStatus == JobStatus.pending) ...[
                     10.verticalSpace,
                     _approveAndRejectJobButtons(context),
                   ],
-                  if (widget.job.status == JobStatus.approved) ...[
+                  if (jobStatus == JobStatus.approved) ...[
                     10.verticalSpace,
                     _otherOptionsButton(context),
                   ],
-                  if (widget.job.status == JobStatus.inProgress) ...[
+                  if (jobStatus == JobStatus.inProgress) ...[
                     20.verticalSpace,
                     _bookingConfirmAndCancelButtons(context),
                   ],
-                  if (widget.job.status == JobStatus.waitingPayment) ...[
+                  if (jobStatus == JobStatus.waitingPayment) ...[
                     10.verticalSpace,
                     _paymentReceivedButton(),
                   ],
@@ -267,8 +290,11 @@ class _JobDetailPageState extends State<JobDetailPage> {
               color: AppPalette.primaryColor.withAlpha(220),
               textColor: Colors.white,
               onPressed: () {
-                Fluttertoast.showToast(msg: "Job Approved");
-                context.pop();
+                // ref
+                //     .read(merchantJobsNotifierProvider.notifier)
+                //     .approveJob(jobId: widget.job.id!);
+                // Fluttertoast.showToast(msg: "Job Approved");
+                // context.pop();
                 // _showJobStartConfirmationDialog(context);
               },
             ),

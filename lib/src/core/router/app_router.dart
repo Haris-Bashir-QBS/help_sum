@@ -29,6 +29,7 @@ import 'package:help_sum/src/features/core/common/profile/presentation/pages/pro
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/create_request_screen.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/find_merchant_screen.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/immediate_book_screen.dart';
+import 'package:help_sum/src/features/core/merchant/domain/entities/merchant_job_request_resposne_entity.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/job_detail_screen.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/change_description_page.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/change_rate_page.dart';
@@ -94,7 +95,7 @@ GoRoute _jobDetail() {
     name: AppRoutes.jobDetail,
     builder: (context, state) {
       final Map<String, dynamic> extras = state.extra as Map<String, dynamic>;
-      final JobModel job = extras['job'];
+      final JobRequestEntity job = extras['job'];
       final String? tabName = extras['tabName'];
       return JobDetailPage(job: job, tabName: tabName);
     },

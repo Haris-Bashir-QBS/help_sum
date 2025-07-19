@@ -22,55 +22,54 @@ class AppUtils {
     );
   }
 
-static Future<TimeOfDay?> pickTime(
-  BuildContext context, {
-  bool restrictPast = false,
-  TimeOfDay? initialTime,
-}) async {
-  final now = TimeOfDay.now();
-  final time = initialTime ?? now;
+  static Future<TimeOfDay?> pickTime(
+    BuildContext context, {
+    bool restrictPast = false,
+    TimeOfDay? initialTime,
+  }) async {
+    final now = TimeOfDay.now();
+    final time = initialTime ?? now;
 
-  final picked = await showTimePicker(
-    context: context,
-    initialTime: time,
-    builder: (context, child) {
-      return Theme(
-        data: Theme.of(context).copyWith(
-          timePickerTheme: const TimePickerThemeData(
-            backgroundColor: Colors.white,
-            hourMinuteTextColor: Colors.black,
-            dialHandColor: Colors.blue,
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: time,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            timePickerTheme: const TimePickerThemeData(
+              backgroundColor: Colors.white,
+              hourMinuteTextColor: Colors.black,
+              dialHandColor: Colors.blue,
+            ),
+            colorScheme: ColorScheme.light(
+              primary: Colors.blue, // OK/Cancel buttons
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
           ),
-          colorScheme: ColorScheme.light(
-            primary: Colors.blue, // OK/Cancel buttons
-            onPrimary: Colors.white,
-            onSurface: Colors.black,
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null && restrictPast) {
+      final pickedMinutes = picked.hour * 60 + picked.minute;
+      final nowMinutes = now.hour * 60 + now.minute;
+
+      if (pickedMinutes < nowMinutes) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select a future time'),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.redAccent,
           ),
-        ),
-        child: child!,
-      );
-    },
-  );
-
-  if (picked != null && restrictPast) {
-    final pickedMinutes = picked.hour * 60 + picked.minute;
-    final nowMinutes = now.hour * 60 + now.minute;
-
-    if (pickedMinutes < nowMinutes) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select a future time'),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.redAccent,
-        ),
-      );
-      return null;
+        );
+        return null;
+      }
     }
+
+    return picked;
   }
-
-  return picked;
-}
-
 
   static void showSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(
@@ -207,6 +206,29 @@ static Future<TimeOfDay?> pickTime(
       return AppTexts.serviceEndsOn;
     } else {
       return AppTexts.serviceDateAndTime;
+    }
+  }
+
+  static JobStatus parseJobStatus(String status) {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return JobStatus.completed;
+      case 'inprogress':
+        return JobStatus.inProgress;
+      case 'pending':
+        return JobStatus.pending;
+      case 'approved':
+        return JobStatus.approved;
+      case 'confirmation waiting':
+        return JobStatus.waitingConfirmation;
+      case 'payment waiting':
+        return JobStatus.waitingPayment;
+      case 'cancelled':
+        return JobStatus.cancelled;
+      case 'rejected':
+        return JobStatus.rejected;
+      default:
+        return JobStatus.all;
     }
   }
 }

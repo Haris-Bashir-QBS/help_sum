@@ -8,4 +8,6 @@ abstract class MerchantJobsRepository {
   Future<Either<Failure, MerchantJobRequestsEntity>> getAllJobsByType(
     MerchantByTypeParam params,
   );
+
+  ///Change Job Status 
 }
