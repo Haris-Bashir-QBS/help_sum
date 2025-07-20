@@ -56,6 +56,7 @@ class AppTexts {
   static const String artist = 'Artist';
   static const String personalCare = 'Personal care';
   static const String careTakers = 'Care takers';
+  static const String personalDetails = 'Personal Details';
   static const String electrician = 'Electrician';
   static const String electricianReviews = '4.3 (21 reviews)';
   static const String tutor = 'Tutor';

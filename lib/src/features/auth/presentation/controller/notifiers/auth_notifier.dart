@@ -339,7 +339,7 @@ class AuthNotifier extends _$AuthNotifier {
             ref.read(currentUserProvider.notifier).updateUser(updatedUser);
           }
 
-          CustomToast.errorToast(context: ctx, message: entity.message ?? "");
+          CustomToast.infoToast(context: ctx, message: entity.message ?? "");
         }
 
         return entity.url ?? '';

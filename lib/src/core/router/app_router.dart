@@ -6,7 +6,7 @@ import 'package:help_sum/src/core/services/session_service.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/select_skill_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/login_page.dart';
-import 'package:help_sum/src/features/auth/presentation/screens/role_selection.dart';
+import 'package:help_sum/src/features/auth/presentation/screens/role_selection_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/signup_page.dart';
 import 'package:help_sum/src/features/core/common/intro/spash/pages/splash_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/otp_verification_page.dart';

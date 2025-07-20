@@ -20,6 +20,7 @@ import 'package:help_sum/src/widgets/comman_imageview.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/custom_toast.dart';
+import 'package:help_sum/src/widgets/enlarged_image_view_widget.dart';
 import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 
 class PortfolioScreen extends ConsumerStatefulWidget {
@@ -125,11 +126,12 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   _buildMediaGrid(UserEntity? user) {
     return GridView.builder(
       itemCount: user?.media?.length ?? 0,
+      padding: EdgeInsets.only(top: 5.h),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         crossAxisSpacing: 5,
         mainAxisSpacing: 5,
-        childAspectRatio: .9,
+        childAspectRatio: 1,
       ),
       itemBuilder: (context, index) {
         final url = user?.media![index];
@@ -154,6 +156,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
             imageType: ImageType.network,
             imagePath: url,
             fit: BoxFit.cover,
+            borderRadius: BorderRadius.circular(30),
           ),
         );
       },

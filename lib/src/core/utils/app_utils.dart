@@ -9,7 +9,12 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
 import 'package:help_sum/src/core/enums/permission_status.dart';
 import 'package:help_sum/src/core/services/permission_manager.dart';
+import 'package:help_sum/src/core/utils/app_static_data.dart';
+import 'package:help_sum/src/features/auth/data/models/request/schdule_request_model.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
+import 'package:intl/intl.dart';
+
+import '../../features/auth/domain/entities/user_entity.dart';
 
 class AppUtils {
   /// Picks a date with optional range.
@@ -255,5 +260,38 @@ class AppUtils {
       return null;
     }
     return null;
+  }
+
+  static String getTodayScheduleSubtitle(UserEntity user) {
+    final now = DateTime.now();
+    final days = AppStaticData.daysOfWeek;
+    final today = days[now.weekday - 1];
+    final schedule = user.schedule;
+    if (schedule == null || schedule.isEmpty) {
+      return 'No schedule for today';
+    }
+    final todaySchedule = schedule.firstWhere(
+      (s) => s.dayOfWeek?.toLowerCase() == today.toLowerCase(),
+      orElse: () => Schedule(dayOfWeek: today, timeSlots: []),
+    );
+    if (todaySchedule.timeSlots == null || todaySchedule.timeSlots!.isEmpty) {
+      return 'No schedule for today';
+    }
+    final slot = todaySchedule.timeSlots!.first;
+    if (slot.startTime == null || slot.endTime == null) {
+      return 'No schedule for today';
+    }
+    final formattedStart = _formatTime(slot.startTime!);
+    final formattedEnd = _formatTime(slot.endTime!);
+    return "Today: $formattedStart - $formattedEnd";
+  }
+
+  static String _formatTime(String time) {
+    try {
+      final dt = DateFormat('H:mm').parse(time);
+      return DateFormat('h:mm a').format(dt);
+    } catch (_) {
+      return time;
+    }
   }
 }
