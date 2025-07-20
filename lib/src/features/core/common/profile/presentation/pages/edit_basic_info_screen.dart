@@ -12,6 +12,7 @@ import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/controller/user_state_provider.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/widgets/avatar_with_badge.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_card.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_row.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
@@ -78,7 +79,7 @@ class _EditBasicInfoScreenState extends ConsumerState<EditBasicInfoScreen> {
         ),
         child: Row(
           children: [
-            _buildAvatarWithBadge(),
+            AvatarWithBadge(),
             SizedBox(width: 16.w),
             Expanded(
               child: Column(
@@ -181,76 +182,79 @@ class _EditBasicInfoScreenState extends ConsumerState<EditBasicInfoScreen> {
         appBar: CustomAppBar(title: AppTexts.account),
         body: Form(
           key: _formKey,
-          child: Padding(
-            padding: EdgeInsets.all(16.w),
-            child: Column(
-              children: [
-                if (appRole == AppRole.merchant) ...[
-                  _buildMerchantProfileHeader(context),
-                  30.verticalSpace,
-                ],
-
-                InfoCard(
-                  title:
-                      appRole == AppRole.merchant
-                          ? "Personal Details"
-                          : AppTexts.basicInformation,
-                  children: [
-                    InfoRow(
-                      label: AppTexts.firstName,
-                      value: widget.user.firstName ?? "",
-                      isEditable: true,
-                      controller: _firstNameController,
-                      validator: AppValidators.validateFullName(),
-                      onChanged: (value) {
-                        _formKey.currentState?.validate();
-                      },
-                    ),
-                    InfoRow(
-                      label: AppTexts.lastName,
-                      value: widget.user.lastName ?? "",
-                      isEditable: true,
-                      controller: _lastNameController,
-                      validator: AppValidators.validateFullName(),
-                      onChanged: (value) {
-                        _formKey.currentState?.validate();
-                      },
-                    ),
-
-                    if (appRole == AppRole.merchant) ...[
-                      InfoRow(
-                        label: AppTexts.emailAddress,
-                        value: widget.user.email ?? "",
-                        isEditable: true,
-                        controller: _emailController,
-                        validator: AppValidators.validateEmail(),
-                        onChanged: (value) {
-                          _formKey.currentState?.validate();
-                        },
-                      ),
-
-                      InfoRow(
-                        label: AppTexts.phoneNumber,
-                        value: widget.user.phone ?? "",
-                        isEditable: true,
-                        controller: _phoneController,
-                        validator: AppValidators.validatePhoneNumber(),
-                        onChanged: (value) {
-                          _formKey.currentState?.validate();
-                        },
-                      ),
-                    ],
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                children: [
+                  if (appRole == AppRole.merchant) ...[
+                    _buildMerchantProfileHeader(context),
+                    30.verticalSpace,
                   ],
-                  onPressed: () {},
-                ),
-                const Spacer(),
-                CustomButton(
-                  text: AppTexts.saveChanges,
-                  textColor: Colors.white,
-                  color: AppPalette.primaryColor,
-                  onPressed: _saveChanges,
-                ),
-              ],
+                  InfoCard(
+                    title:
+                        appRole == AppRole.merchant
+                            ? AppTexts.personalDetails
+                            : AppTexts.basicInformation,
+                    children: [
+                      InfoRow(
+                        label: AppTexts.firstName,
+                        value: widget.user.firstName ?? "",
+                        isEditable: true,
+                        controller: _firstNameController,
+                        validator: AppValidators.validateFullName(),
+                        onChanged: (value) {
+                          _formKey.currentState?.validate();
+                        },
+                      ),
+                      InfoRow(
+                        label: AppTexts.lastName,
+                        value: widget.user.lastName ?? "",
+                        isEditable: true,
+                        controller: _lastNameController,
+                        validator: AppValidators.validateFullName(),
+                        onChanged: (value) {
+                          _formKey.currentState?.validate();
+                        },
+                      ),
+
+                      if (appRole == AppRole.merchant) ...[
+                        InfoRow(
+                          label: AppTexts.emailAddress,
+                          value: widget.user.email ?? "",
+                          isEditable: true,
+                          controller: _emailController,
+                          validator: AppValidators.validateEmail(),
+                          onChanged: (value) {
+                            _formKey.currentState?.validate();
+                          },
+                        ),
+
+                        InfoRow(
+                          label: AppTexts.phoneNumber,
+                          value: widget.user.phone ?? "",
+                          isEditable: false,
+                          controller: _phoneController,
+                          validator: AppValidators.validatePhoneNumber(),
+                          onChanged: (value) {
+                            _formKey.currentState?.validate();
+                          },
+                        ),
+                      ],
+                    ],
+                    onPressed: () {},
+                  ),
+
+                  // const Spacer(),
+                  30.verticalSpace,
+                  CustomButton(
+                    text: AppTexts.saveChanges,
+                    textColor: Colors.white,
+                    color: AppPalette.primaryColor,
+                    onPressed: _saveChanges,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

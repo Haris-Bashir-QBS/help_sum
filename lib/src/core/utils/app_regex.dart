@@ -1,7 +1,7 @@
 class AppRegex {
   AppRegex._();
 
-  static final RegExp phoneRegExp = RegExp(r'^03[0-9]{9}$');
+  static final RegExp phoneRegExp = RegExp(r'^[\+]?[0-9\s\-\(\)\.]{7,15}$');
   static final RegExp passwordRegExp = RegExp(
     r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$&*~]).{8,}$',
   );

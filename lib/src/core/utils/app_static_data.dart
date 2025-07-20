@@ -69,6 +69,16 @@ class AppStaticData {
     CategoryData(name: AppTexts.technicians, iconPath: AppAssets.technician),
   ];
 
+  static const List<String> daysOfWeek = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+
   // static const List<ServiceProviderModel> serviceProviders = [
   //   ServiceProviderModel(
   //     id: '1',

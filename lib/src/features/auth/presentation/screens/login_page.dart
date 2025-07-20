@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
+import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_validators.dart';
 import 'package:help_sum/src/features/auth/data/models/request/login_request_model.dart';
@@ -49,7 +50,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           // context.goNamed(AppRoutes.mainNavigation);
 
           if (next.user.role != AppRole.consumer.name &&
-              next.user.isCompleted == false) {
+              //  next.user.isCompleted == false) {
+              (next.user.services?.isEmpty == true ||
+                  next.user.schedule?.isEmpty == true)) {
             context.goNamed(AppRoutes.selectSkill);
           } else {
             context.goNamed(AppRoutes.mainNavigation);
@@ -148,7 +151,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       hint: AppTexts.phoneNumber,
       prefixIcon: Icons.phone,
       keyboardType: TextInputType.phone,
-      // validator: AppValidators.validatePhoneNumber(),
+      validator: AppValidators.validatePhoneNumber(),
     );
   }
 
@@ -165,7 +168,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget _buildLoginButton() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 48.w),
-      child: CustomButton(text: AppTexts.login, onPressed: _login),
+      child: CustomButton(
+        text: AppTexts.login,
+        onPressed: _login,
+        //color: context.primaryColor,
+      ),
     );
   }
 

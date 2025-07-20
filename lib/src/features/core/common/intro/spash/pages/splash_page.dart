@@ -41,7 +41,9 @@ class _SplashPageState extends ConsumerState<SplashPage>
           // );
         } else {
           if (next.user.role != AppRole.consumer.name) {
-            if (next.user.isCompleted == false) {
+            //   if (next.user.isCompleted == false) {
+            if ((next.user.services?.isEmpty == true ||
+                next.user.schedule?.isEmpty == true)) {
               context.goNamed(AppRoutes.selectSkill);
             } else {
               context.goNamed(AppRoutes.mainNavigation);

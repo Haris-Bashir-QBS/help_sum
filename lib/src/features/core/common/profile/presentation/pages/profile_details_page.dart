@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
+import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/services/local_storage_service.dart';
+import 'package:help_sum/src/core/utils/app_utils.dart';
+import 'package:help_sum/src/features/auth/data/models/response/user_model.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
-import 'package:help_sum/src/features/auth/presentation/screens/stripe_merchant_setup_screen.dart';
+import 'package:help_sum/src/features/auth/presentation/screens/stripe_merchant_setup_page.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/controller/user_state_provider.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_card.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_row.dart';
@@ -19,6 +23,13 @@ import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/modal_progress_hud.dart';
+import 'package:help_sum/src/features/auth/data/models/request/schdule_request_model.dart';
+import 'dart:io';
+import 'package:help_sum/src/core/services/media_picker_service.dart';
+import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
+
+import '../../../../../auth/data/models/request/update_profile_request_model.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/widgets/avatar_with_badge.dart';
 
 class ProfileDetailsPage extends ConsumerStatefulWidget {
   const ProfileDetailsPage({super.key});
@@ -34,7 +45,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
       child: Consumer(
         builder: (context, ref, _) {
           UserEntity? user = ref.watch(currentUserProvider).user;
-          print("userRole  is ${user?.role}");
+          debugPrint("userRole  is ${user?.role}");
           if (user == null) {
             return Container(color: Colors.red, width: 1.sw, height: 200.h);
           }
@@ -116,7 +127,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
         ),
         child: Row(
           children: [
-            _buildAvatarWithBadge(),
+            const AvatarWithBadge(),
             SizedBox(width: 16.w),
             Expanded(
               child: Column(
@@ -139,13 +150,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                       ),
                       Icon(Icons.star_half, color: Colors.amber, size: 16.sp),
                       SizedBox(width: 4.w),
-                      Text(
-                        '4.5',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
+                      CustomText(text: user.rating ?? "N/A"),
                     ],
                   ),
                 ],
@@ -155,35 +160,6 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildAvatarWithBadge() {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        CircleAvatar(
-          radius: 28.r,
-          backgroundColor: Colors.grey.shade300,
-          child: Icon(
-            Icons.account_circle_outlined,
-            size: 32.sp,
-            color: Colors.grey.shade800,
-          ),
-        ),
-        Positioned(
-          top: -2,
-          right: -2,
-          child: Container(
-            padding: const EdgeInsets.all(2),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.error, color: Colors.orange, size: 18.r),
-          ),
-        ),
-      ],
     );
   }
 
@@ -210,7 +186,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
             title: 'Skill',
             subtitle:
                 user.services != null && user.services!.isNotEmpty
-                    ? user.services!.map((e) => e['name']).join(',').toString()
+                    ? user.services!.map((e) => e['name']).join(', ').toString()
                     : 'No Services Added',
             onTap: () => context.pushNamed(AppRoutes.selectSkill, extra: true),
           ),
@@ -219,7 +195,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
             context,
             icon: Icons.schedule,
             title: 'Schedule',
-            subtitle: 'Todays: 9:00AM - 4:00PM',
+            subtitle: AppUtils.getTodayScheduleSubtitle(user),
             onTap:
                 () => context.pushNamed(AppRoutes.createSchedule, extra: true),
           ),
@@ -235,18 +211,20 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
           const Divider(),
           _buildWorkPhotosGallery(context, user),
 
-          if (user.isMerchant == false)
+          if (user.isConsumer != true) ...[
+            const Divider(),
             _buildMerchantInfoTile(
               context,
               icon: Icons.schedule,
               title: 'Setup Stripe Merchant Account',
-              subtitle: 'to recieve payments',
+              subtitle: 'To receive payments',
               onTap: () async {
                 final checkoutUrl = await ref
                     .read(authNotifierProvider.notifier)
                     .fetchStripeAccount(context);
 
                 if (checkoutUrl.isNotEmpty) {
+                  //if (mounted) {
                   final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -261,12 +239,13 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                     ref
                         .read(currentUserProvider.notifier)
                         .updateUser(updatedUser);
-                    // Handle the result if needed
-                    print("Stripe setup completed with result: $result");
+                    debugPrint("Stripe setup completed with result: $result");
                   }
+                  //}
                 }
               },
             ),
+          ],
           const Divider(),
         ],
       ),
@@ -293,7 +272,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomText(text: title, fontWeight: FontWeight.bold),
+                  CustomText(text: title, fontWeight: FontWeight.w600),
                   SizedBox(height: 10.h),
                   CustomText(text: subtitle, maxLines: 1, fontSize: 15.sp),
                 ],
@@ -310,25 +289,30 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
     required IconData icon,
     bool hasWarning = false,
   }) {
-    return Stack(
-      clipBehavior: Clip.none,
-      alignment: Alignment.center,
-      children: [
-        Icon(icon, size: 28.sp, color: Colors.grey.shade700),
-        if (hasWarning)
-          Positioned(
-            top: -4,
-            right: -4,
-            child: Container(
-              padding: const EdgeInsets.all(1),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: () {
+        // Handle icon tap if needed
+      },
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          Icon(icon, size: 28.sp, color: Colors.grey.shade700),
+          if (hasWarning)
+            Positioned(
+              top: -4,
+              right: -4,
+              child: Container(
+                padding: const EdgeInsets.all(1),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.error, color: Colors.orange, size: 14.r),
               ),
-              child: Icon(Icons.error, color: Colors.orange, size: 14.r),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -351,13 +335,11 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                 ),
                 SizedBox(width: 16.w),
                 Expanded(
-                  child: Text(
-                    'Work Photos Gallery',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
+                  child: CustomText(
+                    text: 'Work Photos Gallery',
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
                   ),
                 ),
                 Image.asset(AppAssets.arrow),
@@ -382,7 +364,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
       child: CustomButton(
         text: "Sign out",
         textColor: Colors.white,
-        color: const Color(0xFF0D6EFD),
+        color: AppPalette.primaryColor,
         onPressed: () async {
           context.goNamed(AppRoutes.roleSelection, extra: true);
           await LocalStorageService().clearAll();

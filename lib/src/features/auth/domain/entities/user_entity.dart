@@ -15,6 +15,7 @@ class UserEntity {
   final bool? status;
   final String? idCard;
   final List<String>? media;
+  final String? rating;
   final bool? isConsumer;
   final bool? isMerchant;
   final bool? isNotification;
@@ -49,6 +50,7 @@ class UserEntity {
     this.isDeleted,
     this.isBlocked,
     this.services,
+    this.rating,
     this.schedule,
   });
 
@@ -72,6 +74,7 @@ class UserEntity {
     bool? isVerified,
     bool? isCompleted,
     bool? isDeleted,
+    String? rating,
     bool? isBlocked,
     List<Map<String, dynamic>>? services,
     List<Schedule>? schedule,
@@ -99,6 +102,7 @@ class UserEntity {
       isBlocked: isBlocked ?? this.isBlocked,
       services: services ?? this.services,
       schedule: schedule ?? this.schedule,
+      rating: rating ?? this.rating,
     );
   }
 }
