@@ -5,6 +5,8 @@ import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/entities/service_provider_model.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/merchant_view_profile_provider.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/merchant_view_profile_state.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/about_merchant_widget.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/merchant_details_widget.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/merchant_info_row.dart';
@@ -16,7 +18,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/create_job_route_model.dart';
 import 'package:go_router/go_router.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/merchant_view_profile_notifier.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class MerchantViewProfilePage extends ConsumerStatefulWidget {

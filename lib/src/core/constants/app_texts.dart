@@ -191,7 +191,7 @@ class AppTexts {
   static const String bookings = 'Bookings';
   static const String jobs = 'Jobs';
 
-  static const String inProgress = "In-Progress";
+  static const String inProgress = "On going";
   static const String completed = "Completed";
   static const String waitingConfirmation = "Waiting Confirmation";
   static const String waitingPayment = "Waiting Payment";
@@ -253,6 +253,7 @@ class AppTexts {
   static const String searchServices = "Search services...";
   static const String noServicesFound = "No services found";
   static const String noServicesAvailable = "No services available";
+  static const String noBookingsFound = "No bookings found";
   static const String retry = "Retry";
 
   static const String continuee = "Continue";

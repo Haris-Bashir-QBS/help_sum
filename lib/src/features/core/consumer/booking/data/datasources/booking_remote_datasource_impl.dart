@@ -31,11 +31,19 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   }
 
   @override
-  Future<JobResponseModel> fetchJobsByType(String type) async {
+  Future<JobResponseModel> fetchJobsByType(
+    String type, {
+    int? page,
+    int? limit,
+  }) async {
     return await ApiErrorHandler.executeGuarded(() async {
+      final queryParams = <String, dynamic>{};
+      if (page != null) queryParams['page'] = page;
+      if (limit != null) queryParams['limit'] = limit;
+
       final response = await client.get(
-        endpoint: ApiEndpoints.fetchJobs.value,
-        queryParams: {'type': type},
+        endpoint: "${ApiEndpoints.fetchJobs.value}/$type",
+        queryParams: queryParams.isNotEmpty ? queryParams : null,
       );
       if (response.isOk) {
         return JobResponseModel.fromJson(response.data);

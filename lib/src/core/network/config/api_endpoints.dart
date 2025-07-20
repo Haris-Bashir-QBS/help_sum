@@ -72,7 +72,7 @@ enum ApiEndpoints {
       case ApiEndpoints.createJob:
         return "/job";
       case ApiEndpoints.fetchJobs:
-        return "/job/consumer/all";
+        return "/job/consumer";
       case ApiEndpoints.merchantSetup:
         return "/$_auth/merchant-account-setup";
       case ApiEndpoints.jobMerchantByType:

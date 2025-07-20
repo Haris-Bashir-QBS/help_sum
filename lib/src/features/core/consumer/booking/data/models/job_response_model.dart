@@ -128,7 +128,11 @@ class JobData {
   factory JobData.fromJson(Map<String, dynamic> json) {
     return JobData(
       consumerId: json['consumerId'] ?? '',
-      merchantId: json['merchantId'] ?? '',
+      merchantId:
+          (json['merchantId'] is Map
+              ? json['merchantId']["_id"]
+              : json["merchantId"]) ??
+          '',
       serviceId: ServiceInfo.fromJson(json['serviceId'] ?? {}),
       title: json['title'] ?? '',
       description: json['description'] ?? '',
