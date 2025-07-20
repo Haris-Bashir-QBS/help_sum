@@ -8,6 +8,7 @@ class InfoRow extends StatelessWidget {
   final String value;
   final Widget? labelWidget;
   final bool isEditable;
+  final bool showDivider, visible;
   final TextEditingController? controller;
   final String? errorText;
   final Function(String)? onChanged;
@@ -19,85 +20,75 @@ class InfoRow extends StatelessWidget {
     required this.value,
     this.labelWidget,
     this.isEditable = false,
+    this.visible = true,
     this.controller,
     this.errorText,
+    this.showDivider = true,
     this.onChanged,
     this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CustomText(
-                text: '$label ',
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w500,
-                color: AppPalette.darkGreyColor,
-              ),
-              if(labelWidget!=null)
-                labelWidget!,
-            ],
-          ),
-          8.verticalSpace,
-          isEditable
-              ? _textFormField()
-              : Column(
+    return Visibility(
+      visible: visible,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 0.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CustomText(
+                  text: '$label ',
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppPalette.darkGreyColor,
+                ),
+                if (labelWidget != null) labelWidget!,
+              ],
+            ),
+            8.verticalSpace,
+            isEditable
+                ? _textFormField()
+                : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomText(
-                      text: value,
-                      fontSize: 14.sp,
-                    ),
+                    CustomText(text: value, fontSize: 14.sp),
                     7.verticalSpace,
-                    Divider(),
+                    if (showDivider) Divider(),
                   ],
                 ),
-          7.verticalSpace
-        ],
+            7.verticalSpace,
+          ],
+        ),
       ),
     );
   }
 
   TextFormField _textFormField() {
     return TextFormField(
-                controller: controller,
-                onChanged: onChanged,
-                validator: validator,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: AppPalette.blackColor,
-                ),
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(vertical: 8.h),
-                  border: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: AppPalette.greyColor,
-                    ),
-                  ),
-                  enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: AppPalette.greyColor,
-                    ),
-                  ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: AppPalette.primaryColor,
-                    ),
-                  ),
-                  errorBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: AppPalette.errorColor,
-                    ),
-                  ),
-                  errorText: errorText,
-                )
-              );
+      controller: controller,
+      onChanged: onChanged,
+      validator: validator,
+      style: TextStyle(fontSize: 16.sp, color: AppPalette.blackColor),
+      decoration: InputDecoration(
+        isDense: true,
+        contentPadding: EdgeInsets.symmetric(vertical: 8.h),
+        border: const UnderlineInputBorder(
+          borderSide: BorderSide(color: AppPalette.greyColor),
+        ),
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: AppPalette.greyColor),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: AppPalette.primaryColor),
+        ),
+        errorBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: AppPalette.errorColor),
+        ),
+        errorText: errorText,
+      ),
+    );
   }
-} 
+}

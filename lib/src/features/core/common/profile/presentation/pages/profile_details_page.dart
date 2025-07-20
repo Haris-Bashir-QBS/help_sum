@@ -19,16 +19,11 @@ import 'package:help_sum/src/features/core/common/profile/presentation/controlle
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_card.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_row.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/profile_header.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/widgets/verification_status.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_image_slider.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/modal_progress_hud.dart';
-import 'package:help_sum/src/features/auth/data/models/request/schdule_request_model.dart';
-import 'dart:io';
-import 'package:help_sum/src/core/services/media_picker_service.dart';
-import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
-
-import '../../../../../auth/data/models/request/update_profile_request_model.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/avatar_with_badge.dart';
 
 class ProfileDetailsPage extends ConsumerStatefulWidget {
@@ -63,7 +58,11 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                       children:
                           user.role == AppRole.consumer.name
                               ? [
-                                ProfileHeader(user: user),
+                                _buildMerchantProfileHeader(
+                                  context,
+                                  user,
+                                  showRating: false,
+                                ),
                                 SizedBox(height: 24.h),
                                 _buildBasicInfoCard(context, user),
                                 26.verticalSpace,
@@ -103,11 +102,12 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
     return InfoCard(
       title: AppTexts.contactInformation,
       children: [
-        // InfoRow(
-        //   label: AppTexts.emailAddress,
-        //   value: user.emailAddress,
-        //   labelWidget: VerificationStatusIndicator(isVerified: user.isVerified),
-        // ),
+        VerificationStatusIndicator(isVerified: user.isVerified == true),
+        InfoRow(
+          label: AppTexts.emailAddress,
+          value: user.email ?? "",
+          visible: (user.email ?? "")!.isNotEmpty,
+        ),
         InfoRow(label: AppTexts.phoneNumber, value: user.phone ?? ""),
       ],
       onPressed: () {
@@ -116,7 +116,11 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
     );
   }
 
-  Widget _buildMerchantProfileHeader(BuildContext context, UserEntity user) {
+  Widget _buildMerchantProfileHeader(
+    BuildContext context,
+    UserEntity user, {
+    bool? showRating = true,
+  }) {
     return InkWell(
       onTap: () => context.pushNamed(AppRoutes.editBasicInfo, extra: user),
       child: Container(
@@ -140,19 +144,24 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  if (showRating ?? true) ...[
+                    Row(
+                      children: [
+                        ...List.generate(
+                          4,
+                          (i) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                            size: 16.sp,
+                          ),
+                        ),
+                        Icon(Icons.star_half, color: Colors.amber, size: 16.sp),
+                        SizedBox(width: 4.w),
+                        CustomText(text: user.rating ?? "N/A"),
+                      ],
+                    ),
+                  ],
                   SizedBox(height: 4.h),
-                  Row(
-                    children: [
-                      ...List.generate(
-                        4,
-                        (i) =>
-                            Icon(Icons.star, color: Colors.amber, size: 16.sp),
-                      ),
-                      Icon(Icons.star_half, color: Colors.amber, size: 16.sp),
-                      SizedBox(width: 4.w),
-                      CustomText(text: user.rating ?? "N/A"),
-                    ],
-                  ),
                 ],
               ),
             ),
