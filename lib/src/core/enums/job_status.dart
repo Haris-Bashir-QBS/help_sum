@@ -3,6 +3,7 @@ enum JobStatus {
   ongoing,
   inProgress,
   approved,
+  accepted,
   pending,
   waitingConfirmation,
   waitingPayment,

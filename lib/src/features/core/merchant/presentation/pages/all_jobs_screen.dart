@@ -142,6 +142,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
       case JobStatus.inProgress:
         return "In-Progress";
       case JobStatus.approved:
+      case JobStatus.accepted:
         return "Approved";
       case JobStatus.completed:
         return "Completed";
@@ -167,6 +168,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
       case JobStatus.pending:
         return Color(0xFFFFC680);
       case JobStatus.approved:
+      case JobStatus.accepted:
       case JobStatus.completed:
         return Color(0xFFAFFFA8);
       case JobStatus.waitingConfirmation:

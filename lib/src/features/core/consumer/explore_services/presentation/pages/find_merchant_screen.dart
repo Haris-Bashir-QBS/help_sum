@@ -86,6 +86,18 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
   }
 
   void _handleTabSelection() {
+    if (_tabController.index == 1) {
+      final state = ref.read(nearbyMerchantsProvider);
+      final serviceId = widget.bookingRouteParams?.serviceId;
+
+      if (state is! NearbyMerchantsLoaded && lat != 0.0 && long != 0.0) {
+        ref.invalidate(nearbyMerchantsProvider);
+        ref
+            .read(nearbyMerchantsProvider.notifier)
+            .fetchNearbyMerchants(lat: lat, long: long, serviceId: serviceId);
+      }
+    }
+
     setState(() {});
   }
 

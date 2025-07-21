@@ -59,4 +59,22 @@ class PaymentRepositoryImplementation implements PaymentRepository {
       return left(Failure(message: e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, CardActionResponseModel>> payForJob({
+    required String jobId,
+    required String paymentToken,
+    required int amount,
+  }) async {
+    try {
+      final response = await _remoteDataSource.payForJob(
+        jobId: jobId,
+        paymentToken: paymentToken,
+        amount: amount,
+      );
+      return right(response);
+    } on Failure catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
 }

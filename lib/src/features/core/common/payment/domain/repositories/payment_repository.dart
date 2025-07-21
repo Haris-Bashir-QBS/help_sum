@@ -10,6 +10,15 @@ abstract interface class PaymentRepository {
     required AddCardRequestModel params,
   });
   Future<Either<Failure, GetCardsResponseModel>> getCards();
-  Future<Either<Failure, CardActionResponseModel>> deleteCard({required String cardId});
-  Future<Either<Failure, CardActionResponseModel>> setDefaultCard({required String cardId});
+  Future<Either<Failure, CardActionResponseModel>> deleteCard({
+    required String cardId,
+  });
+  Future<Either<Failure, CardActionResponseModel>> setDefaultCard({
+    required String cardId,
+  });
+  Future<Either<Failure, CardActionResponseModel>> payForJob({
+    required String jobId,
+    required String paymentToken,
+    required int amount,
+  });
 }

@@ -120,7 +120,8 @@ void _registerPaymentUsecases() {
     ..registerLazySingleton(() => AddCardUseCase(sl()))
     ..registerLazySingleton(() => GetCardsUseCase(sl()))
     ..registerLazySingleton(() => DeleteCardUseCase(sl()))
-    ..registerLazySingleton(() => SetDefaultCardUseCase(sl()));
+    ..registerLazySingleton(() => SetDefaultCardUseCase(sl()))
+    ..registerLazySingleton(() => PayForJobUseCase(sl()));
 }
 
 Future<void> _initBookingDependencies() async {

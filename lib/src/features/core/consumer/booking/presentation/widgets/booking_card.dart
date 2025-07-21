@@ -50,12 +50,12 @@ class BookingCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  CustomText(
-                    text: '#${job.id}',
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.normal,
-                    color: AppPalette.hintColor,
-                  ),
+                  // CustomText(
+                  //   text: '#${job.id}',
+                  //   fontSize: 16.sp,
+                  //   fontWeight: FontWeight.normal,
+                  //   color: AppPalette.hintColor,
+                  // ),
                 ],
               ),
             ),
@@ -99,24 +99,19 @@ class BookingCard extends StatelessWidget {
                         blurRadius: 5,
                       ),
                     ],
-                    color: AppUtils.getJobColor(
-                      _parseJobStatus(job.status ?? "pending"),
-                    ),
+                    color: AppUtils.getJobColor(_parseJobStatus(job.status)),
                     borderRadius: BorderRadius.circular(
                       AppDimensions.appBorderRadius,
                     ),
                   ),
                   child: CustomText(
                     color:
-                        _parseJobStatus(job.status ?? "pending") ==
-                                JobStatus.cancelled
+                        _parseJobStatus(job.status) == JobStatus.cancelled
                             ? AppPalette.backgroundColor
                             : null,
                     fontWeight: FontWeight.bold,
                     fontSize: 13.sp,
-                    text: AppUtils.getJobString(
-                      _parseJobStatus(job.status ?? "pending"),
-                    ),
+                    text: AppUtils.getJobString(_parseJobStatus(job.status)),
                   ),
                 ),
               ),
