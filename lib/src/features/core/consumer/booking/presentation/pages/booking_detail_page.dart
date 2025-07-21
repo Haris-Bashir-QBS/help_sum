@@ -3,9 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
+import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/core/utils/app_utils.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/service_provider_card.dart';
+import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_status_header.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_timer.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_details_update_card.dart';
@@ -23,7 +25,7 @@ import 'package:help_sum/src/widgets/custom_text.dart';
 import '../../../../../../core/constants/app_dimensions.dart';
 
 class BookingDetailPage extends StatelessWidget {
-  final JobModel job;
+  final JobData job;
   final String? tabName;
 
   const BookingDetailPage({super.key, required this.job, this.tabName});
@@ -37,8 +39,9 @@ class BookingDetailPage extends StatelessWidget {
         children: [
           20.verticalSpace,
           BookingStatusHeader(
-            text: tabName ?? "",
-            showContractTag: job.status == JobStatus.inProgress,
+            text: job.status,
+            //      showContractTag: job.status == JobStatus.inProgress.n,
+            showContractTag: false,
           ),
           10.verticalSpace,
           Expanded(
@@ -52,13 +55,15 @@ class BookingDetailPage extends StatelessWidget {
                   ],
 
                   ServiceTimeCard(
-                    title: AppUtils.getServiceStartTimeTitle(job.status),
+                    //title: AppUtils.getServiceStartTimeTitle(job.status??""),
+                    title: "Start Time",
                     date: 'Tuesday, 11 November',
                     time: '3:10 PM',
                   ),
                   20.verticalSpace,
                   ServiceTimeCard(
-                    title: AppUtils.getServiceEndTimeTitle(job.status),
+                    // title: AppUtils.getServiceEndTimeTitle(job.status),
+                    title: "End Time",
                     date: 'Thursday, 12 November',
                     time: '2:10 PM',
                   ),
@@ -74,21 +79,22 @@ class BookingDetailPage extends StatelessWidget {
                   ),
                   Divider(),
                   20.verticalSpace,
-                  if (job.status == JobStatus.ongoing ||
-                      job.status == JobStatus.approved ||
-                      job.status == JobStatus.pending) ...[
-                    JobDetailsUpdateCard(
-                      workLabel:
-                          job.status == JobStatus.waitingPayment ||
-                                  job.status == JobStatus.completed
-                              ? AppTexts.totalServiceTime
-                              : null,
-                      workValue:
-                          job.status == JobStatus.waitingPayment ||
-                                  job.status == JobStatus.completed
-                              ? AppTexts.threeHours
-                              : null,
-                    ),
+                  if (job.status == JobStatus.ongoing.name ||
+                      job.status == JobStatus.approved.name ||
+                      job.status == JobStatus.accepted.name ||
+                      job.status == JobStatus.pending.name) ...[
+                    // JobDetailsUpdateCard(
+                    //   workLabel:
+                    //       job.status == JobStatus.waitingPayment ||
+                    //               job.status == JobStatus.completed
+                    //           ? AppTexts.totalServiceTime
+                    //           : null,
+                    //   workValue:
+                    //       job.status == JobStatus.waitingPayment ||
+                    //               job.status == JobStatus.completed
+                    //           ? AppTexts.threeHours
+                    //           : null,
+                    // ),
                     20.verticalSpace,
                   ],
 
@@ -108,12 +114,12 @@ class BookingDetailPage extends StatelessWidget {
                   ),
                   20.verticalSpace,
 
-                  if (job.status != JobStatus.inProgress) ...[
+                  if (job.status != JobStatus.inProgress.name) ...[
                     LocationMapView(latitude: 144, longitude: 146),
                     10.verticalSpace,
                   ],
                   ServiceProviderCard(
-                    title: job.customerName,
+                    title: job.consumerId,
                     reviews: AppTexts.ratingAndReviews,
                     showMapIcon:
                         job.status != JobStatus.cancelled &&
@@ -131,7 +137,24 @@ class BookingDetailPage extends StatelessWidget {
                       context.pushNamed(AppRoutes.mapTracking);
                     },
                   ),
-
+                  if (job.paymentAmount == 0 ||
+                      job.paymentStatus == "escrowed") ...[
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppDimensions.paddingAllSides,
+                      ),
+                      child: CustomButton(
+                        text: "Pay now",
+                        onPressed: () {
+                          context.pushNamed(
+                            AppRoutes.paymentMethod,
+                            extra: job,
+                          );
+                        },
+                        color: context.primaryColor,
+                      ),
+                    ),
+                  ],
                   if (job.status == JobStatus.pending) ...[
                     10.verticalSpace,
                     _otherOptionsButton(context),

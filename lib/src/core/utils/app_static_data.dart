@@ -23,7 +23,7 @@ class AppStaticData {
   static const List<String> jobStatusTabs = [
     AppTexts.all,
     AppTexts.completed,
-    AppTexts.inProgress,
+    AppTexts.onGoing,
     AppTexts.pending,
     AppTexts.approved,
     AppTexts.waitingConfirmation,

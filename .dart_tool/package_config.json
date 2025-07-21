@@ -950,6 +950,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "shorebird_code_push",
+      "rootUri": "file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/shorebird_code_push-2.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
       "name": "skeletonizer",
       "rootUri": "file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/skeletonizer-1.4.3",
       "packageUri": "lib/",
@@ -1166,7 +1172,7 @@
       "languageVersion": "3.7"
     }
   ],
-  "generated": "2025-07-20T06:14:01.984822Z",
+  "generated": "2025-07-21T17:29:54.549690Z",
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///C:/haris/flutter/flutter",

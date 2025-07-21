@@ -39,6 +39,7 @@ import '../../features/core/common/payment/domain/usecases/delete_card_usecase.d
 import '../../features/core/common/payment/domain/usecases/set_default_card_usecase.dart';
 import '../../features/core/consumer/explore_services/domain/usecases/get_services_by_category_usecase.dart';
 import '../../features/core/consumer/explore_services/domain/usecases/get_nearby_merchants_usecase.dart';
+import '../../features/core/common/payment/domain/usecases/pay_for_job_usecase.dart';
 import '../network/client/dio_client.dart';
 import '../../features/core/consumer/booking/data/datasources/booking_remote_datasource.dart';
 import '../../features/core/consumer/booking/data/datasources/booking_remote_datasource_impl.dart';

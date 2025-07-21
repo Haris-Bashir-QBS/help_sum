@@ -21,6 +21,7 @@ enum ApiEndpoints {
   updateProfile,
   merchantSetup,
   jobMerchantByType,
+  jobPayment,
 
   /// ================= Services =======================
   getServicesByCategory,
@@ -77,6 +78,8 @@ enum ApiEndpoints {
         return "/$_auth/merchant-account-setup";
       case ApiEndpoints.jobMerchantByType:
         return '/job/merchant';
+      case ApiEndpoints.jobPayment:
+        return "/job"; // Will be appended with /:id/payment
     }
   }
 }

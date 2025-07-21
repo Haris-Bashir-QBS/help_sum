@@ -152,6 +152,7 @@ class AppUtils {
         return Color(0xFFFFC680);
 
       case JobStatus.approved:
+      case JobStatus.accepted:
       case JobStatus.completed:
         return Color(0xFFAFFFA8);
       case JobStatus.waitingConfirmation:
@@ -171,6 +172,7 @@ class AppUtils {
       case JobStatus.inProgress:
         return "In-Progress";
       case JobStatus.approved:
+      case JobStatus.accepted:
         return "Approved";
       case JobStatus.waitingConfirmation:
         return "Waiting Confirmation";
@@ -197,6 +199,7 @@ class AppUtils {
       case JobStatus.pending:
         return AppTexts.requestedAt;
       case JobStatus.approved:
+      case JobStatus.accepted:
         return AppTexts.approvedAt;
       case JobStatus.cancelled:
         return AppTexts.rejectedAt;

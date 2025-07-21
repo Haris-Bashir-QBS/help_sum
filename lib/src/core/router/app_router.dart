@@ -14,6 +14,7 @@ import 'package:help_sum/src/features/core/common/intro/onboarding/pages/onboard
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/main_navigation_page.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/portfolio_screen.dart';
+import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/Booking_route_params.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_categories_listing_page.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_service_providers_listing_page.dart';
@@ -364,7 +365,7 @@ GoRoute _bookingDetail() {
     name: AppRoutes.bookingDetail,
     builder: (context, state) {
       final Map<String, dynamic> extras = state.extra as Map<String, dynamic>;
-      final JobModel job = extras['job'];
+      final JobData job = extras['job'];
       final String? tabName = extras['tabName'];
       return BookingDetailPage(job: job, tabName: tabName);
     },
@@ -375,7 +376,11 @@ GoRoute _paymentMethod() {
   return GoRoute(
     path: '/payment-method',
     name: AppRoutes.paymentMethod,
-    builder: (context, state) => const PaymentMethodScreen(),
+
+    builder: (context, state) {
+      final JobData job = state.extra as JobData;
+      return PaymentMethodScreen(job: job);
+    },
   );
 }
 

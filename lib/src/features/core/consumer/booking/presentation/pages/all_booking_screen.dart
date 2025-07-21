@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
+import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/widgets/app_tab_bar.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -107,13 +108,11 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
                       showStatus: selectedIndex == 0,
                       index: i,
                       onTap: () {
-                        context.pushNamed(
-                          AppRoutes.bookingDetail,
-                          extra: {
-                            'job': jobs[i],
-                            'tabName': jobTypes[selectedIndex],
-                          },
-                        );
+                        // context.pushNamed(
+                        //   AppRoutes.paymentMethod,
+                        //   extra: jobs[i],
+                        // );
+                        _navigateToJobDetailPage(context, jobs, i);
                       },
                     );
                   },
@@ -138,6 +137,17 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
           ),
         ),
       ],
+    );
+  }
+
+  void _navigateToJobDetailPage(
+    BuildContext context,
+    List<JobData> jobs,
+    int i,
+  ) {
+    context.pushNamed(
+      AppRoutes.bookingDetail,
+      extra: {'job': jobs[i], 'tabName': jobTypes[selectedIndex]},
     );
   }
 

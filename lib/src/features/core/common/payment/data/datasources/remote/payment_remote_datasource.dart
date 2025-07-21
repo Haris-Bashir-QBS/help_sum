@@ -8,4 +8,9 @@ abstract interface class PaymentRemoteDataSource {
   Future<GetCardsResponseModel> getCards();
   Future<CardActionResponseModel> deleteCard({required String cardId});
   Future<CardActionResponseModel> setDefaultCard({required String cardId});
+  Future<CardActionResponseModel> payForJob({
+    required String jobId,
+    required String paymentToken,
+    required int amount,
+  });
 }

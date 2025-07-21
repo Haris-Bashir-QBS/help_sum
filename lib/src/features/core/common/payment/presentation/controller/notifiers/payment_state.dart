@@ -57,3 +57,16 @@ class SetDefaultCardError extends PaymentState {
   final String message;
   SetDefaultCardError(this.message);
 }
+
+/// Pay For Job states
+class PayForJobLoading extends PaymentState {}
+
+class PayForJobSuccess extends PaymentState {
+  final CardActionResponseModel response;
+  PayForJobSuccess(this.response);
+}
+
+class PayForJobError extends PaymentState {
+  final String message;
+  PayForJobError(this.message);
+}

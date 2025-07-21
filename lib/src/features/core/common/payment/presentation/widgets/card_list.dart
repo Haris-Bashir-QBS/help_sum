@@ -14,11 +14,13 @@ class CardList extends ConsumerWidget {
   final bool isLoading;
   final Function(String)? onDelete;
   final Function(String)? onSetDefault;
+  final bool? showHeading;
 
   const CardList({
     super.key,
     required this.cards,
     required this.isLoading,
+    this.showHeading = true,
     this.onDelete,
     this.onSetDefault,
   });
@@ -39,13 +41,6 @@ class CardList extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomText(
-          text: AppTexts.savedCards,
-          fontSize: 18.sp,
-          fontWeight: FontWeight.w600,
-          color: AppPalette.blackColor,
-        ),
-        12.verticalSpace,
         Expanded(
           child: ListView.builder(
             shrinkWrap: true,

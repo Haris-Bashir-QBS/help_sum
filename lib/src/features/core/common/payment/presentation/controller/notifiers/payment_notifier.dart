@@ -5,6 +5,7 @@ import 'package:help_sum/src/features/core/common/payment/domain/usecases/add_ca
 import 'package:help_sum/src/features/core/common/payment/domain/usecases/get_cards_usecase.dart';
 import 'package:help_sum/src/features/core/common/payment/domain/usecases/delete_card_usecase.dart';
 import 'package:help_sum/src/features/core/common/payment/domain/usecases/set_default_card_usecase.dart';
+import 'package:help_sum/src/features/core/common/payment/domain/usecases/pay_for_job_usecase.dart';
 import 'package:help_sum/src/core/use_cases/use_case.dart';
 import 'payment_state.dart';
 
@@ -13,12 +14,14 @@ class PaymentNotifier extends StateNotifier<PaymentState> {
   final GetCardsUseCase _getCardsUseCase;
   final DeleteCardUseCase _deleteCardUseCase;
   final SetDefaultCardUseCase _setDefaultCardUseCase;
+  final PayForJobUseCase _payForJobUseCase;
 
   PaymentNotifier(
     this._addCardUseCase,
     this._getCardsUseCase,
     this._deleteCardUseCase,
     this._setDefaultCardUseCase,
+    this._payForJobUseCase,
   ) : super(PaymentInitial());
 
   Future<void> addCard(AddCardRequestModel params) async {
@@ -62,6 +65,21 @@ class PaymentNotifier extends StateNotifier<PaymentState> {
       (response) => state = SetDefaultCardSuccess(response),
     );
   }
+
+  Future<void> payForJob({
+    required String jobId,
+    required String paymentToken,
+    required int amount,
+  }) async {
+    state = PayForJobLoading();
+    final result = await _payForJobUseCase(
+      PayForJobParams(jobId: jobId, paymentToken: paymentToken, amount: amount),
+    );
+    result.match(
+      (failure) => state = PayForJobError(failure.message),
+      (response) => state = PayForJobSuccess(response),
+    );
+  }
 }
 
 final paymentNotifierProvider =
@@ -71,5 +89,6 @@ final paymentNotifierProvider =
         sl(), // GetCardsUseCase
         sl(), // DeleteCardUseCase
         sl(), // SetDefaultCardUseCase
+        sl(), // PayForJobUseCase
       ),
     );
