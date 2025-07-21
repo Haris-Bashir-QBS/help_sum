@@ -8,7 +8,7 @@ class LocationTypeAheadField extends StatelessWidget {
   final String googleApiKey;
   final TextEditingController controller;
   final void Function(double lat, double lng, String description)
-      onLocationSelected;
+  onLocationSelected;
 
   const LocationTypeAheadField({
     super.key,
@@ -26,7 +26,10 @@ class LocationTypeAheadField extends StatelessWidget {
       suggestionsCallback: (pattern) async {
         if (pattern.isEmpty) return <places_sdk.AutocompletePrediction?>[];
         final result = await places.findAutocompletePredictions(pattern);
-        return <places_sdk.AutocompletePrediction?>[null, ...result.predictions];
+        return <places_sdk.AutocompletePrediction?>[
+          null,
+          ...result.predictions,
+        ];
       },
 
       itemBuilder: (context, suggestion) {
@@ -48,11 +51,13 @@ class LocationTypeAheadField extends StatelessWidget {
 
         if (suggestion == null) {
           final status = await geolocator.Geolocator.checkPermission();
-          bool granted = status == geolocator.LocationPermission.always ||
+          bool granted =
+              status == geolocator.LocationPermission.always ||
               status == geolocator.LocationPermission.whileInUse;
           if (!granted) {
             final result = await geolocator.Geolocator.requestPermission();
-            granted = result == geolocator.LocationPermission.always ||
+            granted =
+                result == geolocator.LocationPermission.always ||
                 result == geolocator.LocationPermission.whileInUse;
           }
 
