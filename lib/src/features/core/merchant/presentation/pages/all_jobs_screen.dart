@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,17 +27,17 @@ class AllJobsScreen extends ConsumerStatefulWidget {
 }
 
 class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
-  static const List<String> jobTypes = [
-    'all',
-    'completed',
-    'inProgress',
-    'pending',
-    'approved',
-    'confirmation waiting',
-    'payment waiting',
-    'cancelled',
-    'rejected',
-  ];
+  // static const List<String> jobTypes = [
+  //   'all',
+  //   'completed',
+  //   'on going',
+  //   'pending',
+  //   'approved',
+  //   'confirmation waiting',
+  //   'payment waiting',
+  //   'cancelled',
+  //   'rejected',
+  // ];
   final ScrollController scrollController = ScrollController();
   int selectedIndex = 0;
   List<JobModel> jobs = [];
@@ -45,7 +47,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
     jobs = AppStaticData.dummyJobs;
     ref
         .read(merchantJobsNotifierProvider.notifier)
-        .getAllJobsByType(jobType: jobTypes.first);
+        .getAllJobsByType(jobType: AppStaticData.jobStatusTabs.first);
     super.initState();
   }
 
@@ -126,11 +128,15 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   void _navigateToJobDetailScreen(JobRequestEntity? job) {
     context.pushNamed(
       AppRoutes.jobDetail,
-      extra: {'job': job, 'tabName': jobTypes[selectedIndex]},
+      extra: {
+        'job': job,
+        'tabName': AppStaticData.jobStatusTabs[selectedIndex],
+      },
     );
   }
 
   String getJobString(JobStatus job) {
+    log(job.name);
     switch (job) {
       case JobStatus.ongoing:
       case JobStatus.inProgress:
@@ -177,7 +183,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   _buildJobsTabbar() {
     return AppTabBar(
       selectedIndex: selectedIndex,
-      tabs: jobTypes,
+      tabs: AppStaticData.jobStatusTabs,
       onTapChanged: (index) {
         // switch (index) {
         //   case 0:
@@ -243,7 +249,10 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
 
         ref
             .read(merchantJobsNotifierProvider.notifier)
-            .getAllJobsByType(jobType: jobTypes[index], refresh: true);
+            .getAllJobsByType(
+              jobType: AppStaticData.jobStatusTabs[index],
+              refresh: true,
+            );
 
         print("object");
       },

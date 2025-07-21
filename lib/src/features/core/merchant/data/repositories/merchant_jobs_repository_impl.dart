@@ -4,6 +4,7 @@ import 'package:help_sum/src/features/core/consumer/explore_services/domain/usec
 import 'package:help_sum/src/features/core/merchant/data/data_sources/remote/merchant_jobs_remote_source.dart';
 import 'package:help_sum/src/features/core/merchant/domain/entities/merchant_job_request_resposne_entity.dart';
 import 'package:help_sum/src/features/core/merchant/domain/params/merchant_by_type_param.dart';
+import 'package:help_sum/src/features/core/merchant/domain/params/update_job_params.dart';
 import 'package:help_sum/src/features/core/merchant/domain/repositories/merchant_jobs_repository.dart';
 
 class MerchantJobsRepositoryImpl implements MerchantJobsRepository {
@@ -27,6 +28,19 @@ class MerchantJobsRepositoryImpl implements MerchantJobsRepository {
       //     pagination: response.data.pagination,
       //   ),
       // );
+
+      return right(response);
+    } on Failure catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, JobRequestEntity>> updateJob(
+    UpdateJobParams params,
+  ) async {
+    try {
+      final response = await remoteDataSource.updateJob(params);
 
       return right(response);
     } on Failure catch (e) {

@@ -264,7 +264,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 40.w),
           child: CustomButton.bordered(
-            text: "Chat with Usama",
+            text: "Chat with ${widget.job.consumerId?.email}",
             iconWidget: Image.asset(
               AppAssets.chatIcon,
               width: 20.w,
@@ -290,9 +290,13 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
               color: AppPalette.primaryColor.withAlpha(220),
               textColor: Colors.white,
               onPressed: () {
-                // ref
-                //     .read(merchantJobsNotifierProvider.notifier)
-                //     .approveJob(jobId: widget.job.id!);
+                ref
+                    .read(merchantJobsNotifierProvider.notifier)
+                    .changeJobStatuts(
+                      jobId: widget.job.id,
+                      action: "accept",
+                      ctx: context,
+                    );
                 // Fluttertoast.showToast(msg: "Job Approved");
                 // context.pop();
                 // _showJobStartConfirmationDialog(context);
@@ -307,6 +311,13 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
               color: AppPalette.redColor,
               onPressed: () {
                 Fluttertoast.showToast(msg: "Job Rejected");
+                ref
+                    .read(merchantJobsNotifierProvider.notifier)
+                    .changeJobStatuts(
+                      jobId: widget.job.id,
+                      action: "reject",
+                      ctx: context,
+                    );
                 context.pop();
               },
             ),
@@ -329,6 +340,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
               onPressed: () {
                 //   Fluttertoast.showToast(msg: "Job Ended");
                 //context.pop();
+
                 _showJobEndConfirmationDialog(context);
               },
             ),
@@ -341,7 +353,14 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
               color: AppPalette.redColor,
               onPressed: () {
                 Fluttertoast.showToast(msg: "Job Cancelled");
-                context.pop();
+                ref
+                    .read(merchantJobsNotifierProvider.notifier)
+                    .changeJobStatuts(
+                      jobId: widget.job.id,
+                      action: "cancel",
+                      ctx: context,
+                    );
+                // context.pop();
               },
             ),
           ),
@@ -357,6 +376,13 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
       title: "Are you sure to end this job?",
       primaryButtonText: AppTexts.no,
       onSecondaryTap: () {
+        ref
+            .read(merchantJobsNotifierProvider.notifier)
+            .changeJobStatuts(
+              jobId: widget.job.id,
+              action: "complete",
+              ctx: context,
+            );
         showJobReceiptDialog(context);
       },
       secondaryButtonText: AppTexts.yes,
@@ -476,7 +502,15 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
             text: "Start Job",
             color: AppPalette.primaryColor,
             onPressed: () {
-              context.pop();
+              // context.pop();
+
+              ref
+                  .read(merchantJobsNotifierProvider.notifier)
+                  .changeJobStatuts(
+                    jobId: widget.job.id,
+                    action: "start",
+                    ctx: context,
+                  );
               Fluttertoast.showToast(msg: "Job Started");
             },
           ),

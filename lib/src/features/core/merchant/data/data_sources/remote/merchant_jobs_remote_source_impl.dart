@@ -8,6 +8,7 @@ import 'package:help_sum/src/features/core/consumer/explore_services/domain/usec
 import 'package:help_sum/src/features/core/merchant/data/data_sources/remote/merchant_jobs_remote_source.dart';
 import 'package:help_sum/src/features/core/merchant/data/models/response/merchant_job_requests_response_model.dart';
 import 'package:help_sum/src/features/core/merchant/domain/params/merchant_by_type_param.dart';
+import 'package:help_sum/src/features/core/merchant/domain/params/update_job_params.dart';
 
 class MerchantJobsRemoteSourceImpl implements MerchantJobsRemoteSource {
   final DioClient client;
@@ -26,6 +27,27 @@ class MerchantJobsRemoteSourceImpl implements MerchantJobsRemoteSource {
 
       if (response.isOk) {
         return MerchantJobRequestsModel.fromJson(response.data);
+      } else {
+        throw ServerException(
+          statusCode: response.statusCode,
+          message: response.data['message'] ?? AppErrors.somethingWentWrong,
+        );
+      }
+    });
+  }
+
+  @override
+  Future<JobRequestModel> updateJob(UpdateJobParams params) async {
+    return await ApiErrorHandler.executeGuarded(() async {
+      final response = await client.put(
+        endpoint:
+            "${ApiEndpoints.createJob.value}/${params.jobId}/merchant/respond",
+        // queryParams: {'page': params.page, 'limit': params.limit},
+        data: params.toJson(),
+      );
+
+      if (response.isOk) {
+        return JobRequestModel.fromJson(response.data['data']);
       } else {
         throw ServerException(
           statusCode: response.statusCode,

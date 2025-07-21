@@ -52,8 +52,10 @@ class _MerchantHomeState extends ConsumerState<MerchantHome> {
                   context,
 
                   UpdateProfileRequest(
-                    lat: newLatLng.latitude,
-                    long: newLatLng.longitude,
+                    // lat: newLatLng.latitude,
+                    // long: newLatLng.longitude,
+                    lat: 24.900,
+                    long: 67.1060,
                   ),
 
                   onSuccess: () {

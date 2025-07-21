@@ -228,7 +228,7 @@ class AppUtils {
         return JobStatus.inProgress;
       case 'pending':
         return JobStatus.pending;
-      case 'approved':
+      case 'accepted':
         return JobStatus.approved;
       case 'confirmation waiting':
         return JobStatus.waitingConfirmation;

@@ -9,4 +9,4 @@ enum JobStatus {
   completed,
   cancelled,
   rejected,
-}
+} 
