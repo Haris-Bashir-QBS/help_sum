@@ -76,11 +76,27 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                     ),
                   ),
                 ),
+                if (user.role == AppRole.consumer.name)
+                  _buildSettingButton(context),
+                10.verticalSpace,
                 _buildSignOutButton(context),
               ],
             ),
           );
         },
+      ),
+    );
+  }
+
+  Padding _buildSettingButton(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: CustomButton(
+        text: AppTexts.settings,
+        onPressed: () {
+          context.pushNamed(AppRoutes.settings);
+        },
+        color: context.primaryColor,
       ),
     );
   }
@@ -369,7 +385,7 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
 
   Widget _buildSignOutButton(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: CustomButton(
         text: "Sign out",
         textColor: Colors.white,

@@ -16,8 +16,15 @@ class AppTexts {
   static const String confirmPassword = 'Confirm Password';
   static const String alreadyHaveAccount = 'Already have an account?';
   static const String loginHere = 'Login here.';
+  static const String settings = 'Settings';
   static const String roleSelectionHeading =
       'Need Services\nor Job at Your\nFingertips?.';
+  static const String managePaymentMethods = 'Manage Payment Methods ';
+  static const String termsAndConditions = 'Terms & Conditions';
+  static const String privacyPolicy = 'Privacy Policy';
+  static const String aboutUs = 'About Us';
+  static const String contactUs = 'Contact Us';
+  static const String deleteAccount = 'Delete Account';
 
   // OTP Verification Page
   static const String verificationCode = 'Verification Code';

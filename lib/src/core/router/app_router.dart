@@ -14,6 +14,7 @@ import 'package:help_sum/src/features/core/common/intro/onboarding/pages/onboard
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/main_navigation_page.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/portfolio_screen.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/pages/settings_page.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/Booking_route_params.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_categories_listing_page.dart';
@@ -62,6 +63,7 @@ final GoRouter appRouter = GoRouter(
     _changeDescription(),
     _changeRates(),
     _portfolio(),
+    _settings(),
 
     _mainNavigation(),
     _allCategoriesListing(),
@@ -89,6 +91,16 @@ final GoRouter appRouter = GoRouter(
     _manageJob(),
   ],
 );
+
+GoRoute _settings() {
+  return GoRoute(
+    path: '/settings',
+    name: AppRoutes.settings,
+    builder: (context, state) {
+      return SettingsPage();
+    },
+  );
+}
 
 GoRoute _jobDetail() {
   return GoRoute(
