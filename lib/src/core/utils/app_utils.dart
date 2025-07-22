@@ -147,7 +147,7 @@ class AppUtils {
   static Color getJobColor(JobStatus job) {
     switch (job) {
       case JobStatus.ongoing:
-      case JobStatus.inProgress:
+      case JobStatus.in_progress:
       case JobStatus.pending:
         return Color(0xFFFFC680);
 
@@ -169,7 +169,7 @@ class AppUtils {
   static String getJobString(JobStatus job) {
     switch (job) {
       case JobStatus.ongoing:
-      case JobStatus.inProgress:
+      case JobStatus.in_progress:
         return "In-Progress";
       case JobStatus.approved:
       case JobStatus.accepted:
@@ -194,7 +194,7 @@ class AppUtils {
 
   static String getServiceStartTimeTitle(JobStatus job) {
     switch (job) {
-      case JobStatus.inProgress:
+      case JobStatus.in_progress:
         return AppTexts.serviceStartTime;
       case JobStatus.pending:
         return AppTexts.requestedAt;
@@ -228,7 +228,7 @@ class AppUtils {
       case 'completed':
         return JobStatus.completed;
       case 'inprogress':
-        return JobStatus.inProgress;
+        return JobStatus.in_progress;
       case 'pending':
         return JobStatus.pending;
       case 'accepted':

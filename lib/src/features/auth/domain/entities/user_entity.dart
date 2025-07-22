@@ -20,8 +20,11 @@ class UserEntity {
   final bool? isMerchant;
   final bool? isNotification;
   final bool? isVerified;
+  final String? averageRating;
+  final String? totalReviews;
   bool? isCompleted;
   final bool? isDeleted;
+  final String? totalJobsCompleted;
   final bool? isBlocked;
 
   // ✅ Add missing fields here
@@ -33,15 +36,18 @@ class UserEntity {
     this.role,
     this.image,
     this.firstName,
+    this.averageRating,
     this.lastName,
     this.email,
     this.phone,
     this.location,
     this.description,
     this.hourlyRate,
+    this.totalJobsCompleted,
     this.status,
     this.idCard,
     this.media,
+    this.totalReviews,
     this.isConsumer,
     this.isMerchant,
     this.isNotification,
@@ -76,6 +82,9 @@ class UserEntity {
     bool? isDeleted,
     String? rating,
     bool? isBlocked,
+    final String? totalReviews,
+    final String? totalJobsCompleted,
+    final String? averageRating,
     List<Map<String, dynamic>>? services,
     List<Schedule>? schedule,
   }) {
@@ -103,6 +112,9 @@ class UserEntity {
       services: services ?? this.services,
       schedule: schedule ?? this.schedule,
       rating: rating ?? this.rating,
+      totalReviews: totalReviews ?? this.totalReviews,
+      averageRating: averageRating ?? this.averageRating,
+      totalJobsCompleted: totalJobsCompleted ?? this.totalJobsCompleted,
     );
   }
 }

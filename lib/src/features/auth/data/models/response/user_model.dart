@@ -11,6 +11,7 @@ class UserModel extends UserEntity {
     super.email,
     super.rating,
     super.phone,
+    super.totalJobsCompleted,
     super.location,
     super.description,
     super.hourlyRate,
@@ -26,6 +27,8 @@ class UserModel extends UserEntity {
     super.isBlocked,
     super.services,
     super.schedule,
+    super.averageRating,
+    super.totalReviews,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +40,8 @@ class UserModel extends UserEntity {
       firstName: json['firstName'] as String?,
       lastName: json['lastName'] as String?,
       email: json['email']?.toString(),
+      totalReviews: json['totalReviews']?.toString(),
+      averageRating: json['averageRating']?.toString(),
       phone: json['phone'] as String?,
       location:
           json['location'] != null
@@ -59,12 +64,21 @@ class UserModel extends UserEntity {
       isBlocked: json['isBlocked'] as bool?,
       services:
           (json['services'] as List?)
-              ?.map((e) => Map<String, dynamic>.from(e))
+              ?.map((e) {
+                if (e is String) {
+                  return {'_id': e};
+                } else if (e is Map<String, dynamic>) {
+                  return Map<String, dynamic>.from(e);
+                }
+                return null;
+              })
+              .whereType<Map<String, dynamic>>()
               .toList(),
       schedule:
           (json['schedule'] as List?)
               ?.map((e) => Schedule.fromJson(e as Map<String, dynamic>))
               .toList(),
+      totalJobsCompleted: json['totalCompletedJobs']?.toString(),
     );
   }
 

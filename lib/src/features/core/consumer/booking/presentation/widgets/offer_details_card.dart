@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class OfferDetailsCard extends StatelessWidget {
-  const OfferDetailsCard({super.key});
+  final JobData job;
+  const OfferDetailsCard({super.key, required this.job});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class OfferDetailsCard extends StatelessWidget {
           ),
           Divider(),
           3.verticalSpace,
-          _buildDetailRow(AppTexts.estimatedWorkTime, AppTexts.oneToTwoHours),
+          _buildDetailRow(AppTexts.estimatedWorkTime, job.estimatedWorkTime),
           10.verticalSpace,
           _buildDetailRow(AppTexts.estimatedBudget, AppTexts.twoHundredDollars),
           10.verticalSpace,

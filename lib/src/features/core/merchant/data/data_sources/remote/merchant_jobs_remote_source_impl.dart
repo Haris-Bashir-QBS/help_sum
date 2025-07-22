@@ -4,6 +4,7 @@ import 'package:help_sum/src/core/extensions/dio_extensions.dart';
 import 'package:help_sum/src/core/network/client/dio_client.dart';
 import 'package:help_sum/src/core/network/config/api_endpoints.dart';
 import 'package:help_sum/src/core/network/config/error_handler.dart';
+import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_categories_params.dart';
 import 'package:help_sum/src/features/core/merchant/data/data_sources/remote/merchant_jobs_remote_source.dart';
 import 'package:help_sum/src/features/core/merchant/data/models/response/merchant_job_requests_response_model.dart';
@@ -16,9 +17,7 @@ class MerchantJobsRemoteSourceImpl implements MerchantJobsRemoteSource {
   MerchantJobsRemoteSourceImpl({required this.client});
 
   @override
-  Future<MerchantJobRequestsModel> getAllJobsByType(
-    MerchantByTypeParam params,
-  ) async {
+  Future<JobResponseModel> getAllJobsByType(MerchantByTypeParam params) async {
     return await ApiErrorHandler.executeGuarded(() async {
       final response = await client.get(
         endpoint: "${ApiEndpoints.jobMerchantByType.value}/${params.jobType}",
@@ -26,7 +25,7 @@ class MerchantJobsRemoteSourceImpl implements MerchantJobsRemoteSource {
       );
 
       if (response.isOk) {
-        return MerchantJobRequestsModel.fromJson(response.data);
+        return JobResponseModel.fromJson(response.data);
       } else {
         throw ServerException(
           statusCode: response.statusCode,
@@ -37,7 +36,7 @@ class MerchantJobsRemoteSourceImpl implements MerchantJobsRemoteSource {
   }
 
   @override
-  Future<JobRequestModel> updateJob(UpdateJobParams params) async {
+  Future<JobData> updateJob(UpdateJobParams params) async {
     return await ApiErrorHandler.executeGuarded(() async {
       final response = await client.put(
         endpoint:
@@ -47,7 +46,7 @@ class MerchantJobsRemoteSourceImpl implements MerchantJobsRemoteSource {
       );
 
       if (response.isOk) {
-        return JobRequestModel.fromJson(response.data['data']);
+        return JobData.fromJson(response.data['data']);
       } else {
         throw ServerException(
           statusCode: response.statusCode,

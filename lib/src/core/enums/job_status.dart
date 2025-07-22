@@ -1,7 +1,7 @@
 enum JobStatus {
   all,
   ongoing,
-  inProgress,
+  in_progress,
   approved,
   accepted,
   pending,
@@ -10,4 +10,4 @@ enum JobStatus {
   completed,
   cancelled,
   rejected,
-} 
+}

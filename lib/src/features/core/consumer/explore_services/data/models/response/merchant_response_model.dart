@@ -87,7 +87,8 @@ class MerchantModel {
 
 class ServiceModel {
   final String id;
-  final CategoryInfo categoryId;
+  // final CategoryInfo categoryId;
+  final String? categoryId;
   final String name;
 
   ServiceModel({
@@ -99,7 +100,8 @@ class ServiceModel {
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
     return ServiceModel(
       id: json['_id'] ?? '',
-      categoryId: CategoryInfo.fromJson(json['categoryId'] ?? {}),
+      //  categoryId: CategoryInfo.fromJson(json['categoryId'] ?? {}),
+      categoryId: json['categoryId'] as String?,
       name: json['name'] ?? '',
     );
   }

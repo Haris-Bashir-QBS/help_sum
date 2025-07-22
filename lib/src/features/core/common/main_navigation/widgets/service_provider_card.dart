@@ -9,6 +9,7 @@ class ServiceProviderCard extends StatelessWidget {
   final String title;
   final String reviews;
   final bool? showMapIcon, showChatIcon;
+  final String? imageUrl;
   final VoidCallback onTap;
   final VoidCallback onTapChat;
   final VoidCallback onTapMap;
@@ -22,6 +23,7 @@ class ServiceProviderCard extends StatelessWidget {
     required this.onTapChat,
     this.showChatIcon = true,
     required this.onTapMap,
+    this.imageUrl,
   });
 
   @override
@@ -54,8 +56,8 @@ class ServiceProviderCard extends StatelessWidget {
             // Image
             CircleAvatar(
               radius: 30.r,
-              backgroundImage: const NetworkImage(
-                'https://picsum.photos/200',
+              backgroundImage: NetworkImage(
+                imageUrl ?? 'https://picsum.photos/200',
               ), // Placeholder image
             ),
             10.horizontalSpace,

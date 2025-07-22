@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/domain/entities/service_provider_model.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/merchant_view_profile_provider.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/merchant_view_profile_state.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/about_merchant_widget.dart';
@@ -13,12 +12,14 @@ import 'package:help_sum/src/features/core/merchant/presentation/widgets/merchan
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/image_view.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/merchant_profile_image_view.dart';
-import 'package:help_sum/src/features/core/merchant/presentation/widgets/rating_review_section.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:help_sum/src/widgets/no_data_found.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/create_job_route_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
+
+import '../../../../../auth/data/models/response/user_model.dart';
 
 class MerchantViewProfilePage extends ConsumerStatefulWidget {
   final CreateJobRouteModel routeModel;
@@ -65,7 +66,7 @@ class _MerchantViewProfilePageState
                 Column(
                   children: [
                     // IMAGE CAROUSEL OR PLACEHOLDER
-                    serviceProvider.profileImages.isNotEmpty
+                    serviceProvider.media?.isNotEmpty == true
                         ? CarouselSlider(
                           options: CarouselOptions(
                             height: 180.h,
@@ -74,7 +75,7 @@ class _MerchantViewProfilePageState
                             autoPlay: true,
                           ),
                           items:
-                              serviceProvider.profileImages.map((imageUrl) {
+                              serviceProvider.media?.map((imageUrl) {
                                 return Builder(
                                   builder: (BuildContext context) {
                                     return ImageView(
@@ -99,18 +100,19 @@ class _MerchantViewProfilePageState
                             ),
                           ),
                         ),
-                    40.verticalSpace,
+                    50.verticalSpace,
                     MerchantDetailsWidget(
-                      name: serviceProvider.name,
-                      profession: serviceProvider.profession,
-                      isAvailable: serviceProvider.isAvailable,
+                      name:
+                          "${serviceProvider.firstName ?? ""}${serviceProvider.lastName ?? ""}",
+                      profession: serviceProvider.role ?? "",
+                      isAvailable: true,
                     ),
                     10.verticalSpace,
                     InfoRow(
-                      ratePerHour: serviceProvider.rate,
-                      averageRating: serviceProvider.rating,
-                      distanceKm: serviceProvider.distance,
-                      finishedJobs: serviceProvider.completedJobs,
+                      ratePerHour: serviceProvider.hourlyRate?.toString() ?? "",
+                      averageRating: serviceProvider.rating ?? "0",
+                      distanceKm: "",
+                      finishedJobs: serviceProvider.totalJobsCompleted ?? "0",
                     ),
                     Divider(thickness: 0.2),
                     _detailsWidget(serviceProvider),
@@ -139,7 +141,7 @@ class _MerchantViewProfilePageState
                   child: Align(
                     alignment: Alignment.center,
                     child: MerchantProfileImageView(
-                      imagePath: serviceProvider.profileImage,
+                      imagePath: serviceProvider.image ?? "",
                       shadowColor: Colors.grey.withAlpha(127),
                     ),
                   ),
@@ -197,7 +199,7 @@ class _MerchantViewProfilePageState
     );
   }
 
-  Widget _detailsWidget(ServiceProviderModel serviceProvider) {
+  Widget _detailsWidget(UserModel serviceProvider) {
     return Expanded(
       child: SingleChildScrollView(
         child: Padding(
@@ -206,18 +208,20 @@ class _MerchantViewProfilePageState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 0.h),
-              AboutMerchantWidget(aboutText: serviceProvider.aboutText),
+              AboutMerchantWidget(aboutText: serviceProvider.description ?? ""),
               Divider(thickness: 0.3),
-              serviceProvider.reviews.isNotEmpty
-                  ? RatingReviewSection(reviews: serviceProvider.reviews)
-                  : Center(
-                    child: CustomText(
-                      text: AppTexts.noReviewsYet,
-                      fontSize: 16.sp,
-                      color: AppPalette.darkGreyColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+              CustomText(
+                text: AppTexts.reviews,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+              ),
+              // serviceProvider.reviews.isNotEmpty
+              //     ? RatingReviewSection(reviews: serviceProvider.reviews)
+              //     :
+              Padding(
+                padding: EdgeInsets.only(top: 60.h),
+                child: Center(child: NoDataFound(message: "No Reviews Found")),
+              ),
               SizedBox(height: 20.h),
             ],
           ),

@@ -1,5 +1,6 @@
 import 'package:fpdart/src/either.dart';
 import 'package:help_sum/src/core/errors/api_exceptions.dart';
+import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_categories_params.dart';
 import 'package:help_sum/src/features/core/merchant/data/data_sources/remote/merchant_jobs_remote_source.dart';
 import 'package:help_sum/src/features/core/merchant/domain/entities/merchant_job_request_resposne_entity.dart';
@@ -13,7 +14,7 @@ class MerchantJobsRepositoryImpl implements MerchantJobsRepository {
   MerchantJobsRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, MerchantJobRequestsEntity>> getAllJobsByType(
+  Future<Either<Failure, JobResponseModel>> getAllJobsByType(
     MerchantByTypeParam params,
   ) async {
     try {
@@ -36,9 +37,7 @@ class MerchantJobsRepositoryImpl implements MerchantJobsRepository {
   }
 
   @override
-  Future<Either<Failure, JobRequestEntity>> updateJob(
-    UpdateJobParams params,
-  ) async {
+  Future<Either<Failure, JobData>> updateJob(UpdateJobParams params) async {
     try {
       final response = await remoteDataSource.updateJob(params);
 

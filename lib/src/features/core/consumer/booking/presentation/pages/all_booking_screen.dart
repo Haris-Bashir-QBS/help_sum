@@ -108,10 +108,6 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
                       showStatus: selectedIndex == 0,
                       index: i,
                       onTap: () {
-                        // context.pushNamed(
-                        //   AppRoutes.paymentMethod,
-                        //   extra: jobs[i],
-                        // );
                         _navigateToJobDetailPage(context, jobs, i);
                       },
                     );

@@ -9,13 +9,13 @@ import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
 import 'package:help_sum/src/core/utils/app_utils.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/service_provider_card.dart';
+import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_status_header.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_timer.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_details_update_card.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/offer_details_card.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/service_location_map.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/service_time_card.dart';
-import 'package:help_sum/src/features/core/merchant/domain/entities/merchant_job_request_resposne_entity.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/section_divider_text.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
@@ -29,7 +29,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../../../../core/constants/app_dimensions.dart';
 
 class JobDetailPage extends ConsumerStatefulWidget {
-  final JobRequestEntity job;
+  final JobData job;
   final String? tabName;
 
   const JobDetailPage({super.key, required this.job, this.tabName});
@@ -43,14 +43,14 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
 
   @override
   void initState() {
-    log(widget.job.status!);
+    log(widget.job.status);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final jobStatus = AppUtils.parseJobStatus(widget.job.status ?? "pending");
-    print("job status is ${widget.job.status}");
+    final jobStatus = AppUtils.parseJobStatus(widget.job.status);
+    debugPrint("job status is ${widget.job.status}");
     return Scaffold(
       appBar: CustomAppBar(title: AppTexts.bookingDetail),
       body: Column(
@@ -59,7 +59,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
           BookingStatusHeader(
             text: widget.tabName ?? "",
             showContractTag:
-                jobStatus == JobStatus.inProgress ||
+                jobStatus == JobStatus.in_progress ||
                 jobStatus == JobStatus.pending,
           ),
           10.verticalSpace,
@@ -68,7 +68,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (jobStatus == JobStatus.inProgress) ...[
+                  if (jobStatus == JobStatus.in_progress) ...[
                     const BookingTimer(),
                     // 20.verticalSpace,
                   ],
@@ -89,7 +89,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                   //     jobStatus == JobStatus.rejected)
                   SectionDividerText(
                     heading: "Job Description",
-                    text: widget.job.description ?? "",
+                    text: widget.job.description,
                   ),
                   if (jobStatus == JobStatus.cancelled)
                     SectionDividerText(
@@ -110,7 +110,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                   ],
                   if (jobStatus != JobStatus.cancelled &&
                       jobStatus != JobStatus.rejected) ...[
-                    const OfferDetailsCard(),
+                    OfferDetailsCard(job: widget.job),
                     10.verticalSpace,
                   ],
                   if (jobStatus == JobStatus.ongoing ||
@@ -122,24 +122,16 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                       heading: "Job Details Update",
                       showMerchantNotes: true,
                       workLabel:
-                          AppUtils.parseJobStatus(
-                                        widget.job.status ?? "pending",
-                                      ) ==
+                          AppUtils.parseJobStatus(widget.job.status) ==
                                       JobStatus.waitingPayment ||
-                                  AppUtils.parseJobStatus(
-                                        widget.job.status ?? "pending",
-                                      ) ==
+                                  AppUtils.parseJobStatus(widget.job.status) ==
                                       JobStatus.completed
                               ? AppTexts.totalServiceTime
                               : null,
                       workValue:
-                          AppUtils.parseJobStatus(
-                                        widget.job.status ?? "pending",
-                                      ) ==
+                          AppUtils.parseJobStatus(widget.job.status) ==
                                       JobStatus.waitingPayment ||
-                                  AppUtils.parseJobStatus(
-                                        widget.job.status ?? "pending",
-                                      ) ==
+                                  AppUtils.parseJobStatus(widget.job.status) ==
                                       JobStatus.completed
                               ? AppTexts.threeHours
                               : null,
@@ -150,7 +142,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 14.w),
                       child: CustomButton(
-                        text: "Chat with ${widget.job.consumerId?.email}",
+                        text: "Chat with ${widget.job.consumerId}",
                         textColor: Colors.black,
                         color: Color(0xFF04DB00).withAlpha(40),
                         iconWidget: Image.asset(
@@ -185,18 +177,18 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                     10.verticalSpace,
                     LocationMapView(
                       heading: "Service Location",
-                      latitude: widget.job.location?.coordinates?[1] ?? 0,
-                      longitude: widget.job.location?.coordinates?[0] ?? 0,
+                      latitude: widget.job.location.coordinates[1],
+                      longitude: widget.job.location.coordinates[0],
                     ),
                     10.verticalSpace,
                   ],
-                  if (jobStatus == JobStatus.inProgress) ...[
+                  if (jobStatus == JobStatus.in_progress) ...[
                     _chatAndTrackConsumerButtons(context),
                   ],
                   if (jobStatus == JobStatus.cancelled ||
                       jobStatus == JobStatus.rejected)
                     ServiceProviderCard(
-                      title: widget.job.consumerId?.email ?? "",
+                      title: widget.job.consumerId.firstName,
                       reviews: AppTexts.ratingAndReviews,
                       showMapIcon: false,
                       showChatIcon: false,
@@ -212,7 +204,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                     10.verticalSpace,
                     _otherOptionsButton(context),
                   ],
-                  if (jobStatus == JobStatus.inProgress) ...[
+                  if (jobStatus == JobStatus.in_progress) ...[
                     20.verticalSpace,
                     _bookingConfirmAndCancelButtons(context),
                   ],
@@ -264,7 +256,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 40.w),
           child: CustomButton.bordered(
-            text: "Chat with ${widget.job.consumerId?.email}",
+            text: "Chat with ${widget.job.consumerId}",
             iconWidget: Image.asset(
               AppAssets.chatIcon,
               width: 20.w,

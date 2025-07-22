@@ -6,10 +6,10 @@ import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class InfoRow extends StatelessWidget {
-  final double ratePerHour;
-  final double averageRating;
-  final double distanceKm;
-  final int finishedJobs;
+  final String ratePerHour;
+  final String averageRating;
+  final String distanceKm;
+  final String finishedJobs;
 
   const InfoRow({
     super.key,
@@ -24,19 +24,15 @@ class InfoRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildInfoItem(
-          AppAssets.dollar,
-          averageRating.toStringAsFixed(1),
-          AppTexts.perHour,
-        ),
+        _buildInfoItem(AppAssets.dollar, ratePerHour, AppTexts.perHour),
         _buildInfoItem(
           AppAssets.starTwo,
-          ratePerHour.toStringAsFixed(0),
+          averageRating,
           AppTexts.averageRating,
         ),
         _buildInfoItem(
           AppAssets.distance,
-          '${distanceKm.toStringAsFixed(1)} km',
+          '${distanceKm} km',
           AppTexts.distance,
         ),
         _buildInfoItem(

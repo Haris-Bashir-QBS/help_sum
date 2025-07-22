@@ -46,7 +46,7 @@ class BookingCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: CustomText(
-                      text: job.title ?? "",
+                      text: job.title,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -66,7 +66,7 @@ class BookingCard extends StatelessWidget {
                 horizontal: AppDimensions.paddingAllSides,
               ),
               child: CustomText(
-                text: job.serviceId?.name ?? "",
+                text: job.serviceId.name ?? "",
                 fontWeight: FontWeight.normal,
                 fontSize: 16.sp,
                 color: AppPalette.hintColor,
@@ -76,7 +76,12 @@ class BookingCard extends StatelessWidget {
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: LocationTimeline(),
+              child: LocationTimeline(
+                sourceLocation:
+                    "${job.merchantId.location?.address ?? ""},${job.merchantId.location?.city ?? ""},${job.merchantId.location?.state ?? ""}",
+                destinationLocation:
+                    "${job.location.address ?? ""},${job.location.city ?? ""},${job.location.state ?? ""}",
+              ),
             ),
             16.verticalSpace,
 
@@ -128,8 +133,8 @@ class BookingCard extends StatelessWidget {
     switch (status.toLowerCase()) {
       case 'completed':
         return JobStatus.completed;
-      case 'inprogress':
-        return JobStatus.inProgress;
+      case 'in_progress':
+        return JobStatus.in_progress;
       case 'pending':
         return JobStatus.pending;
       case 'accepted':
@@ -149,7 +154,7 @@ class BookingCard extends StatelessWidget {
 }
 
 class JobCardMerchant extends StatelessWidget {
-  final JobRequestEntity job;
+  final JobData job;
   final int index;
   final bool? showStatus;
   final VoidCallback onTap;
@@ -188,12 +193,12 @@ class JobCardMerchant extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  CustomText(
-                    text: '#${job.id}',
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.normal,
-                    color: AppPalette.hintColor,
-                  ),
+                  // CustomText(
+                  //   text: '#${job.id}',
+                  //   fontSize: 16.sp,
+                  //   fontWeight: FontWeight.normal,
+                  //   color: AppPalette.hintColor,
+                  // ),
                 ],
               ),
             ),
@@ -204,7 +209,7 @@ class JobCardMerchant extends StatelessWidget {
                 horizontal: AppDimensions.paddingAllSides,
               ),
               child: CustomText(
-                text: job.serviceId?.name ?? "",
+                text: job.serviceId.name ?? "",
                 fontWeight: FontWeight.normal,
                 fontSize: 16.sp,
                 color: AppPalette.hintColor,
@@ -214,7 +219,13 @@ class JobCardMerchant extends StatelessWidget {
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: LocationTimeline(),
+              child: LocationTimeline(
+                //sourceLocation: "${job.consumerId.location?.address ?? ""},${job.consumerId.location?.city ?? ""},${job.consumerId.location?.state ?? ""}",
+                sourceLocation:
+                    "${job.consumerId.location?.address ?? ""},${job.consumerId.location?.city ?? ""},${job.consumerId.location?.state ?? ""}",
+                destinationLocation:
+                    "${job.location.address} ${job.location.city}${job.location.state}",
+              ),
             ),
             16.verticalSpace,
 
@@ -237,24 +248,19 @@ class JobCardMerchant extends StatelessWidget {
                         blurRadius: 5,
                       ),
                     ],
-                    color: AppUtils.getJobColor(
-                      _parseJobStatus(job.status ?? "pending"),
-                    ),
+                    color: AppUtils.getJobColor(_parseJobStatus(job.status)),
                     borderRadius: BorderRadius.circular(
                       AppDimensions.appBorderRadius,
                     ),
                   ),
                   child: CustomText(
                     color:
-                        _parseJobStatus(job.status ?? "pending") ==
-                                JobStatus.cancelled
+                        _parseJobStatus(job.status) == JobStatus.cancelled
                             ? AppPalette.backgroundColor
                             : null,
                     fontWeight: FontWeight.bold,
                     fontSize: 13.sp,
-                    text: AppUtils.getJobString(
-                      _parseJobStatus(job.status ?? "pending"),
-                    ),
+                    text: AppUtils.getJobString(_parseJobStatus(job.status)),
                   ),
                 ),
               ),
@@ -271,8 +277,8 @@ class JobCardMerchant extends StatelessWidget {
     switch (status.toLowerCase()) {
       case 'completed':
         return JobStatus.completed;
-      case 'inprogress':
-        return JobStatus.inProgress;
+      case 'in_progress':
+        return JobStatus.in_progress;
       case 'pending':
         return JobStatus.pending;
       case 'accepted':

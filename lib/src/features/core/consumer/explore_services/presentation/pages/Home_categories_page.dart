@@ -20,15 +20,14 @@ import 'package:help_sum/src/features/core/consumer/explore_services/presentatio
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class ServiceCategoriesPage extends ConsumerStatefulWidget {
-  const ServiceCategoriesPage({super.key});
+class HomeCategoriesPage extends ConsumerStatefulWidget {
+  const HomeCategoriesPage({super.key});
 
   @override
-  ConsumerState<ServiceCategoriesPage> createState() =>
-      _ServiceCategoriesPageState();
+  ConsumerState<HomeCategoriesPage> createState() => _HomeCategoriesPageState();
 }
 
-class _ServiceCategoriesPageState extends ConsumerState<ServiceCategoriesPage> {
+class _HomeCategoriesPageState extends ConsumerState<HomeCategoriesPage> {
   @override
   void initState() {
     super.initState();
@@ -173,7 +172,7 @@ class _ServiceCategoriesPageState extends ConsumerState<ServiceCategoriesPage> {
         HeadingWithViewAll(
           title: AppTexts.recommendedForYou,
           onViewAllTap: () {
-            context.pushNamed(AppRoutes.allServiceProvidersListing);
+            // context.pushNamed(AppRoutes.allServiceProvidersListing);
           },
         ),
         SizedBox(height: 15.h),

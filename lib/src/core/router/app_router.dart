@@ -96,7 +96,7 @@ GoRoute _jobDetail() {
     name: AppRoutes.jobDetail,
     builder: (context, state) {
       final Map<String, dynamic> extras = state.extra as Map<String, dynamic>;
-      final JobRequestEntity job = extras['job'];
+      final JobData job = extras['job'];
       final String? tabName = extras['tabName'];
       return JobDetailPage(job: job, tabName: tabName);
     },

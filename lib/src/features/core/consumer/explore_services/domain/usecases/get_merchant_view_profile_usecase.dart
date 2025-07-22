@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:help_sum/src/core/errors/api_exceptions.dart';
 import 'package:help_sum/src/core/use_cases/use_case.dart';
+import 'package:help_sum/src/features/auth/data/models/response/user_model.dart';
 import '../repositories/merchant_view_profile_repository.dart';
 import '../entities/service_provider_model.dart';
 
@@ -10,14 +11,12 @@ class GetMerchantViewProfileParams {
 }
 
 class GetMerchantViewProfileUseCase
-    extends UseCase<ServiceProviderModel, GetMerchantViewProfileParams> {
+    extends UseCase<UserModel, GetMerchantViewProfileParams> {
   final MerchantViewProfileRepository repository;
   GetMerchantViewProfileUseCase(this.repository);
 
   @override
-  Future<Either<Failure, ServiceProviderModel>> call(
-    GetMerchantViewProfileParams params,
-  ) {
+  Future<Either<Failure, UserModel>> call(GetMerchantViewProfileParams params) {
     return repository.fetchMerchantProfile(params.merchantId);
   }
 }

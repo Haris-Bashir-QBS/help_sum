@@ -163,7 +163,7 @@ class AppStaticData {
       time: "3:30 pm",
       customerName: "Ali",
       serviceName: "Tyre Change",
-      status: JobStatus.inProgress,
+      status: JobStatus.in_progress,
     ),
     JobModel(
       date: "26/07/2022",

@@ -73,8 +73,8 @@ class ServiceInfo {
 }
 
 class JobData {
-  final String consumerId;
-  final String merchantId;
+  final UserInfo consumerId;
+  final UserInfo merchantId;
   final ServiceInfo serviceId;
   final String title;
   final String description;
@@ -127,12 +127,26 @@ class JobData {
 
   factory JobData.fromJson(Map<String, dynamic> json) {
     return JobData(
-      consumerId: json['consumerId'] ?? '',
+      //  consumerId: json['consumerId'] ?? '',
+      //merchantId: UserInfo.fromJson(json['merchantId']),
+      consumerId:
+          json['consumerId'] is Map
+              ? UserInfo.fromJson(json['consumerId'])
+              : UserInfo(
+                id: json['consumerId'] ?? '',
+                firstName: '',
+                lastName: '',
+                phone: '',
+              ),
       merchantId:
-          (json['merchantId'] is Map
-              ? json['merchantId']["_id"]
-              : json["merchantId"]) ??
-          '',
+          json['merchantId'] is Map
+              ? UserInfo.fromJson(json['merchantId'])
+              : UserInfo(
+                id: json['merchantId'] ?? '',
+                firstName: '',
+                lastName: '',
+                phone: '',
+              ),
       serviceId: ServiceInfo.fromJson(json['serviceId'] ?? {}),
       title: json['title'] ?? '',
       description: json['description'] ?? '',
@@ -155,6 +169,38 @@ class JobData {
       createdAt: json['createdAt'] ?? '',
       updatedAt: json['updatedAt'] ?? '',
       v: json['__v'] ?? 0,
+    );
+  }
+}
+
+class UserInfo {
+  final String id;
+  final String? image;
+  final String firstName;
+  final String lastName;
+  final String phone;
+  final String? description;
+  final JobLocation? location;
+
+  UserInfo({
+    required this.id,
+    this.image,
+    required this.firstName,
+    required this.lastName,
+    required this.phone,
+    this.description,
+    this.location,
+  });
+
+  factory UserInfo.fromJson(Map<String, dynamic> json) {
+    return UserInfo(
+      id: json['_id'] ?? '',
+      image: json['image'],
+      firstName: json['firstName'] ?? '',
+      lastName: json['lastName'] ?? '',
+      phone: json['phone'] ?? '',
+      description: json['description'],
+      location: JobLocation.fromJson(json['location'] ?? {}),
     );
   }
 }

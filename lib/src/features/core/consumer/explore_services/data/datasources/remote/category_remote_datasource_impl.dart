@@ -68,25 +68,25 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   Future<MerchantResponseModel> getNearbyMerchants(
     BookingRequestModel params,
   ) async {
-    return await ApiErrorHandler.executeGuarded(() async {
-      final response = await client.get(
-        endpoint: ApiEndpoints.merchantsNearby.value,
-        queryParams: {
-          "latitude": params.lat,
-          "longitude": params.long,
-          //  "page": params.page,
-          //  "limit": params.limit,
-          "serviceIds": params.serviceId != null ? [params.serviceId] : [],
-        },
+    //return await ApiErrorHandler.executeGuarded(() async {
+    final response = await client.get(
+      endpoint: ApiEndpoints.merchantsNearby.value,
+      queryParams: {
+        "latitude": params.lat,
+        "longitude": params.long,
+        //  "page": params.page,
+        //  "limit": params.limit,
+        "serviceIds": params.serviceId != null ? [params.serviceId] : [],
+      },
+    );
+    if (response.isOk) {
+      return MerchantResponseModel.fromJson(response.data);
+    } else {
+      throw ServerException(
+        statusCode: response.statusCode,
+        message: response.data['message'] ?? AppErrors.somethingWentWrong,
       );
-      if (response.isOk) {
-        return MerchantResponseModel.fromJson(response.data);
-      } else {
-        throw ServerException(
-          statusCode: response.statusCode,
-          message: response.data['message'] ?? AppErrors.somethingWentWrong,
-        );
-      }
-    });
+    }
+    //  });
   }
 }

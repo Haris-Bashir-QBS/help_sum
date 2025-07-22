@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/merchant/domain/entities/merchant_job_request_resposne_entity.dart';
 import 'package:help_sum/src/features/core/merchant/domain/params/merchant_by_type_param.dart';
 import 'package:help_sum/src/features/core/merchant/domain/params/update_job_params.dart';
@@ -20,7 +21,7 @@ class MerchantJobsNotifier extends StateNotifier<MerchantJobsState> {
   ) : super(MerchantJobsInitial());
 
   int _currentPage = 1;
-  List<JobRequestEntity> allJobs = [];
+  List<JobData> allJobs = [];
 
   changeJobStatuts({
     final String? jobId,
@@ -29,10 +30,6 @@ class MerchantJobsNotifier extends StateNotifier<MerchantJobsState> {
     double? newOffer,
     required BuildContext ctx,
   }) async {
-
-    
-
-
     final result = await _merchantUseCase(
       UpdateJobParams(
         jobId: jobId,
@@ -105,15 +102,15 @@ class MerchantJobsNotifier extends StateNotifier<MerchantJobsState> {
         state = MerchantJobsError(failure.message);
       },
       (response) {
-        allJobs.addAll(response.data?.data ?? []);
-        final pagination = response.data?.pagination;
-        final hasMore = (pagination?.page ?? 0) < (pagination?.totalPages ?? 0);
-        _currentPage = (pagination?.page ?? 0) + 1;
+        allJobs.addAll(response.data.data ?? []);
+        final pagination = response.data.pagination;
+        final hasMore = (pagination.page ?? 0) < (pagination.totalPages ?? 0);
+        _currentPage = (pagination.page ?? 0) + 1;
 
         state = MerchantJobsLoaded(
           response: response,
           hasMore: hasMore,
-          totalCount: pagination?.total ?? 0,
+          totalCount: pagination.total ?? 0,
         );
       },
     );
