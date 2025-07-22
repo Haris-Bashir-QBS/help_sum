@@ -76,8 +76,8 @@ class _ProfileDetailsPageState extends ConsumerState<ProfileDetailsPage> {
                     ),
                   ),
                 ),
-                if (user.role == AppRole.consumer.name)
-                  _buildSettingButton(context),
+
+                _buildSettingButton(context),
                 10.verticalSpace,
                 _buildSignOutButton(context),
               ],

@@ -147,7 +147,8 @@ class JobData {
                 lastName: '',
                 phone: '',
               ),
-      serviceId: ServiceInfo.fromJson(json['serviceId'] ?? {}),
+      serviceId: _parseServiceInfo(json['serviceId']),
+
       title: json['title'] ?? '',
       description: json['description'] ?? '',
       location: JobLocation.fromJson(json['location'] ?? {}),
@@ -171,6 +172,15 @@ class JobData {
       v: json['__v'] ?? 0,
     );
   }
+}
+
+ServiceInfo _parseServiceInfo(dynamic data) {
+  if (data is Map<String, dynamic>) {
+    return ServiceInfo.fromJson(data);
+  } else if (data is String) {
+    return ServiceInfo(id: data, name: ''); // Replace with your constructor
+  }
+  return ServiceInfo(id: '', name: '');
 }
 
 class UserInfo {

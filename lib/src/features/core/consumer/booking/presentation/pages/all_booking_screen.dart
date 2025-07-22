@@ -109,6 +109,7 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
                       showStatus: selectedIndex == 0,
                       index: i,
                       onTap: () {
+                        // _navigateToPaymentScreen(context, jobs, i);
                         _navigateToJobDetailPage(context, jobs, i);
                       },
                     );
@@ -137,15 +138,26 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
     );
   }
 
-  void _navigateToJobDetailPage(
+  void _navigateToPaymentScreen(
     BuildContext context,
     List<JobData> jobs,
     int i,
   ) {
-    context.pushNamed(
+    context.pushNamed(AppRoutes.paymentMethod, extra: jobs[i]);
+  }
+
+  void _navigateToJobDetailPage(
+    BuildContext context,
+    List<JobData> jobs,
+    int i,
+  ) async {
+    bool? isRefresh = await context.pushNamed(
       AppRoutes.bookingDetail,
       extra: {'job': jobs[i], 'tabName': jobTypes[selectedIndex]},
     );
+    if (isRefresh == true) {
+      _fetchJobs(selectedIndex);
+    }
   }
 
   Widget _searchField() {
@@ -162,11 +174,16 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
       tabs: jobTypes,
       onTapChanged: (index) {
         setState(() => selectedIndex = index);
-        Future.microtask(() {
-          final newType = jobTypes[index];
-          ref.invalidate(allBookingsProvider(newType));
-        });
+        _fetchJobs(index);
       },
     );
+  }
+
+  void _fetchJobs(int index) {
+    Future.microtask(() {
+      final newType = jobTypes[index];
+
+      ref.invalidate(allBookingsProvider(newType));
+    });
   }
 }

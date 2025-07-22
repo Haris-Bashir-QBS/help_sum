@@ -174,7 +174,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
                             AppTexts.estimatedWorkTimeWithUnit,
                           ),
                           keyboardType: TextInputType.number,
-                          hint: 'e.g. 2',
+                          // hint: 'e.g. 2',
                         ),
                       ),
                       _buildFormSection(

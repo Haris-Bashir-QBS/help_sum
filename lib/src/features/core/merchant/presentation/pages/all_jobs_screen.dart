@@ -15,6 +15,7 @@ import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_states.dart';
 import 'package:help_sum/src/widgets/app_tab_bar.dart';
+import 'package:help_sum/src/widgets/custom_refresh_indicator.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
@@ -26,17 +27,6 @@ class AllJobsScreen extends ConsumerStatefulWidget {
 }
 
 class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
-  // static const List<String> jobTypes = [
-  //   'all',
-  //   'completed',
-  //   'on going',
-  //   'pending',
-  //   'approved',
-  //   'confirmation waiting',
-  //   'payment waiting',
-  //   'cancelled',
-  //   'rejected',
-  // ];
   final ScrollController scrollController = ScrollController();
   int selectedIndex = 0;
   List<JobModel> jobs = [];
@@ -58,7 +48,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
       children: [
         CustomSearchField(),
         20.verticalSpace,
-        _buildJobsTabbar(),
+        _buildJobsTabBar(),
         20.verticalSpace,
         _jobListView(state),
       ],
@@ -82,181 +72,76 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
           child: Center(child: CustomText(text: "No Data Found")),
         );
       }
-
       return Expanded(
-        child: ListView.builder(
-          itemCount: jobs.data.length ,
-          itemBuilder: (c, i) {
-            final job = jobs.data[i];
-            return JobCardMerchant(
-              job: job,
-              showStatus: true,
-              index: i,
-              onTap: () => _navigateToJobDetailScreen(job),
-            );
+        child: CustomRefreshIndicator(
+          onRefresh: () async {
+            _fetchJobs();
           },
+          child: ListView.builder(
+            itemCount: jobs.data.length,
+            itemBuilder: (c, i) {
+              final job = jobs.data[i];
+              return JobCardMerchant(
+                job: job,
+                showStatus: true,
+                index: i,
+                onTap: () => _navigateToJobDetailScreen(job),
+              );
+            },
+          ),
         ),
       );
     }
 
-    return const Expanded(child: SizedBox()); // fallback for initial state
+    return const Expanded(child: SizedBox());
   }
 
-  // Widget _jobListView(List<JobRequestEntity> _allJobs) {
-  //   return Expanded(
-  //     child:
-  //         _allJobs.isEmpty
-  //             ? Center(child: CustomText(text: "No Data Found"))
-  //             : ListView.builder(
-  //               itemCount: _allJobs.length,
-  //               itemBuilder: (c, i) {
-  //                 // return Container();
-  //                 return JobCardMerchant(
-  //                   job: _allJobs[i],
-  //                   showStatus: true,
-  //                   index: i,
-  //                   onTap: () {
-  //                     _navigateToJobDetailScreen(i);
-  //                   },
-  //                 );
-  //               },
-  //             ),
-  //   );
-  // }
-
-  void _navigateToJobDetailScreen(JobData? job) {
-    context.pushNamed(
+  void _navigateToJobDetailScreen(JobData? job) async {
+    bool? isRefresh = await context.pushNamed(
       AppRoutes.jobDetail,
       extra: {
         'job': job,
         'tabName': AppStaticData.jobStatusTabs[selectedIndex],
       },
     );
-  }
-
-  String getJobString(JobStatus job) {
-    log(job.name);
-    switch (job) {
-      case JobStatus.ongoing:
-      case JobStatus.in_progress:
-        return "In-Progress";
-      case JobStatus.approved:
-      case JobStatus.accepted:
-        return "Approved";
-      case JobStatus.completed:
-        return "Completed";
-      case JobStatus.waitingConfirmation:
-        return "Waiting Confirmation";
-      case JobStatus.waitingPayment:
-        return "Waiting Payment";
-      case JobStatus.cancelled:
-        return "Cancelled";
-      case JobStatus.all:
-        return AppTexts.all;
-      case JobStatus.pending:
-        return AppTexts.pending;
-      case JobStatus.rejected:
-        return AppTexts.rejected;
+    if (isRefresh == true) {
+      _fetchJobs();
     }
   }
 
-  Color getJobColor(JobStatus job) {
-    switch (job) {
-      case JobStatus.ongoing:
-      case JobStatus.in_progress:
-      case JobStatus.pending:
-        return Color(0xFFFFC680);
-      case JobStatus.approved:
-      case JobStatus.accepted:
-      case JobStatus.completed:
-        return Color(0xFFAFFFA8);
-      case JobStatus.waitingConfirmation:
-      case JobStatus.waitingPayment:
-        return Color(0xFFFFC680);
-      case JobStatus.cancelled:
-      case JobStatus.rejected:
-        return Color(0xFFFF0000);
-      case JobStatus.all:
-        return Colors.transparent;
-    }
-  }
-
-  _buildJobsTabbar() {
+  _buildJobsTabBar() {
     return AppTabBar(
       selectedIndex: selectedIndex,
       tabs: AppStaticData.jobStatusTabs,
       onTapChanged: (index) {
-        // switch (index) {
-        //   case 0:
-        //     jobs = AppStaticData.dummyJobs;
-        //     break;
-        //   case 1:
-        //     jobs =
-        //         AppStaticData.dummyJobs
-        //             .where((e) => e.status == JobStatus.inProgress)
-        //             .toList();
-        //   case 2:
-        //     jobs =
-        //         AppStaticData.dummyJobs
-        //             .where((e) => e.status == JobStatus.pending)
-        //             .toList();
-
-        //     break;
-        //   case 3:
-        //     jobs =
-        //         AppStaticData.dummyJobs
-        //             .where((e) => e.status == JobStatus.approved)
-        //             .toList();
-        //     break;
-        //   case 4:
-        //     jobs =
-        //       AppStaticData.dummyJobs
-        //           .where((e) => e.status == JobStatus.waitingConfirmation)
-        //           .toList();
-
-        //   break;
-
-        // case 5:
-        //   jobs =
-        //       AppStaticData.dummyJobs
-        //           .where((e) => e.status == JobStatus.waitingPayment)
-        //           .toList();
-
-        //   break;
-
-        // case 6:
-        //   jobs =
-        //       AppStaticData.dummyJobs
-        //           .where((e) => e.status == JobStatus.cancelled)
-        //           .toList();
-
-        //   break;
-        // case 7:
-        //   jobs =
-        //       AppStaticData.dummyJobs
-        //           .where((e) => e.status == JobStatus.rejected)
-        //           .toList();
-        // case 8:
-        //   jobs =
-        //       AppStaticData.dummyJobs
-        //           .where((e) => e.status == JobStatus.completed)
-        //           .toList();
-
-        //   break;
-        // // }
         setState(() {
           selectedIndex = index;
         });
 
-        ref
-            .read(merchantJobsNotifierProvider.notifier)
-            .getAllJobsByType(
-              jobType: AppStaticData.jobStatusTabs[index],
-              refresh: true,
-            );
+        _fetchJobs();
 
         print("object");
       },
     );
   }
+
+  void _fetchJobs() {
+    Future.microtask(() {
+      ref
+          .read(merchantJobsNotifierProvider.notifier)
+          .getAllJobsByType(
+            jobType: AppStaticData.jobStatusTabs[selectedIndex],
+            refresh: true,
+          );
+    });
+  }
+
+  //   ref.invalidate(merchantJobsNotifierProvider);
+  //   // ref
+  //   //     .read(merchantJobsNotifierProvider.notifier)
+  //   //     .getAllJobsByType(
+  //   //       jobType: AppStaticData.jobStatusTabs[selectedIndex],
+  //   //       refresh: true,
+  //   //     );
+  // }
 }

@@ -27,6 +27,8 @@ class PaymentMethodScreen extends ConsumerStatefulWidget {
 
 class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
   bool _paying = false;
+  List<CardData> _cards = [];
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -41,14 +43,9 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
     _listener(context);
 
     final state = ref.watch(paymentNotifierProvider);
-    List<CardData> cards = [];
-    bool isLoading = false;
-    if (state is GetCardsSuccess) {
-      cards = state.response.cards?.data ?? [];
-    } else if (state is GetCardsLoading) {
-      isLoading = true;
-    }
-    final hasCards = cards.isNotEmpty;
+    _isLoading = state is GetCardsLoading;
+
+    final hasCards = _cards.isNotEmpty;
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -77,7 +74,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
               TotalAmountWidget(amount: "\$${widget.job.offer}"),
               Divider(),
               16.verticalSpace,
-              _cardWidget(isLoading, hasCards, cards, context),
+              _cardWidget(_isLoading, hasCards, _cards, context),
               24.verticalSpace,
               CustomButton(
                 text: AppTexts.payNow,
@@ -85,15 +82,16 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
                 textColor: Colors.white,
                 isLoading: _paying,
                 onPressed: () {
-                  ref
-                      .read(paymentNotifierProvider.notifier)
-                      .payForJob(
-                        jobId: widget.job.id,
-                        paymentToken: cards[0].id,
-                        amount: widget.job.offer,
-                      );
+                  if (_cards.isNotEmpty) {
+                    ref
+                        .read(paymentNotifierProvider.notifier)
+                        .payForJob(
+                          jobId: widget.job.id,
+                          paymentToken: _cards[0].id,
+                          amount: widget.job.offer,
+                        );
+                  }
                 },
-                // disables button if not enabled
               ),
             ],
           ),
@@ -109,36 +107,34 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
       } else {
         setState(() => _paying = false);
       }
-      if (next is PayForJobSuccess) {
+
+      if (next is GetCardsSuccess) {
+        setState(() {
+          _cards = next.response.cards?.data ?? [];
+        });
+      } else if (next is GetCardsError) {
+        CustomToast.errorToast(context: context, message: next.message);
+      } else if (next is PayForJobSuccess) {
         CustomToast.successToast(
           context: context,
           message: next.response.message,
         );
-        // Navigate to payment result screen with success status and job data
         context.pushNamed(
           AppRoutes.paymentResult,
-          extra: {
-            'isSuccess': true,
-            'job': widget.job,
-          },
+          extra: {'isSuccess': true, 'job': widget.job},
         );
       } else if (next is PayForJobError) {
         CustomToast.errorToast(context: context, message: next.message);
-        // Navigate to payment result screen with failure status
         context.pushNamed(
           AppRoutes.paymentResult,
-          extra: {
-            'isSuccess': false,
-            'job': widget.job,
-          },
+          extra: {'isSuccess': false, 'job': widget.job},
         );
-      } else if (next is GetCardsError) {
-        CustomToast.errorToast(context: context, message: next.message);
       } else if (next is DeleteCardSuccess) {
         CustomToast.successToast(
           context: context,
           message: next.response.message,
         );
+        ref.read(paymentNotifierProvider.notifier).getCards();
       } else if (next is DeleteCardError) {
         CustomToast.errorToast(context: context, message: next.message);
       } else if (next is SetDefaultCardSuccess) {
@@ -146,7 +142,6 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
           context: context,
           message: next.response.message,
         );
-      } else if (next is SetDefaultCardSuccess) {
         ref.read(paymentNotifierProvider.notifier).getCards();
       }
     });

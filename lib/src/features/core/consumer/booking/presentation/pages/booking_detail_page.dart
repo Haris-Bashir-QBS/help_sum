@@ -5,6 +5,7 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
 import 'package:help_sum/src/core/enums/payment_status.dart';
 import 'package:help_sum/src/core/extensions/context_extensions.dart';
+import 'package:help_sum/src/core/extensions/string_extensions.dart';
 import 'package:help_sum/src/core/utils/app_utils.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/service_provider_card.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
@@ -32,12 +33,17 @@ class BookingDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     print("job status is ${job.status}");
     return Scaffold(
-      appBar: CustomAppBar(title: AppTexts.bookingDetail),
+      appBar: CustomAppBar(
+        title: AppTexts.bookingDetail,
+        onBackButtonPressed: () {
+          context.pop(true);
+        },
+      ),
       body: Column(
         children: [
           20.verticalSpace,
           BookingStatusHeader(
-            text: job.status,
+            text: job.status.capitalizeAndReplaceUnderscore(),
             showContractTag: job.status == JobStatus.in_progress.name,
             // showContractTag: false,
           ),
@@ -95,12 +101,13 @@ class BookingDetailPage extends StatelessWidget {
                   ),
 
                   10.verticalSpace,
-                  if (job.status != JobStatus.waitingPayment.name &&
-                      job.status != JobStatus.cancelled.name &&
-                      job.status != JobStatus.rejected.name) ...[
-                    OfferDetailsCard(job: job),
-                    20.verticalSpace,
-                  ],
+                  // if (job.status != JobStatus.waitingPayment.name &&
+                  // //    job.status != JobStatus.cancelled.name
+                  // //    && job.status != JobStatus.rejected.name
+                  // ) ...[
+                  OfferDetailsCard(job: job),
+                  20.verticalSpace,
+                  //],
                   //_imagesWidget(),
                   // 20.verticalSpace,
                   Divider(),
@@ -126,7 +133,8 @@ class BookingDetailPage extends StatelessWidget {
                           job.paymentStatus == PaymentStatus.paid.name) &&
                       (job.status == JobStatus.waitingPayment.name ||
                           job.status == JobStatus.completed.name ||
-                          job.status == JobStatus.in_progress.name)) ...[
+                          job.status == JobStatus.in_progress.name ||
+                          job.status == JobStatus.accepted.name)) ...[
                     10.verticalSpace,
                     Padding(
                       padding: EdgeInsets.symmetric(
