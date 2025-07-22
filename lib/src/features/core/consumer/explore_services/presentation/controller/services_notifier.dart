@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/response/services_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_services_by_category_usecase.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_services_params.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/services_state.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/data/models/response/services_response_model.dart';
 
 class ServicesNotifier extends StateNotifier<ServicesState> {
   final GetServicesByCategoryUseCase _getServicesByCategoryUseCase;

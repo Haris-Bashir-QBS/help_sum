@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/category_card.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CategorySkeleton extends StatelessWidget {
   const CategorySkeleton({super.key});

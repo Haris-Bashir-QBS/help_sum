@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
-import 'dart:ui';
-
 import 'package:help_sum/src/widgets/custom_text.dart'; // For NumberFormat if you want to format currency
 
 // You can move this enum to a separate file if you use it elsewhere

@@ -9,8 +9,8 @@ import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/services/stripe_service.dart';
 import 'package:help_sum/src/core/utils/app_utils.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/request/add_card_request_model.dart';
-import 'package:help_sum/src/features/core/common/payment/presentation/controller/notifiers/payment_notifier.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/controller/notifiers/payment_state.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/controller/providers/payment_provider.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/models/card_detail_params.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/widgets/card_details_form.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
@@ -121,6 +121,7 @@ class _CardDetailsScreenState extends ConsumerState<CardDetailsScreen> {
       );
 
       if (cardToken == null) {
+        if(!mounted)return;
         AppUtils.showSnackBar(context, 'Failed to create card token');
         return;
       }

@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:help_sum/src/core/errors/api_exceptions.dart';
 import 'package:help_sum/src/features/core/common/payment/data/datasources/remote/payment_remote_datasource.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/request/add_card_request_model.dart';
+import 'package:help_sum/src/features/core/common/payment/data/models/request/rate_job_request_model.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/response/add_card_response_model.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/response/get_cards_response_model.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/response/card_action_response_model.dart';
@@ -67,14 +68,26 @@ class PaymentRepositoryImplementation implements PaymentRepository {
     required int amount,
   }) async {
     try {
-      final response = await _remoteDataSource.payForJob(
+      final result = await _remoteDataSource.payForJob(
         jobId: jobId,
         paymentToken: paymentToken,
         amount: amount,
       );
-      return right(response);
+      return Right(result);
     } on Failure catch (e) {
-      return left(Failure(message: e.message));
+      return Left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CardActionResponseModel>> rateJob({
+    required RateJobRequestModel params,
+  }) async {
+    try {
+      final result = await _remoteDataSource.rateJob(params: params);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(Failure(message: e.message));
     }
   }
 }

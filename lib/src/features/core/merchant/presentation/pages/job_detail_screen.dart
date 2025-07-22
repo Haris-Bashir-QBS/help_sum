@@ -1,30 +1,30 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
+import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_utils.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/service_provider_card.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_status_header.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_timer.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_details_update_card.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_image_slider.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/offer_details_card.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/service_location_map.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/service_time_card.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/section_divider_text.dart';
+import 'package:help_sum/src/widgets/animated_dialog.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
-import 'package:help_sum/src/widgets/animated_dialog.dart';
-import 'package:go_router/go_router.dart';
-import 'package:help_sum/src/core/router/app_routes.dart';
-import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_image_slider.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../../core/constants/app_dimensions.dart';
 

@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
-import 'package:help_sum/src/features/core/merchant/domain/entities/merchant_job_request_resposne_entity.dart';
 import 'package:help_sum/src/features/core/merchant/domain/params/merchant_by_type_param.dart';
 import 'package:help_sum/src/features/core/merchant/domain/params/update_job_params.dart';
 import 'package:help_sum/src/features/core/merchant/domain/usecases/fetch_jobs_by_type_merchant.dart';

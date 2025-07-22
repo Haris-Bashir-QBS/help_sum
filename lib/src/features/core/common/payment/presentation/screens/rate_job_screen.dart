@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/features/core/common/payment/data/models/request/rate_job_request_model.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/controller/notifiers/rating_state.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/controller/providers/rating_provider.dart';
+import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_rating_widget.dart';
 import 'package:help_sum/src/widgets/custom_text_formfield.dart';
+import 'package:help_sum/src/widgets/custom_toast.dart';
 
-class RateScreen extends StatefulWidget {
-  const RateScreen({super.key, this.isEdit = false});
+class RateJobScreen extends ConsumerStatefulWidget {
+  const RateJobScreen({super.key, this.isEdit = false, required this.job});
   final bool isEdit;
+  final JobData job;
 
   @override
-  State<RateScreen> createState() => _RateScreenState();
+  ConsumerState<RateJobScreen> createState() => _RateJobScreenState();
 }
 
-class _RateScreenState extends State<RateScreen> {
+class _RateJobScreenState extends ConsumerState<RateJobScreen> {
   double _rating = 0.0;
   final TextEditingController _reviewController = TextEditingController();
 
@@ -27,14 +34,43 @@ class _RateScreenState extends State<RateScreen> {
   }
 
   void _submitReview() {
-    // TODO: Implement logic to submit the rating and review
-    print('Rating: $_rating');
-    print('Review: ${_reviewController.text}');
-    context.pop();
+    if (_rating == 0.0) {
+      CustomToast.errorToast(
+        context: context,
+        message: "Please provide a rating",
+      );
+      return;
+    }
+
+    final params = RateJobRequestModel(
+      jobId: widget.job.id,
+      rating: _rating.toInt(),
+      review: _reviewController.text,
+    );
+
+    ref.read(ratingNotifierProvider.notifier).rateJob(params);
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(ratingNotifierProvider, (previous, current) {
+      if (current is RatingSuccess) {
+        CustomToast.successToast(
+          context: context,
+          message: 'Rating submitted successfully',
+        );
+        context.pop();
+        context.pop();
+      } else if (current is RatingError) {
+        CustomToast.successToast(
+          context: context,
+          message: current.message,
+        );
+     
+      }
+    });
+    final ratingState = ref.watch(ratingNotifierProvider);
+
     return Scaffold(
       appBar: CustomAppBar(title: AppTexts.rateMerchant),
       body: SafeArea(
@@ -49,7 +85,7 @@ class _RateScreenState extends State<RateScreen> {
                 SizedBox(height: 73.h),
                 _buildReviewField(),
                 SizedBox(height: 32.h),
-                _buildSubmitButton(),
+                _buildSubmitButton(ratingState),
                 SizedBox(height: 32.h),
               ],
             ),
@@ -80,12 +116,13 @@ class _RateScreenState extends State<RateScreen> {
     );
   }
 
-  Widget _buildSubmitButton() {
+  Widget _buildSubmitButton(RatingState state) {
     return CustomButton(
       text: AppTexts.done,
       onPressed: _submitReview,
       color: AppPalette.primaryColor,
       textColor: Colors.white,
+      isLoading: state is RatingLoading,
     );
   }
 }

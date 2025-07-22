@@ -1,4 +1,5 @@
 import 'package:help_sum/src/features/core/common/payment/data/models/request/add_card_request_model.dart';
+import 'package:help_sum/src/features/core/common/payment/data/models/request/rate_job_request_model.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/response/add_card_response_model.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/response/get_cards_response_model.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/response/card_action_response_model.dart';
@@ -13,4 +14,5 @@ abstract interface class PaymentRemoteDataSource {
     required String paymentToken,
     required int amount,
   });
+  Future<CardActionResponseModel> rateJob({required RateJobRequestModel params});
 }

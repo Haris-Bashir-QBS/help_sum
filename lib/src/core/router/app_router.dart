@@ -11,7 +11,6 @@ import 'package:help_sum/src/features/auth/presentation/screens/signup_page.dart
 import 'package:help_sum/src/features/core/common/intro/spash/pages/splash_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/otp_verification_page.dart';
 import 'package:help_sum/src/features/core/common/intro/onboarding/pages/onboarding_page.dart';
-import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/main_navigation_page.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/portfolio_screen.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/settings_page.dart';
@@ -25,13 +24,12 @@ import 'package:help_sum/src/features/core/common/payment/presentation/screens/a
 import 'package:help_sum/src/features/core/common/payment/presentation/screens/card_details_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/screens/payment_method_screen.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/screens/payment_result_screen.dart';
-import 'package:help_sum/src/features/core/common/payment/presentation/screens/rate_merchant_screen.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/screens/rate_job_screen.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/edit_contact_info_screen.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/profile_details_page.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/create_request_screen.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/find_merchant_screen.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/immediate_book_screen.dart';
-import 'package:help_sum/src/features/core/merchant/domain/entities/merchant_job_request_resposne_entity.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/job_detail_screen.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/change_description_page.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/change_rate_page.dart';
@@ -417,8 +415,10 @@ GoRoute _paymentResult() {
     path: "/${AppRoutes.paymentResult}",
     name: AppRoutes.paymentResult,
     builder: (context, state) {
-      final isSuccess = state.extra as bool;
-      return PaymentResultScreen(isSuccess: isSuccess);
+      final Map<String, dynamic> extras = state.extra as Map<String, dynamic>;
+      final bool isSuccess = extras['isSuccess'] as bool;
+      final JobData? job = extras['job'] as JobData?;
+      return PaymentResultScreen(isSuccess: isSuccess, job: job);
     },
   );
 }
@@ -427,7 +427,9 @@ GoRoute _rateScreen() {
   return GoRoute(
     path: '/rate-screen',
     name: AppRoutes.rateScreen,
-    builder: (context, state) => const RateScreen(),
+    builder: (context, state) {
+      final JobData job = state.extra as JobData;
+      return  RateJobScreen(job: job);}
   );
 }
 

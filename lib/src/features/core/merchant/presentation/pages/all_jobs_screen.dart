@@ -1,19 +1,17 @@
 import 'dart:developer';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
-
 import 'package:help_sum/src/core/enums/job_status.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_card.dart';
-import 'package:help_sum/src/features/core/merchant/domain/entities/merchant_job_request_resposne_entity.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_states.dart';
 import 'package:help_sum/src/widgets/app_tab_bar.dart';
@@ -79,7 +77,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
     } else if (state is MerchantJobsLoaded) {
       final jobs = state.response.data;
 
-      if (jobs?.data?.isEmpty == true) {
+      if (jobs.data.isEmpty == true) {
         return const Expanded(
           child: Center(child: CustomText(text: "No Data Found")),
         );
@@ -87,11 +85,11 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
 
       return Expanded(
         child: ListView.builder(
-          itemCount: jobs?.data?.length ?? 0,
+          itemCount: jobs.data.length ,
           itemBuilder: (c, i) {
-            final job = jobs?.data?[i];
+            final job = jobs.data[i];
             return JobCardMerchant(
-              job: job!,
+              job: job,
               showStatus: true,
               index: i,
               onTap: () => _navigateToJobDetailScreen(job),

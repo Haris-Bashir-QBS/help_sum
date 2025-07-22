@@ -5,6 +5,7 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
 import 'package:help_sum/src/core/enums/payment_status.dart';
 import 'package:help_sum/src/core/extensions/context_extensions.dart';
+import 'package:help_sum/src/core/utils/app_utils.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/service_provider_card.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_status_header.dart';
@@ -17,9 +18,9 @@ import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/animated_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
-import 'package:help_sum/src/widgets/custom_text.dart';
 
 import '../../../../../../core/constants/app_dimensions.dart';
+import '../widgets/job_image_slider.dart';
 
 class BookingDetailPage extends StatelessWidget {
   final JobData job;
@@ -52,11 +53,25 @@ class BookingDetailPage extends StatelessWidget {
                     20.verticalSpace,
                   ],
                   Visibility(
+                    visible:
+                        job.status == JobStatus.pending.name ||
+                        job.status == JobStatus.waitingConfirmation.name ||
+                        job.status == JobStatus.in_progress.name &&
+                            job.jobStartTime == null,
+                    child: ServiceTimeCard(
+                      //title: AppUtils.getServiceStartTimeTitle(job.status??""),
+                      title: "Starting Time",
+                      date: AppUtils.formatReadableDate(job.date),
+                      time: AppUtils.formatReadableTime(job.time),
+                    ),
+                  ),
+
+                  Visibility(
                     visible: job.jobStartTime != null,
                     child: ServiceTimeCard(
                       //title: AppUtils.getServiceStartTimeTitle(job.status??""),
                       title: "Start Time",
-                      date: job.jobStartTime ?? "",
+                      date: job.date,
                       time: '3:10 PM',
                     ),
                   ),
@@ -69,7 +84,7 @@ class BookingDetailPage extends StatelessWidget {
                           child: ServiceTimeCard(
                             // title: AppUtils.getServiceEndTimeTitle(job.status),
                             title: "End Time",
-                            date: 'Thursday, 12 November',
+                            date: job.date,
                             time: '2:10 PM',
                           ),
                         ),
@@ -86,19 +101,14 @@ class BookingDetailPage extends StatelessWidget {
                     OfferDetailsCard(job: job),
                     20.verticalSpace,
                   ],
-                  // JobImageSlider(
-                  //   imageUrls: [
-                  //     'https://picsum.photos/id/237/200/300',
-                  //     'https://picsum.photos/id/238/200/300',
-                  //     'https://picsum.photos/id/239/200/300',
-                  //     'https://picsum.photos/id/240/200/300',
-                  //   ],
-                  // ),
+                  //_imagesWidget(),
                   // 20.verticalSpace,
-                  if (job.status != JobStatus.in_progress.name) ...[
-                    LocationMapView(latitude: 144, longitude: 146),
-                    10.verticalSpace,
-                  ],
+                  Divider(),
+                  LocationMapView(
+                    latitude: job.location.coordinates[1], // Latitude
+                    longitude: job.location.coordinates[0], // Longitude
+                  ),
+                  10.verticalSpace,
                   ServiceProviderCard(
                     title: job.merchantId.firstName + job.merchantId.lastName,
                     reviews: "N/A",
@@ -112,8 +122,11 @@ class BookingDetailPage extends StatelessWidget {
                       context.pushNamed(AppRoutes.mapTracking);
                     },
                   ),
-                  if (job.paymentStatus == PaymentStatus.escrowed.name ||
-                      job.paymentStatus == PaymentStatus.paid.name) ...[
+                  if ((job.paymentStatus == PaymentStatus.escrowed.name ||
+                          job.paymentStatus == PaymentStatus.paid.name) &&
+                      (job.status == JobStatus.waitingPayment.name ||
+                          job.status == JobStatus.completed.name ||
+                          job.status == JobStatus.in_progress.name)) ...[
                     10.verticalSpace,
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -140,11 +153,11 @@ class BookingDetailPage extends StatelessWidget {
                       ),
                     ),
                   ],
-                  if (job.status == JobStatus.pending) ...[
+                  if (job.status == JobStatus.pending.name) ...[
                     10.verticalSpace,
                     _otherOptionsButton(context),
                   ],
-                  if (job.status == JobStatus.waitingConfirmation) ...[
+                  if (job.status == JobStatus.waitingConfirmation.name) ...[
                     20.verticalSpace,
                     _bookingConfirmAndCancelButtons(context),
                   ],
@@ -155,6 +168,17 @@ class BookingDetailPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  JobImageSlider _imagesWidget() {
+    return JobImageSlider(
+      imageUrls: [
+        'https://picsum.photos/id/237/200/300',
+        'https://picsum.photos/id/238/200/300',
+        'https://picsum.photos/id/239/200/300',
+        'https://picsum.photos/id/240/200/300',
+      ],
     );
   }
 

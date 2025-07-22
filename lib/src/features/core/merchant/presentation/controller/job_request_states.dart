@@ -1,5 +1,4 @@
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
-import 'package:help_sum/src/features/core/merchant/domain/entities/merchant_job_request_resposne_entity.dart';
 
 abstract class MerchantJobsState {}
 

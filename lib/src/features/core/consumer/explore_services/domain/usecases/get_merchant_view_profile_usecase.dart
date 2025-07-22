@@ -2,8 +2,8 @@ import 'package:fpdart/fpdart.dart';
 import 'package:help_sum/src/core/errors/api_exceptions.dart';
 import 'package:help_sum/src/core/use_cases/use_case.dart';
 import 'package:help_sum/src/features/auth/data/models/response/user_model.dart';
+
 import '../repositories/merchant_view_profile_repository.dart';
-import '../entities/service_provider_model.dart';
 
 class GetMerchantViewProfileParams {
   final String merchantId;

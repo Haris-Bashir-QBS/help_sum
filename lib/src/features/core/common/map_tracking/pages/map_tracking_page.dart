@@ -4,11 +4,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 // import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
-import 'package:help_sum/src/core/widgets/custom_search_field.dart';
-import 'package:help_sum/src/widgets/custom_search_field.dart';
-import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/features/core/common/map_tracking/widgets/location_info_card.dart';
+import 'package:help_sum/src/widgets/custom_search_field.dart';
+import 'package:help_sum/src/widgets/custom_text.dart';
 
 class MapTrackingPage extends StatefulWidget {
   const MapTrackingPage({super.key});

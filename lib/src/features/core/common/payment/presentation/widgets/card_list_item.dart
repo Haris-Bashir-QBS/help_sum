@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/response/add_card_response_model.dart';
-import 'package:help_sum/src/features/core/common/payment/presentation/controller/notifiers/payment_notifier.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/controller/providers/payment_provider.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class CardListItem extends ConsumerWidget {

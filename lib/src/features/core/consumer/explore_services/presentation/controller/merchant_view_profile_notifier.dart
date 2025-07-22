@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/usecases/get_merchant_view_profile_usecase.dart';
+
 import 'merchant_view_profile_state.dart';
 
 class MerchantViewProfileNotifier

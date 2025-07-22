@@ -2,27 +2,26 @@ import 'dart:developer';
 
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart'
+    as places_sdk;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_secrets.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_utils.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/Booking_route_params.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/merchant_list_tab_view.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/recommended_service_provider_card.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/create_job_route_model.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/nearby_merchants_provider.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/nearby_merchants_state.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/create_job_route_model.dart';
-import 'package:help_sum/src/core/router/app_routes.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/merchant_list_shimmer.dart';
-import 'package:geolocator/geolocator.dart' as geolocator;
-import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart'
-    as places_sdk;
-import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/merchant_list_tab_view.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/location_typeahead_field.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/merchant_list_shimmer.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/recommended_service_provider_card.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../data/models/response/merchant_response_model.dart';

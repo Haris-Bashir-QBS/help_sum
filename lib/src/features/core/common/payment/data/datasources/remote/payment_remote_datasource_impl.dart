@@ -8,6 +8,7 @@ import 'package:help_sum/src/core/network/config/error_handler.dart';
 import 'package:help_sum/src/core/constants/app_errors.dart';
 import 'package:help_sum/src/features/core/common/payment/data/datasources/remote/payment_remote_datasource.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/request/add_card_request_model.dart';
+import 'package:help_sum/src/features/core/common/payment/data/models/request/rate_job_request_model.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/response/add_card_response_model.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/response/get_cards_response_model.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/response/card_action_response_model.dart';
@@ -105,6 +106,30 @@ class PaymentRemoteDataSourceImplementation implements PaymentRemoteDataSource {
         data: {"paymentToken": paymentToken, "amount": amount},
       );
       log("Pay For Job Response: ${response.data}");
+      if (response.isOk || response.isCreated) {
+        return CardActionResponseModel.fromJson(response.data);
+      } else {
+        throw ServerException(
+          statusCode: response.statusCode,
+          message: response.data['message'] ?? AppErrors.somethingWentWrong,
+        );
+      }
+    });
+  }
+
+  @override
+  Future<CardActionResponseModel> rateJob({
+    required RateJobRequestModel params,
+  }) async {
+    return await ApiErrorHandler.executeGuarded(() async {
+      final response = await _client.post(
+        endpoint: "${ApiEndpoints.rateJob.value}/${params.jobId}/rate",
+        data: {
+          "rating": params.rating,
+          "review": params.review,
+        },
+      );
+      log("Rate Job Response: ${response.data}");
       if (response.isOk || response.isCreated) {
         return CardActionResponseModel.fromJson(response.data);
       } else {

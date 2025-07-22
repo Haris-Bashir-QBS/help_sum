@@ -89,7 +89,7 @@ class RecommendedCard extends StatelessWidget {
                       ),
                       SizedBox(width: 5.w),
                       CustomText(
-                        text: '(${reviewsCount})',
+                        text: '($reviewsCount)',
                         fontSize: 12.sp,
                         color: AppPalette.darkGreyColor,
                       ),

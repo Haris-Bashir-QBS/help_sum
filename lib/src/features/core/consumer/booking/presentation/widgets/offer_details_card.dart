@@ -27,11 +27,14 @@ class OfferDetailsCard extends StatelessWidget {
           ),
           Divider(),
           3.verticalSpace,
+          _buildDetailRow(AppTexts.jobTitle, job.title),
+          10.verticalSpace,
+          _buildDetailRow(AppTexts.jobDescription, job.description),
+          10.verticalSpace,
           _buildDetailRow(AppTexts.estimatedWorkTime, job.estimatedWorkTime),
           10.verticalSpace,
-          _buildDetailRow(AppTexts.estimatedBudget, AppTexts.twoHundredDollars),
+          _buildDetailRow(AppTexts.estimatedBudget, job.offer.toString()),
           10.verticalSpace,
-          _buildDetailRow(AppTexts.jobDescription, AppTexts.pipeRepair),
         ],
       ),
     );
@@ -42,7 +45,7 @@ class OfferDetailsCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText(text: title, fontWeight: FontWeight.bold),
-        10.horizontalSpace,
+        13.horizontalSpace,
         CustomText(text: value),
       ],
     );

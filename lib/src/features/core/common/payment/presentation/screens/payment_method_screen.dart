@@ -6,8 +6,8 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/response/add_card_response_model.dart';
-import 'package:help_sum/src/features/core/common/payment/presentation/controller/notifiers/payment_notifier.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/controller/notifiers/payment_state.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/controller/providers/payment_provider.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
@@ -114,9 +114,24 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
           context: context,
           message: next.response.message,
         );
-        Navigator.of(context).pop(true); // Optionally pop with result
+        // Navigate to payment result screen with success status and job data
+        context.pushNamed(
+          AppRoutes.paymentResult,
+          extra: {
+            'isSuccess': true,
+            'job': widget.job,
+          },
+        );
       } else if (next is PayForJobError) {
         CustomToast.errorToast(context: context, message: next.message);
+        // Navigate to payment result screen with failure status
+        context.pushNamed(
+          AppRoutes.paymentResult,
+          extra: {
+            'isSuccess': false,
+            'job': widget.job,
+          },
+        );
       } else if (next is GetCardsError) {
         CustomToast.errorToast(context: context, message: next.message);
       } else if (next is DeleteCardSuccess) {

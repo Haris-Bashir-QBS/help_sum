@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
@@ -39,16 +40,35 @@ class LocationMapView extends StatelessWidget {
               borderRadius: BorderRadius.circular(
                 AppDimensions.appBorderRadius.r,
               ),
-              color: Colors.grey[300],
-              // image: const DecorationImage(
-              //   image: NetworkImage(
-              //     'https://maps.googleapis.com/maps/api/staticmap?center=34.0151,-118.4912&zoom=14&size=400x200',
-              //   ), // Removed API key
-              //   fit: BoxFit.cover,
-              // ),
             ),
-            child: Center(
-              child: Icon(Icons.location_on, color: Colors.red, size: 40.sp),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(
+                AppDimensions.appBorderRadius.r,
+              ),
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(latitude, longitude),
+                  zoom: 14.0,
+                ),
+                markers: {
+                  Marker(
+                    markerId: const MarkerId('serviceLocation'),
+                    position: LatLng(latitude, longitude),
+                    infoWindow: const InfoWindow(title: 'Service Location'),
+                    icon: BitmapDescriptor.defaultMarkerWithHue(
+                      BitmapDescriptor.hueAzure,
+                    ),
+                  ),
+                },
+                zoomControlsEnabled: false,
+                mapType: MapType.normal,
+                myLocationEnabled: false,
+                myLocationButtonEnabled: false,
+                compassEnabled: true,
+                buildingsEnabled: true,
+                indoorViewEnabled: false,
+                trafficEnabled: false,
+              ),
             ),
           ),
         ],

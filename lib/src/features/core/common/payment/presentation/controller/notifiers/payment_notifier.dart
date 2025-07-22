@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/request/add_card_request_model.dart';
 import 'package:help_sum/src/features/core/common/payment/domain/usecases/add_card_usecase.dart';
 import 'package:help_sum/src/features/core/common/payment/domain/usecases/get_cards_usecase.dart';
@@ -82,13 +81,3 @@ class PaymentNotifier extends StateNotifier<PaymentState> {
   }
 }
 
-final paymentNotifierProvider =
-    StateNotifierProvider<PaymentNotifier, PaymentState>(
-      (ref) => PaymentNotifier(
-        sl(), // AddCardUseCase
-        sl(), // GetCardsUseCase
-        sl(), // DeleteCardUseCase
-        sl(), // SetDefaultCardUseCase
-        sl(), // PayForJobUseCase
-      ),
-    );

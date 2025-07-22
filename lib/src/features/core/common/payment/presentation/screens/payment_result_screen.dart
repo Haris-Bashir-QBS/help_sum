@@ -6,13 +6,15 @@ import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
+import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 
 import '../widgets/payment_result_action_button.dart';
 
 class PaymentResultScreen extends StatelessWidget {
   final bool isSuccess;
+  final JobData? job;
 
-  const PaymentResultScreen({super.key, required this.isSuccess});
+  const PaymentResultScreen({super.key, required this.isSuccess, this.job});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +76,15 @@ class PaymentResultScreen extends StatelessWidget {
           iconPath: AppAssets.starIcon,
           text: AppTexts.rate,
           onTap: () {
-            context.pushNamed(AppRoutes.rateScreen);
+            if (job != null) {
+              context.pushNamed(
+                AppRoutes.rateScreen,
+                extra: job,
+              );
+            } else {
+              // Navigate back to bookings if job is null
+              context.pop();
+            }
           },
         ),
       ],

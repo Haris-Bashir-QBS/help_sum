@@ -1,5 +1,4 @@
 import 'package:help_sum/src/features/auth/data/models/response/user_model.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/domain/entities/service_provider_model.dart';
 
 class MerchantViewProfileState {
   const MerchantViewProfileState();

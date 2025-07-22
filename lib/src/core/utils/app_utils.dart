@@ -17,6 +17,24 @@ import 'package:intl/intl.dart';
 import '../../features/auth/domain/entities/user_entity.dart';
 
 class AppUtils {
+  static String formatReadableDate(String dateString) {
+    final dateTime = DateFormat('M/d/y').parse(dateString); // handles 7/22/2025
+    final dayOfWeek = DateFormat('EEEE').format(dateTime);
+    final day = DateFormat('d').format(dateTime);
+    final month = DateFormat('MMMM').format(dateTime);
+    final year = DateFormat('y').format(dateTime);
+    return '$dayOfWeek, $day $month $year';
+  }
+
+  static String formatReadableTime(String timeString) {
+    try {
+      final dateTime = DateFormat('H:mm').parse(timeString); // 24-hour input
+      return DateFormat('hh:mm a').format(dateTime); // 02:00 PM
+    } catch (_) {
+      return 'Invalid time';
+    }
+  }
+
   /// Picks a date with optional range.
   static Future<DateTime?> pickDate(
     BuildContext context, {

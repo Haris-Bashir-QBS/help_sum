@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
-import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/animated_dialog.dart';
+import 'package:help_sum/src/widgets/custom_text.dart';
 
 class CancelJobBottomSheet extends StatefulWidget {
   const CancelJobBottomSheet({super.key});

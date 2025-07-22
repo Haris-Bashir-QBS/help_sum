@@ -1,5 +1,4 @@
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/entities/category_entity.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/domain/entities/categories_response_entity.dart';
 
 abstract class CategoryState {}
 

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
+import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/response/services_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/Booking_route_params.dart';
@@ -11,9 +11,9 @@ import 'package:help_sum/src/features/core/consumer/explore_services/presentatio
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/services_state.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/service_card.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
+import 'package:help_sum/src/widgets/custom_refresh_indicator.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
-import 'package:help_sum/src/widgets/custom_refresh_indicator.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ServicesPerCategoryPage extends ConsumerStatefulWidget {
