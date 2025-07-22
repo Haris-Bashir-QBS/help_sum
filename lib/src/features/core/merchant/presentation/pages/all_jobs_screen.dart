@@ -66,7 +66,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   }
 
   Widget _jobListView(MerchantJobsState state) {
-    if (state is MerchantJobsLoading) {
+    if (state is MerchantJobsLoading || state is MerchantJobsInitial) {
       return const Expanded(
         child: Center(
           child: CircularProgressIndicator(color: AppPalette.primaryColor),
@@ -85,7 +85,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
 
       return Expanded(
         child: ListView.builder(
-          itemCount: jobs.data.length ,
+          itemCount: jobs.data.length,
           itemBuilder: (c, i) {
             final job = jobs.data[i];
             return JobCardMerchant(
