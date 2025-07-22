@@ -5,4 +5,6 @@ import 'package:help_sum/src/features/core/merchant/domain/params/update_job_par
 abstract class MerchantJobsRemoteSource {
   Future<JobResponseModel> getAllJobsByType(MerchantByTypeParam params);
   Future<JobData> updateJob(UpdateJobParams params);
+  Future<JobData> startJob(String jobId);
+  Future<JobData> completeJob(String jobId);
 }

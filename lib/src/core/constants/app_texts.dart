@@ -25,6 +25,7 @@ class AppTexts {
   static const String aboutUs = 'About Us';
   static const String contactUs = 'Contact Us';
   static const String deleteAccount = 'Delete Account';
+  static const String startJob = "Start Job";
 
   // OTP Verification Page
   static const String verificationCode = 'Verification Code';
@@ -56,6 +57,7 @@ class AppTexts {
   static const String recommendedForYou = 'Recommended for you';
   static const String officeWorkers = 'Office workers';
   static const String education = 'Education';
+  static const String endJob = "End Job";
   static const String eventPlanner = 'Event planner';
   static const String mechanic = 'Mechanic';
   static const String health = 'Health';

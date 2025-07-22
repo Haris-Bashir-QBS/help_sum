@@ -23,3 +23,24 @@ class MerchantJobsError extends MerchantJobsState {
 
   MerchantJobsError(this.message);
 }
+
+// Add these new states for job actions
+class JobActionLoading extends MerchantJobsState {
+  final String action; // "start", "complete", "cancel", etc.
+  
+  JobActionLoading(this.action);
+}
+
+class JobActionSuccess extends MerchantJobsState {
+  final String action;
+  final JobData jobData;
+  
+  JobActionSuccess(this.action, this.jobData);
+}
+
+class JobActionError extends MerchantJobsState {
+  final String action;
+  final String message;
+  
+  JobActionError(this.action, this.message);
+}

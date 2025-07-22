@@ -53,4 +53,40 @@ class MerchantJobsRemoteSourceImpl implements MerchantJobsRemoteSource {
       }
     });
   }
+  
+  @override
+  Future<JobData> startJob(String jobId) async {
+    return await ApiErrorHandler.executeGuarded(() async {
+      final response = await client.put(
+        endpoint: "${ApiEndpoints.createJob.value}/$jobId/start",
+      );
+
+      if (response.isOk) {
+        return JobData.fromJson(response.data['data']);
+      } else {
+        throw ServerException(
+          statusCode: response.statusCode,
+          message: response.data['message'] ?? AppErrors.somethingWentWrong,
+        );
+      }
+    });
+  }
+  
+  @override
+  Future<JobData> completeJob(String jobId) async {
+    return await ApiErrorHandler.executeGuarded(() async {
+      final response = await client.put(
+        endpoint: "${ApiEndpoints.createJob.value}/$jobId/complete",
+      );
+
+      if (response.isOk) {
+        return JobData.fromJson(response.data['data']);
+      } else {
+        throw ServerException(
+          statusCode: response.statusCode,
+          message: response.data['message'] ?? AppErrors.somethingWentWrong,
+        );
+      }
+    });
+  }
 }

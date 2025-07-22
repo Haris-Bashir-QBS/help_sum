@@ -142,6 +142,8 @@ Future<void> _initBookingDependencies() async {
   sl.registerLazySingleton(() => FetchJobsByTypeUseCase(sl()));
   sl.registerLazySingleton(() => GetAllJobsByTypeUseCase(sl()));
   sl.registerLazySingleton(() => UpdateJobStatusMerchantUseCase(sl()));
+  sl.registerLazySingleton(() => StartJobUseCase(sl()));
+  sl.registerLazySingleton(() => CompleteJobUseCase(sl()));
 }
 
 Future<void> _initMerchantViewProfileDependencies() async {

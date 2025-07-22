@@ -21,10 +21,12 @@ import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/service_location_map.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/service_time_card.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
+import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_states.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/section_divider_text.dart';
 import 'package:help_sum/src/widgets/animated_dialog.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
+import 'package:help_sum/src/widgets/custom_toast.dart';
 
 import '../../../../../core/constants/app_dimensions.dart';
 
@@ -51,6 +53,35 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
   Widget build(BuildContext context) {
     final jobStatus = AppUtils.parseJobStatus(widget.job.status);
     debugPrint("job status is ${widget.job.status}");
+
+    // Add a listener for job action states
+    ref.listen<MerchantJobsState>(merchantJobsNotifierProvider, (
+      previous,
+      current,
+    ) {
+      // Handle loading state
+      if (current is JobActionLoading) {
+        // Show loading indicator if needed
+      }
+      // Handle success states
+      else if (current is JobActionSuccess) {
+        if (current.action == 'start') {
+          // Job started successfully
+          Navigator.pop(context);
+        } else if (current.action == 'complete') {
+          // Job completed successfully
+          showJobReceiptDialog(context);
+        } else if (current.action == 'cancel') {
+          // Job cancelled successfully
+          Navigator.pop(context);
+        }
+      }
+      // Handle error states
+      else if (current is JobActionError) {
+        CustomToast.errorToast(context: context, message: current.message);
+      }
+    });
+
     return Scaffold(
       appBar: CustomAppBar(title: AppTexts.bookingDetail),
       body: Column(
@@ -200,10 +231,10 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                     10.verticalSpace,
                     _approveAndRejectJobButtons(context),
                   ],
-                  if (jobStatus == JobStatus.approved) ...[
-                    10.verticalSpace,
-                    _otherOptionsButton(context),
-                  ],
+                  // if (jobStatus == JobStatus.approved) ...[
+                  //   10.verticalSpace,
+                  //   _otherOptionsButton(context),
+                  // ],
                   if (jobStatus == JobStatus.in_progress) ...[
                     20.verticalSpace,
                     _bookingConfirmAndCancelButtons(context),
@@ -284,10 +315,10 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
               onPressed: () {
                 ref
                     .read(merchantJobsNotifierProvider.notifier)
-                    .changeJobStatuts(
+                    .changeJobStatus(
                       jobId: widget.job.id,
                       action: "accept",
-                      ctx: context,
+                      //  context: context,
                     );
                 // Fluttertoast.showToast(msg: "Job Approved");
                 // context.pop();
@@ -305,10 +336,10 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                 Fluttertoast.showToast(msg: "Job Rejected");
                 ref
                     .read(merchantJobsNotifierProvider.notifier)
-                    .changeJobStatuts(
+                    .changeJobStatus(
                       jobId: widget.job.id,
                       action: "reject",
-                      ctx: context,
+                      // ctx: context,
                     );
                 context.pop();
               },
@@ -319,6 +350,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
     );
   }
 
+  // Update the button callbacks
   Widget _bookingConfirmAndCancelButtons(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: AppDimensions.paddingAllSides),
@@ -326,14 +358,22 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
         children: [
           Expanded(
             child: CustomButton(
-              text: "End Job",
+              text:
+                  widget.job.jobStartTime == null
+                      ? AppTexts.startJob
+                      : AppTexts.endJob,
               color: AppPalette.primaryColor.withAlpha(220),
               textColor: Colors.white,
               onPressed: () {
-                //   Fluttertoast.showToast(msg: "Job Ended");
-                //context.pop();
-
-                _showJobEndConfirmationDialog(context);
+                if (widget.job.jobStartTime == null) {
+                  // Call start job API without awaiting
+                  ref
+                      .read(merchantJobsNotifierProvider.notifier)
+                      .startJob(jobId: widget.job.id);
+                } else {
+                  // Show confirmation dialog for ending job
+                  _showJobEndConfirmationDialog(context);
+                }
               },
             ),
           ),
@@ -344,15 +384,9 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
               textColor: Colors.white,
               color: AppPalette.redColor,
               onPressed: () {
-                Fluttertoast.showToast(msg: "Job Cancelled");
                 ref
                     .read(merchantJobsNotifierProvider.notifier)
-                    .changeJobStatuts(
-                      jobId: widget.job.id,
-                      action: "cancel",
-                      ctx: context,
-                    );
-                // context.pop();
+                    .changeJobStatus(jobId: widget.job.id, action: "cancel");
               },
             ),
           ),
@@ -368,14 +402,11 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
       title: "Are you sure to end this job?",
       primaryButtonText: AppTexts.no,
       onSecondaryTap: () {
+        // Call complete job API without awaiting
         ref
             .read(merchantJobsNotifierProvider.notifier)
-            .changeJobStatuts(
-              jobId: widget.job.id,
-              action: "complete",
-              ctx: context,
-            );
-        showJobReceiptDialog(context);
+            .completeJob(jobId: widget.job.id!);
+        // The listener will handle showing the receipt dialog
       },
       secondaryButtonText: AppTexts.yes,
     );
@@ -445,9 +476,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context); // First pop (dialog)
-                        Navigator.pop(
-                          context,
-                        ); // Second pop (parent page, if needed)
+                        Navigator.pop(context); // Second pop (parent page)
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
@@ -498,10 +527,10 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
 
               ref
                   .read(merchantJobsNotifierProvider.notifier)
-                  .changeJobStatuts(
+                  .changeJobStatus(
                     jobId: widget.job.id,
                     action: "start",
-                    ctx: context,
+                    //  ctx: context,
                   );
               Fluttertoast.showToast(msg: "Job Started");
             },

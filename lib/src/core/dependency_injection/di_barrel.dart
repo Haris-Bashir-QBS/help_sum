@@ -17,7 +17,9 @@ import 'package:help_sum/src/features/core/merchant/data/data_sources/remote/mer
 import 'package:help_sum/src/features/core/merchant/data/data_sources/remote/merchant_jobs_remote_source_impl.dart';
 import 'package:help_sum/src/features/core/merchant/data/repositories/merchant_jobs_repository_impl.dart';
 import 'package:help_sum/src/features/core/merchant/domain/repositories/merchant_jobs_repository.dart';
+import 'package:help_sum/src/features/core/merchant/domain/usecases/complete_job_usecase.dart';
 import 'package:help_sum/src/features/core/merchant/domain/usecases/fetch_jobs_by_type_merchant.dart';
+import 'package:help_sum/src/features/core/merchant/domain/usecases/start_job_usecase.dart';
 import 'package:help_sum/src/features/core/merchant/domain/usecases/update_job_status_merchant.dart';
 
 import '../../features/auth/data/datasources/remote/auth_remote_datasource.dart';

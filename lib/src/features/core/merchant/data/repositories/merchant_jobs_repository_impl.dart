@@ -44,4 +44,24 @@ class MerchantJobsRepositoryImpl implements MerchantJobsRepository {
       return left(Failure(message: e.message));
     }
   }
+  
+  @override
+  Future<Either<Failure, JobData>> startJob(String jobId) async {
+    try {
+      final response = await remoteDataSource.startJob(jobId);
+      return right(response);
+    } on Failure catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, JobData>> completeJob(String jobId) async {
+    try {
+      final response = await remoteDataSource.completeJob(jobId);
+      return right(response);
+    } on Failure catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
 }

@@ -5,5 +5,5 @@ import 'package:help_sum/src/features/core/merchant/presentation/controller/job_
 
 final merchantJobsNotifierProvider =
     StateNotifierProvider<MerchantJobsNotifier, MerchantJobsState>(
-      (ref) => MerchantJobsNotifier(sl(), sl()),
+      (ref) => MerchantJobsNotifier(sl(), sl(), sl(), sl()),
     );
