@@ -100,21 +100,21 @@ class PaymentRemoteDataSourceImplementation implements PaymentRemoteDataSource {
     required String paymentToken,
     required int amount,
   }) async {
-    return await ApiErrorHandler.executeGuarded(() async {
-      final response = await _client.post(
-        endpoint: "${ApiEndpoints.jobPayment.value}/$jobId/payment",
-        data: {"paymentToken": paymentToken, "amount": amount},
+    //  return await ApiErrorHandler.executeGuarded(() async {
+    final response = await _client.post(
+      endpoint: "${ApiEndpoints.jobPayment.value}/$jobId/payment",
+      data: {"paymentToken": paymentToken, "amount": amount},
+    );
+    log("Pay For Job Response: ${response.data}");
+    if (response.isOk || response.isCreated) {
+      return CardActionResponseModel.fromJson(response.data);
+    } else {
+      throw ServerException(
+        statusCode: response.statusCode,
+        message: response.data['message'] ?? AppErrors.somethingWentWrong,
       );
-      log("Pay For Job Response: ${response.data}");
-      if (response.isOk || response.isCreated) {
-        return CardActionResponseModel.fromJson(response.data);
-      } else {
-        throw ServerException(
-          statusCode: response.statusCode,
-          message: response.data['message'] ?? AppErrors.somethingWentWrong,
-        );
-      }
-    });
+    }
+    //   });
   }
 
   @override
@@ -123,8 +123,9 @@ class PaymentRemoteDataSourceImplementation implements PaymentRemoteDataSource {
   }) async {
     return await ApiErrorHandler.executeGuarded(() async {
       final response = await _client.post(
-        endpoint: "${ApiEndpoints.rateJob.value}/${params.jobId}/rate",
+        endpoint: ApiEndpoints.rateJob.value,
         data: {
+          "jobId": params.jobId,
           "rating": params.rating,
           "review": params.review,
         },

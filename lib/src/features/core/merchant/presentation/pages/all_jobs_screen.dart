@@ -18,6 +18,8 @@ import 'package:help_sum/src/widgets/app_tab_bar.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
+import '../../../../../widgets/custom_refresh_indicator.dart';
+
 class AllJobsScreen extends ConsumerStatefulWidget {
   const AllJobsScreen({super.key});
 
@@ -26,17 +28,6 @@ class AllJobsScreen extends ConsumerStatefulWidget {
 }
 
 class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
-  // static const List<String> jobTypes = [
-  //   'all',
-  //   'completed',
-  //   'on going',
-  //   'pending',
-  //   'approved',
-  //   'confirmation waiting',
-  //   'payment waiting',
-  //   'cancelled',
-  //   'rejected',
-  // ];
   final ScrollController scrollController = ScrollController();
   int selectedIndex = 0;
   List<JobModel> jobs = [];
@@ -58,7 +49,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
       children: [
         CustomSearchField(),
         20.verticalSpace,
-        _buildJobsTabbar(),
+        _buildJobsTabBar(),
         20.verticalSpace,
         _jobListView(state),
       ],
@@ -84,54 +75,45 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
       }
 
       return Expanded(
-        child: ListView.builder(
-          itemCount: jobs.data.length,
-          itemBuilder: (c, i) {
-            final job = jobs.data[i];
-            return JobCardMerchant(
-              job: job,
-              showStatus: true,
-              index: i,
-              onTap: () => _navigateToJobDetailScreen(job),
-            );
+        child: CustomRefreshIndicator(
+          onRefresh: () async {
+            ref
+                .read(merchantJobsNotifierProvider.notifier)
+                .getAllJobsByType(
+                  jobType: AppStaticData.jobStatusTabs[selectedIndex],
+                  refresh: true,
+                );
           },
+          child: ListView.builder(
+            itemCount: jobs.data.length,
+            itemBuilder: (c, i) {
+              final job = jobs.data[i];
+              return JobCardMerchant(
+                job: job,
+                showStatus: true,
+                index: i,
+                onTap: () => _navigateToJobDetailScreen(job),
+              );
+            },
+          ),
         ),
       );
     }
 
-    return const Expanded(child: SizedBox()); // fallback for initial state
+    return const Expanded(child: SizedBox());
   }
 
-  // Widget _jobListView(List<JobRequestEntity> _allJobs) {
-  //   return Expanded(
-  //     child:
-  //         _allJobs.isEmpty
-  //             ? Center(child: CustomText(text: "No Data Found"))
-  //             : ListView.builder(
-  //               itemCount: _allJobs.length,
-  //               itemBuilder: (c, i) {
-  //                 // return Container();
-  //                 return JobCardMerchant(
-  //                   job: _allJobs[i],
-  //                   showStatus: true,
-  //                   index: i,
-  //                   onTap: () {
-  //                     _navigateToJobDetailScreen(i);
-  //                   },
-  //                 );
-  //               },
-  //             ),
-  //   );
-  // }
-
-  void _navigateToJobDetailScreen(JobData? job) {
-    context.pushNamed(
+  void _navigateToJobDetailScreen(JobData? job) async {
+    bool? isRefresh = await context.pushNamed(
       AppRoutes.jobDetail,
       extra: {
         'job': job,
         'tabName': AppStaticData.jobStatusTabs[selectedIndex],
       },
     );
+    if (isRefresh == true) {
+      _fetchJobs();
+    }
   }
 
   String getJobString(JobStatus job) {
@@ -181,82 +163,27 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
     }
   }
 
-  _buildJobsTabbar() {
+  _buildJobsTabBar() {
     return AppTabBar(
       selectedIndex: selectedIndex,
       tabs: AppStaticData.jobStatusTabs,
       onTapChanged: (index) {
-        // switch (index) {
-        //   case 0:
-        //     jobs = AppStaticData.dummyJobs;
-        //     break;
-        //   case 1:
-        //     jobs =
-        //         AppStaticData.dummyJobs
-        //             .where((e) => e.status == JobStatus.inProgress)
-        //             .toList();
-        //   case 2:
-        //     jobs =
-        //         AppStaticData.dummyJobs
-        //             .where((e) => e.status == JobStatus.pending)
-        //             .toList();
-
-        //     break;
-        //   case 3:
-        //     jobs =
-        //         AppStaticData.dummyJobs
-        //             .where((e) => e.status == JobStatus.approved)
-        //             .toList();
-        //     break;
-        //   case 4:
-        //     jobs =
-        //       AppStaticData.dummyJobs
-        //           .where((e) => e.status == JobStatus.waitingConfirmation)
-        //           .toList();
-
-        //   break;
-
-        // case 5:
-        //   jobs =
-        //       AppStaticData.dummyJobs
-        //           .where((e) => e.status == JobStatus.waitingPayment)
-        //           .toList();
-
-        //   break;
-
-        // case 6:
-        //   jobs =
-        //       AppStaticData.dummyJobs
-        //           .where((e) => e.status == JobStatus.cancelled)
-        //           .toList();
-
-        //   break;
-        // case 7:
-        //   jobs =
-        //       AppStaticData.dummyJobs
-        //           .where((e) => e.status == JobStatus.rejected)
-        //           .toList();
-        // case 8:
-        //   jobs =
-        //       AppStaticData.dummyJobs
-        //           .where((e) => e.status == JobStatus.completed)
-        //           .toList();
-
-        //   break;
-        // // }
         setState(() {
           selectedIndex = index;
         });
-
-        ref
-            .read(merchantJobsNotifierProvider.notifier)
-            .getAllJobsByType(
-              jobType: AppStaticData.jobStatusTabs[index],
-              refresh: true,
-            );
-
-        print("object");
+        _fetchJobs();
       },
     );
+  }
+
+  void _fetchJobs() {
+    Future.microtask(() {
+      ref
+          .read(merchantJobsNotifierProvider.notifier)
+          .getAllJobsByType(
+            jobType: AppStaticData.jobStatusTabs[selectedIndex],
+            refresh: true,
+          );
+    });
   }
 }

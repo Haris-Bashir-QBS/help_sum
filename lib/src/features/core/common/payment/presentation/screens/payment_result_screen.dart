@@ -19,21 +19,27 @@ class PaymentResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: AppTexts.paymentResult, centerTitle: true),
+      appBar: CustomAppBar(
+        title: AppTexts.paymentResult,
+        centerTitle: true,
+        onBackButtonPressed: () {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        },
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.w),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              90.verticalSpace,
+              160.verticalSpace,
               _buildSuccessIcon(),
               SizedBox(height: 24.h),
               _buildStatusText(),
               SizedBox(height: 32.h),
               _buildMessageText(),
               SizedBox(height: 32.h),
-              _buildActionButtons(context),
+              // _buildActionButtons(context),
               SizedBox(height: 32.h),
             ],
           ),
@@ -77,10 +83,7 @@ class PaymentResultScreen extends StatelessWidget {
           text: AppTexts.rate,
           onTap: () {
             if (job != null) {
-              context.pushNamed(
-                AppRoutes.rateScreen,
-                extra: job,
-              );
+              context.pushNamed(AppRoutes.rateScreen, extra: job);
             } else {
               // Navigate back to bookings if job is null
               context.pop();

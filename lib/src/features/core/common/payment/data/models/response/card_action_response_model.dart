@@ -1,5 +1,5 @@
 class CardActionResponseModel {
-  final int status;
+  final bool status;
   final String message;
   final Map<String, dynamic>? data;
 
@@ -11,7 +11,7 @@ class CardActionResponseModel {
 
   factory CardActionResponseModel.fromJson(Map<String, dynamic> json) {
     return CardActionResponseModel(
-      status: json['status'] ?? 0,
+      status: json['status'] ?? false,
       message: json['message'] ?? '',
       data: json['data'],
     );

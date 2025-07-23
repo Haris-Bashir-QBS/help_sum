@@ -53,7 +53,7 @@ class MerchantJobsRemoteSourceImpl implements MerchantJobsRemoteSource {
       }
     });
   }
-  
+
   @override
   Future<JobData> startJob(String jobId) async {
     return await ApiErrorHandler.executeGuarded(() async {
@@ -71,7 +71,7 @@ class MerchantJobsRemoteSourceImpl implements MerchantJobsRemoteSource {
       }
     });
   }
-  
+
   @override
   Future<JobData> completeJob(String jobId) async {
     return await ApiErrorHandler.executeGuarded(() async {

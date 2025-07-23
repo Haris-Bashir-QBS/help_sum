@@ -82,7 +82,7 @@ enum ApiEndpoints {
       case ApiEndpoints.jobPayment:
         return "/job"; // Will be appended with /:id/payment
       case ApiEndpoints.rateJob:
-        return "/job"; // Will be appended with /:id/rate
+        return "/rating"; // Will be appended with /:id/rate
     }
   }
 }

@@ -15,9 +15,9 @@ import 'package:help_sum/src/widgets/custom_text_formfield.dart';
 import 'package:help_sum/src/widgets/custom_toast.dart';
 
 class RateJobScreen extends ConsumerStatefulWidget {
-  const RateJobScreen({super.key, this.isEdit = false, required this.job});
   final bool isEdit;
   final JobData job;
+  const RateJobScreen({super.key, this.isEdit = false, required this.job});
 
   @override
   ConsumerState<RateJobScreen> createState() => _RateJobScreenState();
@@ -60,19 +60,15 @@ class _RateJobScreenState extends ConsumerState<RateJobScreen> {
           message: 'Rating submitted successfully',
         );
         context.pop();
-        context.pop();
+        context.pop(true);
       } else if (current is RatingError) {
-        CustomToast.successToast(
-          context: context,
-          message: current.message,
-        );
-     
+        CustomToast.successToast(context: context, message: current.message);
       }
     });
     final ratingState = ref.watch(ratingNotifierProvider);
 
     return Scaffold(
-      appBar: CustomAppBar(title: AppTexts.rateMerchant),
+      appBar: CustomAppBar(title: "Rate Job"),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
