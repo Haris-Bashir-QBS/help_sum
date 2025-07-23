@@ -12,6 +12,7 @@ import 'package:help_sum/src/core/services/permission_manager.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/auth/data/models/request/schdule_request_model.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
+import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 import 'package:intl/intl.dart';
 
 import '../../features/auth/domain/entities/user_entity.dart';
@@ -33,6 +34,27 @@ class AppUtils {
     } catch (_) {
       return 'Invalid time';
     }
+  }
+
+  static Future<void> showProgressLoader({required BuildContext context}) {
+    return showDialog(
+      barrierDismissible: false,
+      context: context,
+      useRootNavigator: true,
+      barrierColor: Colors.black.withValues(alpha: .4),
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Center(
+            child: CircularProgressIndicator(color: AppPalette.primaryColor),
+          ),
+        );
+      },
+    );
+  }
+
+  static void hideLoader(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).maybePop();
   }
 
   /// Picks a date with optional range.
