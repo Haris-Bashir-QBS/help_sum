@@ -10,6 +10,7 @@ import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
+import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/core/extensions/string_extensions.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_utils.dart';
@@ -27,6 +28,7 @@ import 'package:help_sum/src/widgets/animated_dialog.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_toast.dart';
+import 'package:logger/logger.dart';
 
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/enums/payment_status.dart';
@@ -46,7 +48,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
 
   @override
   void initState() {
-    log(widget.job.status);
+    Logger().i(widget.job.paymentStatus);
     super.initState();
   }
 
@@ -145,7 +147,9 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                     title:
                         widget.job.consumerId.firstName +
                         widget.job.consumerId.lastName,
-                    reviews: "N/A",
+                    reviews:
+                        widget.job.consumerId.averageRating
+                            .toString(), // Assuming reviews is a number
                     imageUrl: widget.job.consumerId.image,
                     showMapIcon: false,
                     onTap: () {},
@@ -232,10 +236,25 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                     _bookingConfirmAndCancelButtons(context),
                   ],
                   if (widget.job.paymentStatus == PaymentStatus.paid.name &&
-                      widget.job.status != AppTexts.completed) ...[
+                      widget.job.status != JobStatus.completed.name) ...[
                     10.verticalSpace,
                     _paymentReceivedButton(),
                   ],
+                  if (widget.job.status == JobStatus.completed.name &&
+                      widget.job.isMerchantRated != true)
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.h),
+                      child: CustomButton(
+                        text: AppTexts.rate,
+                        color: context.primaryColor,
+                        onPressed: () {
+                          context.pushNamed(
+                            AppRoutes.rateScreen,
+                            extra: widget.job,
+                          );
+                        },
+                      ),
+                    ),
                   50.verticalSpace,
                 ],
               ),

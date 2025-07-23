@@ -118,7 +118,7 @@ class BookingDetailPage extends StatelessWidget {
                   10.verticalSpace,
                   ServiceProviderCard(
                     title: job.merchantId.firstName + job.merchantId.lastName,
-                    reviews: "N/A",
+                    reviews: job.merchantId.averageRating.toString(),
                     imageUrl: job.merchantId.image,
                     showMapIcon: false,
                     onTap: () {},
@@ -168,6 +168,20 @@ class BookingDetailPage extends StatelessWidget {
                   if (job.status == JobStatus.waitingConfirmation.name) ...[
                     20.verticalSpace,
                     _bookingConfirmAndCancelButtons(context),
+                  ],
+                  if (job.status == JobStatus.completed.name &&
+                      job.isConsumerRated != true) ...[
+                    10.verticalSpace,
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15.h),
+                      child: CustomButton(
+                        text: AppTexts.rate,
+                        color: context.primaryColor,
+                        onPressed: () {
+                          context.pushNamed(AppRoutes.rateScreen, extra: job);
+                        },
+                      ),
+                    ),
                   ],
                   50.verticalSpace,
                 ],

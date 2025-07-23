@@ -96,6 +96,7 @@ class JobData {
   final String id;
   final String createdAt;
   final String updatedAt;
+  final bool? isConsumerRated, isMerchantRated;
   final int v;
 
   JobData({
@@ -106,6 +107,8 @@ class JobData {
     required this.description,
     required this.location,
     required this.date,
+    this.isConsumerRated,
+    this.isMerchantRated,
     required this.time,
     required this.estimatedWorkTime,
     required this.offer,
@@ -148,6 +151,8 @@ class JobData {
                 phone: '',
               ),
       serviceId: _parseServiceInfo(json['serviceId']),
+      isConsumerRated: json['consumerIsRated'] ?? false,
+      isMerchantRated: json['merchantIsRated'] ?? false,
 
       title: json['title'] ?? '',
       description: json['description'] ?? '',
@@ -191,6 +196,7 @@ class UserInfo {
   final String phone;
   final String? description;
   final JobLocation? location;
+  final String? averageRating;
 
   UserInfo({
     required this.id,
@@ -200,6 +206,7 @@ class UserInfo {
     required this.phone,
     this.description,
     this.location,
+    this.averageRating,
   });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
@@ -211,6 +218,7 @@ class UserInfo {
       phone: json['phone'] ?? '',
       description: json['description'],
       location: JobLocation.fromJson(json['location'] ?? {}),
+      averageRating: json['averageRating']?.toString(),
     );
   }
 }

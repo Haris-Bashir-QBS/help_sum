@@ -123,8 +123,12 @@ class PaymentRemoteDataSourceImplementation implements PaymentRemoteDataSource {
   }) async {
     return await ApiErrorHandler.executeGuarded(() async {
       final response = await _client.post(
-        endpoint: "${ApiEndpoints.rateJob.value}/${params.jobId}/rate",
-        data: {"rating": params.rating, "review": params.review},
+        endpoint: ApiEndpoints.rateJob.value,
+        data: {
+          "jobId": params.jobId,
+          "rating": params.rating,
+          "review": params.review,
+        },
       );
       log("Rate Job Response: ${response.data}");
       if (response.isOk || response.isCreated) {

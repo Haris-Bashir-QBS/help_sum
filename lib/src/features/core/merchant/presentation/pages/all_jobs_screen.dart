@@ -15,9 +15,10 @@ import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_states.dart';
 import 'package:help_sum/src/widgets/app_tab_bar.dart';
-import 'package:help_sum/src/widgets/custom_refresh_indicator.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
+
+import '../../../../../widgets/custom_refresh_indicator.dart';
 
 class AllJobsScreen extends ConsumerStatefulWidget {
   const AllJobsScreen({super.key});
@@ -56,7 +57,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   }
 
   Widget _jobListView(MerchantJobsState state) {
-    if (state is MerchantJobsLoading) {
+    if (state is MerchantJobsLoading || state is MerchantJobsInitial) {
       return const Expanded(
         child: Center(
           child: CircularProgressIndicator(color: AppPalette.primaryColor),
@@ -72,10 +73,16 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
           child: Center(child: CustomText(text: "No Data Found")),
         );
       }
+
       return Expanded(
         child: CustomRefreshIndicator(
           onRefresh: () async {
-            _fetchJobs();
+            ref
+                .read(merchantJobsNotifierProvider.notifier)
+                .getAllJobsByType(
+                  jobType: AppStaticData.jobStatusTabs[selectedIndex],
+                  refresh: true,
+                );
           },
           child: ListView.builder(
             itemCount: jobs.data.length,
@@ -109,6 +116,53 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
     }
   }
 
+  String getJobString(JobStatus job) {
+    log(job.name);
+    switch (job) {
+      case JobStatus.ongoing:
+      case JobStatus.in_progress:
+        return "In-Progress";
+      case JobStatus.approved:
+      case JobStatus.accepted:
+        return "Approved";
+      case JobStatus.completed:
+        return "Completed";
+      case JobStatus.waitingConfirmation:
+        return "Waiting Confirmation";
+      case JobStatus.waitingPayment:
+        return "Waiting Payment";
+      case JobStatus.cancelled:
+        return "Cancelled";
+      case JobStatus.all:
+        return AppTexts.all;
+      case JobStatus.pending:
+        return AppTexts.pending;
+      case JobStatus.rejected:
+        return AppTexts.rejected;
+    }
+  }
+
+  Color getJobColor(JobStatus job) {
+    switch (job) {
+      case JobStatus.ongoing:
+      case JobStatus.in_progress:
+      case JobStatus.pending:
+        return Color(0xFFFFC680);
+      case JobStatus.approved:
+      case JobStatus.accepted:
+      case JobStatus.completed:
+        return Color(0xFFAFFFA8);
+      case JobStatus.waitingConfirmation:
+      case JobStatus.waitingPayment:
+        return Color(0xFFFFC680);
+      case JobStatus.cancelled:
+      case JobStatus.rejected:
+        return Color(0xFFFF0000);
+      case JobStatus.all:
+        return Colors.transparent;
+    }
+  }
+
   _buildJobsTabBar() {
     return AppTabBar(
       selectedIndex: selectedIndex,
@@ -117,10 +171,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
         setState(() {
           selectedIndex = index;
         });
-
         _fetchJobs();
-
-        print("object");
       },
     );
   }
@@ -135,13 +186,4 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
           );
     });
   }
-
-  //   ref.invalidate(merchantJobsNotifierProvider);
-  //   // ref
-  //   //     .read(merchantJobsNotifierProvider.notifier)
-  //   //     .getAllJobsByType(
-  //   //       jobType: AppStaticData.jobStatusTabs[selectedIndex],
-  //   //       refresh: true,
-  //   //     );
-  // }
 }
