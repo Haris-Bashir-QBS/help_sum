@@ -17,12 +17,16 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.staunchtie.helpsummerchant"
     compileSdk = 35
+    ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.toString()
+    }
 
     signingConfigs {
         create("release") {
@@ -33,13 +37,9 @@ android {
         }
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-    }
-
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.stt.helpsum1"
+        applicationId = "com.staunchtie.helpsummerchant"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 21
