@@ -6,11 +6,11 @@ import 'package:help_sum/src/features/auth/domain/repositories/auth_repository.d
 
 import '../../../../core/use_cases/use_case.dart';
 
-class OtpUseCase extends UseCase<UserEntity, OtpRequestModel> {
+class OtpUseCase extends UseCase<(UserEntity, String), OtpRequestModel> {
   final AuthRepository authRepository;
   OtpUseCase(this.authRepository);
   @override
-  Future<Either<Failure, UserEntity>> call(params) async {
+  Future<Either<Failure, (UserEntity, String)>> call(params) async {
     return await authRepository.verifyOtp(params: params);
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -8,85 +8,35 @@ import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
+import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
-import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
-import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
-import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
+import 'package:help_sum/src/features/auth/presentation/bloc/skill/skill_bloc.dart';
 import 'package:help_sum/src/widgets/animated_dialog.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/custom_text_formfield.dart';
 import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 
-// Data Model for a single skill
-
-class SkillSelectionScreen extends ConsumerStatefulWidget {
+class SkillSelectionScreen extends StatefulWidget {
   const SkillSelectionScreen({super.key, this.isEdit = false});
   final bool isEdit;
 
   @override
-  ConsumerState<SkillSelectionScreen> createState() =>
-      _SkillSelectionScreenState();
+  State<SkillSelectionScreen> createState() => _SkillSelectionScreenState();
 }
 
-class _SkillSelectionScreenState extends ConsumerState<SkillSelectionScreen> {
-  // Master list of all skills, used for filtering and state updates
-  // List of skills currently displayed, updated by search
-  // Controller for the search text field
+class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
   final TextEditingController _searchController = TextEditingController();
+  late final SkillBloc _skillBloc;
 
   @override
   void initState() {
+    _skillBloc = sl<SkillBloc>();
     super.initState();
-
     debugPrint(widget.isEdit.toString());
     WidgetsBinding.instance.addPostFrameCallback((t) {
-      ref.read(authNotifierProvider.notifier).getGrouppedServices();
+      _skillBloc.add(LoadSkills());
     });
-
-    _searchController.addListener(() {
-      // isSearchingTrue
-      if (_searchController.text.isNotEmpty) {
-        ref.read(authNotifierProvider.notifier).updateSearch(true);
-      } else {
-        ref.read(authNotifierProvider.notifier).updateSearch(false);
-      }
-    });
-
-    // Initialize with a proper list of categories and skills
-    // _allSkillsData = [
-    //   SkillCategory(
-    //     categoryName: "Personal Care",
-    //     skills: [
-    //       Skill(id: "personalCare_makeup", name: "Makeup"),
-    //       Skill(
-    //         id: "personalCare_hairStylist",
-    //         name: "Hairstylist",
-    //         selected: true,
-    //       ), // Example: initially selected
-    //       Skill(id: "personalCare_barber", name: "Barber"),
-    //     ],
-    //   ),
-    //   SkillCategory(
-    //     categoryName: "Mechanic",
-    //     skills: [
-    //       Skill(id: "mechanic_motorcycle", name: "Motorcycle Mechanic"),
-    //       Skill(id: "mechanic_tyreChange", name: "Tyre Change"),
-    //     ],
-    //   ),
-    //   SkillCategory(
-    //     categoryName: "Daily Workers",
-    //     skills: [
-    //       Skill(id: "dailyWorkers_maid", name: "Maid"),
-    //       Skill(id: "dailyWorkers_waiter", name: "Waiter"),
-    //       Skill(id: "dailyWorkers_houseMaintenance", name: "House Maintenance"),
-    //     ],
-    //   ),
-    // ];
-    // // Initially, filtered skills are all skills
-    // _filteredSkillsData = List<SkillCategory>.from(
-    //   _allSkillsData.map((e) => e.copyWith(skills: List<Skill>.from(e.skills))),
-    // );
   }
 
   @override
@@ -95,183 +45,105 @@ class _SkillSelectionScreenState extends ConsumerState<SkillSelectionScreen> {
     super.dispose();
   }
 
-  /// Toggles the selection status of a skill.
-  /// Updates the master list (`_allSkillsData`) and then re-filters the displayed list.
-  // void _toggleSkillSelection(String categoryName, String skillId) {
-  //   setState(() {
-  //     _allSkillsData =
-  //         _allSkillsData.map((category) {
-  //           if (category.categoryName == categoryName) {
-  //             // Create a new list of skills with the updated skill
-  //             final updatedSkills =
-  //                 category.skills.map((skill) {
-  //                   return skill.id == skillId
-  //                       ? skill.copyWith(selected: !skill.selected)
-  //                       : skill;
-  //                 }).toList();
-  //             // Return a new category object with the updated skills list
-  //             return category.copyWith(skills: updatedSkills);
-  //           }
-  //           return category; // Return category as is if not the one to be updated
-  //         }).toList();
-  //     _filterSkills(); // Re-filter to update the displayed list based on the new state
-  //   });
-  // }
-
-  /// Filters the skills data based on the current search term.
-  /// Updates `_filteredSkillsData` which the ListView uses to display items.
-  // void _filterSkills() {
-  //   final searchTerm = _searchController.text.toLowerCase();
-  //   if (searchTerm.isEmpty) {
-  //     // If search term is empty, display all skills
-  //     setState(() {
-  //       _filteredSkillsData = List<SkillCategory>.from(
-  //         _allSkillsData.map(
-  //           (e) => e.copyWith(skills: List<Skill>.from(e.skills)),
-  //         ),
-  //       );
-  //     });
-  //   } else {
-  //     setState(() {
-  //       _filteredSkillsData =
-  //           _allSkillsData
-  //               .map((category) {
-  //                 // Filter skills within each category
-  //                 final filteredCategorySkills =
-  //                     category.skills.where((skill) {
-  //                       return skill.name.toLowerCase().contains(searchTerm);
-  //                     }).toList();
-  //                 // Return a new category object with the filtered skills
-  //                 return category.copyWith(skills: filteredCategorySkills);
-  //               })
-  //               .where(
-  //                 (category) => category.skills.isNotEmpty,
-  //               ) // Only include categories that have matching skills
-  //               .toList();
-  //     });
-  //   }
-  // }
-
-  // /// Handles the "Next" button press.
-  // /// Gathers all selected skills and prints them.
-  // void _handleNext() {
-  //   final selectedSkills =
-  //       _allSkillsData
-  //           .expand(
-  //             (category) => category.skills,
-  //           ) // Flatten the list of lists into a single list of skills
-  //           .where((skill) => skill.selected) // Filter for selected skills
-  //           .toList();
-  //
-  //   debugPrint('Selected Skills:');
-  //   for (var skill in selectedSkills) {
-  //     debugPrint('- ${skill.name} (ID: ${skill.id})');
-  //   }
-  //
-  //   // In a real application, you would typically navigate to another screen
-  //   // or send the selected skills to a backend service here.
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(
-  //       content: Text(
-  //         'Selected ${selectedSkills.length} skills. Check debug console for details.',
-  //       ),
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // Initialize ScreenUtil based on your project's main.dart setup, if not already
-    // ScreenUtil.init(context, designSize: const Size(375, 812)); // Example values
-    final authState = ref.watch(authNotifierProvider);
-
-    log(authState.toString());
-
-    return ModalProgressHUD(
-      inAsyncCall: authState is ServicesSuccess && authState.savingSkills,
-      child: Scaffold(
-        appBar: AppBar(
-          leading:
-              widget.isEdit
-                  ? InkWell(
-                    onTap: () {
-                      context.pop();
-                    },
-                    child: Image.asset(AppAssets.cross),
-                  )
-                  : null,
-          title: CustomText(
-            text: widget.isEdit ? "Add your skills" : AppTexts.appTitle,
-            fontWeight: FontWeight.bold,
-            fontSize: 24.sp,
-          ),
-          bottom:
-              !widget.isEdit
-                  ? PreferredSize(
-                    preferredSize: Size.fromHeight(50),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal:
-                            AppDimensions
-                                .paddingAllSides
-                                .w, // Apply .w for horizontal padding
-                      ),
-                      child: CustomTextFormField(
-                        hint:
-                            "Search for a skill", // Replaced AppTexts.searchHint
-                        controller: _searchController,
-                        onChanged: (value) {
-                          ref
-                              .read(authNotifierProvider.notifier)
-                              .filterServices(value);
-                        }, // Call filter on text change
-                        customHintStyle: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppPalette.blackColor,
-                        ),
-                        fillColor: AppPalette.fillColor,
-                        suffixIcon: Container(
-                          width:
-                              48.w, // Increased width for better touch target and visual
-                          height: 48.h, // Added height for better sizing
-                          decoration: BoxDecoration(
-                            color: AppPalette.orangeColor,
-                            borderRadius: BorderRadius.circular(
-                              AppDimensions.appBorderRadius.r,
+    return BlocProvider.value(
+      value: _skillBloc,
+      child: BlocConsumer<SkillBloc, SkillState>(
+        listener: (context, state) {
+          if (state.skillUpdated && !state.savingSkills) {
+            if (!widget.isEdit) {
+              context.goNamed(AppRoutes.createSchedule);
+            }
+          }
+        },
+        builder: (context, state) {
+          return ModalProgressHUD(
+            inAsyncCall: state.savingSkills,
+            child: Scaffold(
+              appBar: AppBar(
+                leading:
+                    widget.isEdit
+                        ? InkWell(
+                          onTap: () {
+                            context.pop();
+                          },
+                          child: Image.asset(AppAssets.cross),
+                        )
+                        : null,
+                title: CustomText(
+                  text: widget.isEdit ? "Add your skills" : AppTexts.appTitle,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.sp,
+                ),
+                bottom:
+                    !widget.isEdit
+                        ? PreferredSize(
+                          preferredSize: Size.fromHeight(50),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  AppDimensions
+                                      .paddingAllSides
+                                      .w, // Apply .w for horizontal padding
+                            ),
+                            child: CustomTextFormField(
+                              hint:
+                                  "Search for a skill", // Replaced AppTexts.searchHint
+                              controller: _searchController,
+                              onChanged: (value) {
+                                _skillBloc.add(SearchSkill(searchText: value));
+                              }, // Call filter on text change
+                              customHintStyle: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppPalette.blackColor,
+                              ),
+                              fillColor: AppPalette.fillColor,
+                              suffixIcon: Container(
+                                width:
+                                    48.w, // Increased width for better touch target and visual
+                                height: 48.h, // Added height for better sizing
+                                decoration: BoxDecoration(
+                                  color: AppPalette.orangeColor,
+                                  borderRadius: BorderRadius.circular(
+                                    AppDimensions.appBorderRadius.r,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.search,
+                                    color: AppPalette.blackColor,
+                                    size: 24.sp, // Use .sp for icon size
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                          child: Center(
-                            child: Icon(
-                              Icons.search,
-                              color: AppPalette.blackColor,
-                              size: 24.sp, // Use .sp for icon size
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                  : null,
-        ),
-        body: _buildBody(authState),
+                        )
+                        : null,
+              ),
+              body: _buildBody(state),
+            ),
+          );
+        },
       ),
     );
   }
 
-  _buildBody(AuthState authState) {
-    if (authState is ServicesLoading) {
+  _buildBody(SkillState skillState) {
+    if (skillState.isLoading) {
       return Center(
         child: CircularProgressIndicator(color: AppPalette.primaryColor),
       );
-    } else if (authState is ServicesError) {
+    } else if (skillState.apiErrorMessage.isNotEmpty) {
       return Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CustomText(
-              text: authState.message,
+              text: skillState.apiErrorMessage,
               fontSize: 20.sp,
               color: AppPalette.redColor,
             ),
@@ -282,14 +154,15 @@ class _SkillSelectionScreenState extends ConsumerState<SkillSelectionScreen> {
               child: CustomButton(
                 text: 'Retry',
                 onPressed: () {
-                  ref.read(authNotifierProvider.notifier).getGrouppedServices();
+                  _skillBloc.add(LoadSkills());
+                  // ref.read(authNotifierProvider.notifier).getGrouppedServices();
                 },
               ),
             ),
           ],
         ),
       );
-    } else if (authState is ServicesSuccess) {
+    } else if (skillState.cats.isNotEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -312,12 +185,12 @@ class _SkillSelectionScreenState extends ConsumerState<SkillSelectionScreen> {
 
           Expanded(
             child:
-                authState.isSearching
+                skillState.isSearching
                     ? ListView.builder(
-                      itemCount: authState.filteredServices.length,
+                      itemCount: skillState.filteredServices.length,
                       itemBuilder: (context, categoryIndex) {
                         final category =
-                            authState.filteredServices[categoryIndex];
+                            skillState.filteredServices[categoryIndex];
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -340,9 +213,7 @@ class _SkillSelectionScreenState extends ConsumerState<SkillSelectionScreen> {
                             ...category.services.map((skill) {
                               ///is Selected
                               /// If the skill is selected, show a check icon
-                              final isSelected = ref
-                                  .read(authNotifierProvider.notifier)
-                                  .selectedServices
+                              final isSelected = skillState.selectedServices
                                   .contains(skill);
 
                               return Column(
@@ -350,9 +221,7 @@ class _SkillSelectionScreenState extends ConsumerState<SkillSelectionScreen> {
                                   InkWell(
                                     onTap: () {
                                       if (!isSelected) {
-                                        ref
-                                            .read(authNotifierProvider.notifier)
-                                            .addService(skill);
+                                        _skillBloc.add(AddSkill(skill: skill));
                                         AnimatedStatusDialog.show(
                                           context: context,
                                           sucessOnly: true,
@@ -368,6 +237,13 @@ class _SkillSelectionScreenState extends ConsumerState<SkillSelectionScreen> {
                                               context.pop();
                                             }
                                           },
+                                        );
+                                      } else {
+                                        log(
+                                          "Skill already selected: ${skill.name}",
+                                        );
+                                        _skillBloc.add(
+                                          RemoveSkill(skill: skill),
                                         );
                                       }
 
@@ -429,9 +305,9 @@ class _SkillSelectionScreenState extends ConsumerState<SkillSelectionScreen> {
                       },
                     )
                     : ListView.builder(
-                      itemCount: authState.cats.length,
+                      itemCount: skillState.cats.length,
                       itemBuilder: (context, categoryIndex) {
-                        final category = authState.cats[categoryIndex];
+                        final category = skillState.cats[categoryIndex];
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -454,19 +330,21 @@ class _SkillSelectionScreenState extends ConsumerState<SkillSelectionScreen> {
                             ...category.services.map((skill) {
                               ///is Selected
                               /// If the skill is selected, show a check icon
-                              final isSelected = ref
-                                  .read(authNotifierProvider.notifier)
+                              final isSelected = skillState
+                                  // .read(authNotifierProvider.notifier)
                                   .selectedServices
                                   .contains(skill);
-                              ;
+
                               return Column(
                                 children: [
                                   InkWell(
                                     onTap: () {
                                       if (!isSelected) {
-                                        ref
-                                            .read(authNotifierProvider.notifier)
-                                            .addService(skill);
+                                        _skillBloc.add(AddSkill(skill: skill));
+
+                                        // ref
+                                        //     .read(authNotifierProvider.notifier)
+                                        //     .addService(skill);
                                         AnimatedStatusDialog.show(
                                           context: context,
                                           sucessOnly: true,
@@ -482,6 +360,13 @@ class _SkillSelectionScreenState extends ConsumerState<SkillSelectionScreen> {
                                               context.pop();
                                             }
                                           },
+                                        );
+                                      } else {
+                                        log(
+                                          "Skill already selected: ${skill.name}",
+                                        );
+                                        _skillBloc.add(
+                                          RemoveSkill(skill: skill),
                                         );
                                       }
 
@@ -557,24 +442,12 @@ class _SkillSelectionScreenState extends ConsumerState<SkillSelectionScreen> {
                 text: widget.isEdit ? AppTexts.saveChanges : AppTexts.next,
                 onPressed: () {
                   final selectedSkills =
-                      ref
-                          .read(authNotifierProvider.notifier)
+                      skillState
+                          // .read(authNotifierProvider.notifier)
                           .selectedServices
                           .map((e) => e.id)
                           .toList();
-                  ref
-                      .read(authNotifierProvider.notifier)
-                      .updateSkills(
-                        context,
-                        UpdateProfileRequest(services: selectedSkills),
-                        onSuccess: () {
-                          if (widget.isEdit) {
-                            context.pop();
-                          } else {
-                            context.goNamed(AppRoutes.createSchedule);
-                          }
-                        },
-                      );
+                  _skillBloc.add(UpdateSkill(selectedSkills: selectedSkills));
                 },
               ),
             ),

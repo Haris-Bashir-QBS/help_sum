@@ -16,7 +16,7 @@ abstract interface class AuthRepository {
     required LoginRequestModel params,
   });
 
-  Future<Either<Failure, UserEntity>> verifyOtp({
+  Future<Either<Failure, (UserEntity, String)>> verifyOtp({
     required OtpRequestModel params,
   });
   Future<Either<Failure, List<UploadedFileEntity>>> uploadFile({

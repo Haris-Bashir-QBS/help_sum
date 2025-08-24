@@ -1,17 +1,15 @@
-import 'dart:developer';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
+import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_validators.dart';
 import 'package:help_sum/src/features/auth/data/models/request/signup_request_model.dart';
-import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
-import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
+import 'package:help_sum/src/features/auth/presentation/bloc/signup/signup_bloc.dart';
 import 'package:help_sum/src/widgets/animated_slide_fade.dart';
 import 'package:help_sum/src/widgets/clickable_text_pair.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
@@ -20,20 +18,27 @@ import 'package:help_sum/src/widgets/custom_text_formfield.dart';
 import 'package:help_sum/src/widgets/custom_toast.dart';
 import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 
-class SignupPage extends ConsumerStatefulWidget {
+class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
   @override
-  ConsumerState<SignupPage> createState() => _SignupPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _SignupPageState extends ConsumerState<SignupPage> {
+class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+  late final SignupBloc _signupBloc;
+
+  @override
+  void initState() {
+    _signupBloc = sl<SignupBloc>();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -41,88 +46,91 @@ class _SignupPageState extends ConsumerState<SignupPage> {
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+
     super.dispose();
-  }
-
-  void _listener() {
-    ref.listen<AuthState>(authNotifierProvider, (prev, next) {
-      if (next is SignupSuccess) {
-        context.goNamed(
-          AppRoutes.verifyOtp,
-          extra: {'userId': next.userId, 'phone': _phoneController.text},
-        );
-        ref.read(authNotifierProvider.notifier).reset();
-      }
-
-      if (next is SignupError) {
-        CustomToast.errorToast(context: context, message: next.message);
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    _listener();
-    final AuthState authState = ref.watch(authNotifierProvider);
-    final isLoading = authState is SignupLoading;
-    return ModalProgressHUD(
-      inAsyncCall: isLoading,
+    return BlocProvider.value(
+      value: _signupBloc,
+      child: BlocConsumer<SignupBloc, SignupState>(
+        listener: (context, state) {
+          if (state.userId.isNotEmpty) {
+            context.goNamed(
+              AppRoutes.verifyOtp,
+              extra: {'userId': state.userId, 'phone': _phoneController.text},
+            );
+          }
 
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  140.verticalSpace,
-                  AnimatedSlideFade(
-                    delayMilliseconds: 0,
-                    child: _buildIllustration(),
+          if (state.apiErrorMessage.isNotEmpty) {
+            CustomToast.errorToast(
+              context: context,
+              message: state.apiErrorMessage,
+            );
+          }
+        },
+        builder: (context, state) {
+          return ModalProgressHUD(
+            inAsyncCall: state.isLoading,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        140.verticalSpace,
+                        AnimatedSlideFade(
+                          delayMilliseconds: 0,
+                          child: _buildIllustration(),
+                        ),
+                        40.verticalSpace,
+                        AnimatedSlideFade(
+                          delayMilliseconds: 100,
+                          child: _buildCreateAccountTitle(),
+                        ),
+                        32.verticalSpace,
+                        AnimatedSlideFade(
+                          delayMilliseconds: 200,
+                          child: _buildFullNameTextField(),
+                        ),
+                        15.verticalSpace,
+                        AnimatedSlideFade(
+                          delayMilliseconds: 300,
+                          child: _buildPhoneNumberTextField(),
+                        ),
+                        15.verticalSpace,
+                        AnimatedSlideFade(
+                          delayMilliseconds: 400,
+                          child: _buildPasswordTextField(),
+                        ),
+                        15.verticalSpace,
+                        AnimatedSlideFade(
+                          delayMilliseconds: 500,
+                          child: _buildConfirmPasswordTextField(),
+                        ),
+                        30.verticalSpace,
+                        AnimatedSlideFade(
+                          delayMilliseconds: 600,
+                          child: _buildSignUpButton(),
+                        ),
+                        26.verticalSpace,
+                        AnimatedSlideFade(
+                          delayMilliseconds: 700,
+                          child: _buildLoginText(),
+                        ),
+                      ],
+                    ),
                   ),
-                  40.verticalSpace,
-                  AnimatedSlideFade(
-                    delayMilliseconds: 100,
-                    child: _buildCreateAccountTitle(),
-                  ),
-                  32.verticalSpace,
-                  AnimatedSlideFade(
-                    delayMilliseconds: 200,
-                    child: _buildFullNameTextField(),
-                  ),
-                  15.verticalSpace,
-                  AnimatedSlideFade(
-                    delayMilliseconds: 300,
-                    child: _buildPhoneNumberTextField(),
-                  ),
-                  15.verticalSpace,
-                  AnimatedSlideFade(
-                    delayMilliseconds: 400,
-                    child: _buildPasswordTextField(),
-                  ),
-                  15.verticalSpace,
-                  AnimatedSlideFade(
-                    delayMilliseconds: 500,
-                    child: _buildConfirmPasswordTextField(),
-                  ),
-                  30.verticalSpace,
-                  AnimatedSlideFade(
-                    delayMilliseconds: 600,
-                    child: _buildSignUpButton(),
-                  ),
-                  26.verticalSpace,
-                  AnimatedSlideFade(
-                    delayMilliseconds: 700,
-                    child: _buildLoginText(),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -216,7 +224,9 @@ class _SignupPageState extends ConsumerState<SignupPage> {
         isMerchant: appRole == AppRole.merchant,
       );
 
-      ref.read(authNotifierProvider.notifier).signup(params);
+      _signupBloc.add(SignupButtonPressed(signUpRequestModel: params));
+
+      // ref.read(authNotifierProvider.notifier).signup(params);
 
       // context.pushNamed(
       //   AppRoutes.verifyOtp,

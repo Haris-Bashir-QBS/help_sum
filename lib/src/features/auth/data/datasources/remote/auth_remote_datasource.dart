@@ -13,7 +13,7 @@ import '../../models/response/user_model.dart';
 
 abstract interface class AuthRemoteDataSource {
   Future<(UserModel, String)> login({required LoginRequestModel params});
-  Future<UserModel> verifyOtp({required OtpRequestModel params});
+  Future<(UserModel, String)> verifyOtp({required OtpRequestModel params});
   Future<String> resendOtp({required ResendOtpRequestModel params});
   Future<String> signup({required SignUpRequestModel params});
   Future<UserEntity> updateProfile({required UpdateProfileRequest params});

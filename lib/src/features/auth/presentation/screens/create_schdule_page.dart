@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
+import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/features/auth/data/models/request/schdule_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/time_slot_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
-import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
-import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
+import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
+import 'package:help_sum/src/features/auth/presentation/bloc/schedule/schedule_bloc.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/controller/user_state_provider.dart';
 import 'package:help_sum/src/widgets/animated_dialog.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
@@ -26,6 +28,7 @@ class SelectScheduleScreen extends ConsumerStatefulWidget {
 }
 
 class _SelectScheduleScreenState extends ConsumerState<SelectScheduleScreen> {
+  late final ScheduleBloc _scheduleBloc;
   final List<String> days = [
     'Monday',
     'Tuesday',
@@ -43,6 +46,7 @@ class _SelectScheduleScreenState extends ConsumerState<SelectScheduleScreen> {
 
   @override
   void initState() {
+    _scheduleBloc = sl<ScheduleBloc>();
     super.initState();
     selectedDays = {for (var day in days) day: false};
     for (var day in days) {
@@ -50,9 +54,9 @@ class _SelectScheduleScreenState extends ConsumerState<SelectScheduleScreen> {
       endTimes[day] = const TimeOfDay(hour: 18, minute: 0);
     }
 
-    final user = ref.read(currentUserProvider).user;
+    // final user = ref.read(currentUserProvider).user;
+    final user = sl<LoginBloc>().state.userEntity;
     if (widget.isEdit && user != null && user.schedule != null) {
-      print(user.schedule.toString());
       for (var schedule in user.schedule!) {
         final day = schedule.dayOfWeek;
         if (day != null && selectedDays.containsKey(day)) {
@@ -204,28 +208,34 @@ class _SelectScheduleScreenState extends ConsumerState<SelectScheduleScreen> {
           );
         }).toList();
 
-    ref
-        .read(authNotifierProvider.notifier)
-        .updateSchdule(
-          context,
-          UpdateProfileRequest(schedule: scheduleData),
-          onSuccess: () {
-            AnimatedStatusDialog.show(
-              context: context,
-              isShowTimer: true,
-              sucessOnly: true,
-              title: "Congratulations!",
-              message:
-                  widget.isEdit
-                      ? "Schedule updated successfully"
-                      : "Your account is ready.\nYou will be redirected to home page\nin a few seconds.",
-              onBack: () {
-                context.goNamed(AppRoutes.mainNavigation);
-              },
-              isSuccess: true,
-            );
-          },
-        );
+    _scheduleBloc.add(
+      UpdateUserSchedule(
+        schedule: UpdateProfileRequest(schedule: scheduleData),
+      ),
+    );
+
+    // ref
+    //     .read(authNotifierProvider.notifier)
+    //     .updateSchdule(
+    //       context,
+    //       UpdateProfileRequest(schedule: scheduleData),
+    //       onSuccess: () {
+    //         AnimatedStatusDialog.show(
+    //           context: context,
+    //           isShowTimer: true,
+    //           sucessOnly: true,
+    //           title: "Congratulations!",
+    //           message:
+    //               widget.isEdit
+    //                   ? "Schedule updated successfully"
+    //                   : "Your account is ready.\nYou will be redirected to home page\nin a few seconds.",
+    //           onBack: () {
+    //             context.goNamed(AppRoutes.mainNavigation);
+    //           },
+    //           isSuccess: true,
+    //         );
+    //       },
+    //     );
   }
 
   void _toggleSelectAll(bool? value) {
@@ -246,100 +256,143 @@ class _SelectScheduleScreenState extends ConsumerState<SelectScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(authNotifierProvider);
+    return BlocProvider.value(
+      value: _scheduleBloc,
+      child: BlocConsumer<ScheduleBloc, ScheduleState>(
+        listener: (context, state) {
+          if (state.apiErrorMessage.isNotEmpty) {
+            AnimatedStatusDialog.show(
+              context: context,
+              icon: const SizedBox(),
+              title: state.apiErrorMessage,
+              isSuccess: false,
+            );
+          }
 
-    return ModalProgressHUD(
-      inAsyncCall: state is ScheduleLoading,
-      child: Scaffold(
-        appBar: AppBar(
-          leading: const BackButton(),
-          title: const Text(
-            "Select your schedule",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          backgroundColor: Colors.white,
-          elevation: 0,
-          foregroundColor: Colors.black,
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-          child: Column(
-            children: [
-              _buildScheduleRow(
-                "Select all",
-                selectAll,
-                _toggleSelectAll,
-                isHeader: true,
-              ),
-              const Divider(),
-              Expanded(
-                child: ListView.separated(
-                  itemCount: days.length,
-                  separatorBuilder: (_, __) => const Divider(),
-                  itemBuilder: (_, index) {
-                    final day = days[index];
-                    return _buildScheduleRow(
-                      day,
-                      selectedDays[day]!,
-                      (value) => _onDaySelected(day, value),
-                      startTime: _formatTime(startTimes[day]!),
-                      endTime: _formatTime(endTimes[day]!),
-                      onStartTimeTap: () => _pickTime(day, true),
-                      onEndTimeTap: () => _pickTime(day, false),
-                    );
-                  },
+          if (state.scheduleCreated) {
+            AnimatedStatusDialog.show(
+              context: context,
+              isShowTimer: true,
+              sucessOnly: true,
+              title: "Congratulations!",
+              message:
+                  widget.isEdit
+                      ? "Schedule updated successfully"
+                      : "Your account is ready.\nYou will be redirected to home page\nin a few seconds.",
+              onBack: () {
+                context.goNamed(AppRoutes.mainNavigation);
+              },
+              isSuccess: true,
+            );
+          }
+        },
+        builder: (context, state) {
+          return ModalProgressHUD(
+            inAsyncCall: state.isLoading,
+            child: Scaffold(
+              appBar: AppBar(
+                leading: const BackButton(),
+                title: const Text(
+                  "Select your schedule",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
+                backgroundColor: Colors.white,
+                elevation: 0,
+                foregroundColor: Colors.black,
               ),
-              const SizedBox(height: 12),
-              Row(
-                children: const [
-                  Icon(Icons.info_outline, color: Colors.orange, size: 18),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      "Note: End time cannot be less than or equal to start time",
-                      style: TextStyle(color: Colors.orange, fontSize: 13),
+              body: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8,
+                ),
+                child: Column(
+                  children: [
+                    _buildScheduleRow(
+                      "Select all",
+                      selectAll,
+                      _toggleSelectAll,
+                      isHeader: true,
                     ),
-                  ),
-                ],
+                    const Divider(),
+                    Expanded(
+                      child: ListView.separated(
+                        itemCount: days.length,
+                        separatorBuilder: (_, __) => const Divider(),
+                        itemBuilder: (_, index) {
+                          final day = days[index];
+                          return _buildScheduleRow(
+                            day,
+                            selectedDays[day]!,
+                            (value) => _onDaySelected(day, value),
+                            startTime: _formatTime(startTimes[day]!),
+                            endTime: _formatTime(endTimes[day]!),
+                            onStartTimeTap: () => _pickTime(day, true),
+                            onEndTimeTap: () => _pickTime(day, false),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: const [
+                        Icon(
+                          Icons.info_outline,
+                          color: Colors.orange,
+                          size: 18,
+                        ),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            "Note: End time cannot be less than or equal to start time",
+                            style: TextStyle(
+                              color: Colors.orange,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    if (widget.isEdit) ...[
+                      SizedBox(
+                        width: .44.sw,
+                        child: CustomButton(
+                          color: AppPalette.primaryColor,
+                          textColor: AppPalette.fillColor,
+                          text: "Save Changes",
+                          onPressed: _handleDone,
+                        ),
+                      ),
+                    ] else ...[
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: .44.sw,
+                        child: CustomButton(
+                          color: AppPalette.primaryColor,
+                          textColor: AppPalette.fillColor,
+                          text: "Done",
+                          onPressed: _handleDone,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: .44.sw,
+                        child: CustomButton(
+                          color: AppPalette.primaryColor,
+                          textColor: AppPalette.fillColor,
+                          text: "Skip",
+                          onPressed:
+                              () => context.goNamed(AppRoutes.mainNavigation),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 10),
+                  ],
+                ),
               ),
-              const SizedBox(height: 20),
-              if (widget.isEdit) ...[
-                SizedBox(
-                  width: .44.sw,
-                  child: CustomButton(
-                    color: AppPalette.primaryColor,
-                    textColor: AppPalette.fillColor,
-                    text: "Save Changes",
-                    onPressed: _handleDone,
-                  ),
-                ),
-              ] else ...[
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: .44.sw,
-                  child: CustomButton(
-                    color: AppPalette.primaryColor,
-                    textColor: AppPalette.fillColor,
-                    text: "Done",
-                    onPressed: _handleDone,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: .44.sw,
-                  child: CustomButton(
-                    color: AppPalette.primaryColor,
-                    textColor: AppPalette.fillColor,
-                    text: "Skip",
-                    onPressed: () => context.goNamed(AppRoutes.mainNavigation),
-                  ),
-                ),
-              ],
-              const SizedBox(height: 10),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

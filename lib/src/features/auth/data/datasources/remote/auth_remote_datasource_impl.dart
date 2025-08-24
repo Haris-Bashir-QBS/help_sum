@@ -72,7 +72,9 @@ class AuthRemoteDataSourceImplementation implements AuthRemoteDataSource {
   }
 
   @override
-  Future<UserModel> verifyOtp({required OtpRequestModel params}) async {
+  Future<(UserModel, String)> verifyOtp({
+    required OtpRequestModel params,
+  }) async {
     return await ApiErrorHandler.executeGuarded(() async {
       final response = await _client.post(
         endpoint: ApiEndpoints.verifyOtp.value,
@@ -80,9 +82,10 @@ class AuthRemoteDataSourceImplementation implements AuthRemoteDataSource {
       );
       log("Response: ${response.data}");
       if (response.isOk) {
-        UserModel user =
-            LoginResponseModel.fromJson(response.data).data!.userDetail!;
-        return user;
+        final loginResponse = LoginResponseModel.fromJson(response.data);
+        UserModel user = loginResponse.data!.userDetail!;
+        String token = loginResponse.data!.token!;
+        return (user, token);
       } else {
         throw ServerException(
           statusCode: response.statusCode,

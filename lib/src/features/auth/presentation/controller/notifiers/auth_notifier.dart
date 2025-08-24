@@ -165,12 +165,12 @@ class AuthNotifier extends _$AuthNotifier {
     state = OtpLoading();
     final result = await _otpUseCase(params);
 
-    result.match((failure) => state = OtpError(failure.message), (user) async {
-      _currentUser = user;
-      await LocalStorageService().saveUser(UserModel.fromEntity(user));
-      ref.read(currentUserProvider.notifier).setUser(_currentUser!);
-      state = OtpSuccess(user);
-    });
+    // result.match((failure) => state = OtpError(failure.message), (user) async {
+    //   _currentUser = user;
+    //   await LocalStorageService().saveUser(UserModel.fromEntity(user));
+    //   ref.read(currentUserProvider.notifier).setUser(_currentUser!);
+    //   state = OtpSuccess(user);
+    // });
   }
 
   Future<void> updateSkills(

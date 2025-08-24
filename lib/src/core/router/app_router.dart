@@ -204,7 +204,7 @@ GoRoute _login() {
     pageBuilder:
         (context, state) => CustomTransitionPage(
           key: state.pageKey,
-          child: const LoginPage(),
+          child: LoginPage(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(0.0, 1.0);
             const end = Offset.zero;
@@ -429,7 +429,8 @@ GoRoute _rateScreen() {
     name: AppRoutes.rateScreen,
     builder: (context, state) {
       final JobData job = state.extra as JobData;
-      return  RateJobScreen(job: job);}
+      return RateJobScreen(job: job);
+    },
   );
 }
 

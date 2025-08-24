@@ -58,12 +58,12 @@ class AuthRepositoryImplementation implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, UserEntity>> verifyOtp({
+  Future<Either<Failure, (UserEntity, String)>> verifyOtp({
     required OtpRequestModel params,
   }) async {
     try {
-      final UserModel user = await remoteDataSource.verifyOtp(params: params);
-      return right(user);
+      final (user, token) = await remoteDataSource.verifyOtp(params: params);
+      return right((user, token));
     } on Failure catch (e) {
       return left(Failure(message: e.message));
     }

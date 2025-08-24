@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,14 +8,13 @@ import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/services/media_picker_service.dart';
 import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
-import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
-import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
-import 'package:help_sum/src/features/core/common/profile/presentation/controller/user_state_provider.dart';
-import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_image_slider.dart';
+import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
+import 'package:help_sum/src/features/auth/presentation/bloc/portfolio/bloc/portfolio_bloc.dart';
 import 'package:help_sum/src/widgets/app_background.dart';
 import 'package:help_sum/src/widgets/comman_imageview.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
@@ -32,93 +32,119 @@ class PortfolioScreen extends ConsumerStatefulWidget {
 
 class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   List<String> imageUrls = [];
+  late final PortfolioBloc _portfolioBloc;
   @override
   void initState() {
+    _portfolioBloc = sl<PortfolioBloc>();
+    _portfolioBloc.add(
+      UpdateUserEvent(userEntity: sl<LoginBloc>().state.userEntity!),
+    );
     super.initState();
   }
 
-  void _listener() {
-    ref.listen<AuthState>(authNotifierProvider, (prev, next) {
-      if (next is UploadingFileSuccess) {
-        final files = next.files;
-        ref
-            .read(currentUserProvider)
-            .user
-            ?.media
-            ?.addAll(files.map((e) => e.url));
-      } else if (next is UploadingFileError) {
-        CustomToast.errorToast(context: context, message: next.failure.message);
-      }
-      if (next is SavePortfolioSuccess) {
-        CustomToast.successToast(
-          context: context,
-          message: 'Portfolio updated successfully',
-        );
-        context.pop();
-      } else if (next is SavePortfolioError) {
-        CustomToast.errorToast(context: context, message: next.failure.message);
-      }
-    });
-  }
+  // void _listener() {
+  //   ref.listen<AuthState>(authNotifierProvider, (prev, next) {
+  //     if (next is UploadingFileSuccess) {
+  //       final files = next.files;
+  //       ref
+  //           .read(currentUserProvider)
+  //           .user
+  //           ?.media
+  //           ?.addAll(files.map((e) => e.url));
+  //     } else if (next is UploadingFileError) {
+  //       CustomToast.errorToast(context: context, message: next.failure.message);
+  //     }
+  //     if (next is SavePortfolioSuccess) {
+  //       CustomToast.successToast(
+  //         context: context,
+  //         message: 'Portfolio updated successfully',
+  //       );
+  //       context.pop();
+  //     } else if (next is SavePortfolioError) {
+  //       CustomToast.errorToast(context: context, message: next.failure.message);
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    _listener();
+    // _listener();
 
-    final state = ref.watch(authNotifierProvider);
-    final userProvider = ref.watch(currentUserProvider);
+    // final state = ref.watch(authNotifierProvider);
+    // final userProvider = ref.watch(currentUserProvider);
 
-    return ModalProgressHUD(
-      inAsyncCall:
-          state is UploadingFileLoading || state is SavePortfolioLoading,
-      child: AppBackground(
-        onTap: () {
-          context.pop();
+    return BlocProvider.value(
+      value: _portfolioBloc,
+      child: BlocConsumer<PortfolioBloc, PortfolioState>(
+        listener: (context, state) {
+          if (state.apiErrorMessage != '') {
+            CustomToast.errorToast(
+              context: context,
+              message: state.apiErrorMessage,
+            );
+          } else if (state.profileUpdated) {
+            context.pop();
+          }
+          // else if (state is UploadingFileSuccess)
         },
-        actions: [
-          IconButton(
-            onPressed: () {
-              MediaPickerService().imageGalleryBottomSheet(
-                onMediaChanged: (v) {
-                  if (v != null) {
-                    final files = UploadFileRequest([File(v)]);
-                    ref.read(authNotifierProvider.notifier).uploadFile(files);
-                  }
-                },
-                context: context,
-              );
+        builder: (context, state) {
+          return ModalProgressHUD(
+            inAsyncCall: state.isLoading,
+            child: AppBackground(
+              onTap: () {
+                context.pop();
+              },
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    MediaPickerService().imageGalleryBottomSheet(
+                      onMediaChanged: (v) {
+                        if (v != null) {
+                          final files = UploadFileRequest([File(v)]);
 
-              // ref.read(authNotifierProvider.notifier).uploadFile(params);
-            },
-            icon: Icon(Icons.add),
-          ),
-        ],
-        title: 'Work Photo Gallery',
-        bottomWidget: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CustomButton(
-            color: AppPalette.primaryColor,
-            text: AppTexts.saveChanges,
-            onPressed: () {
-              ref
-                  .read(authNotifierProvider.notifier)
-                  .updatePortfolio(
-                    context,
-                    UpdateProfileRequest(media: userProvider.user?.media ?? []),
-                  );
-            },
-          ),
-        ),
+                          _portfolioBloc.add(
+                            UpdatePortfolioEvent(params: files),
+                          );
+                        }
+                      },
+                      context: context,
+                    );
 
-        body: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.paddingAllSides,
-          ),
-          child:
-              userProvider.user?.media?.isNotEmpty == true
-                  ? _buildMediaGrid(userProvider.user)
-                  : _emptyMediaView(),
-        ),
+                    // ref.read(authNotifierProvider.notifier).uploadFile(params);
+                  },
+                  icon: Icon(Icons.add),
+                ),
+              ],
+              title: 'Work Photo Gallery',
+              bottomWidget: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomButton(
+                  color: AppPalette.primaryColor,
+                  text: AppTexts.saveChanges,
+                  onPressed: () {
+                    _portfolioBloc.add(
+                      UpdateUserProfile(
+                        updateProfileRequest: UpdateProfileRequest(
+                          media: state.userEntity?.media ?? [],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              body: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.paddingAllSides,
+                ),
+                child:
+                    state.userEntity?.media?.isNotEmpty == true
+                        ? _buildMediaGrid(state.userEntity)
+                        : _emptyMediaView(),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

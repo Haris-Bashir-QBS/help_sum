@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:help_sum/src/core/constants/app_role.dart';
+import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
+import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/custom_bottom_navigation_bar.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/profile_details_page.dart';
@@ -23,6 +26,7 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
   int _selectedIndex = 0;
   String? userRole;
   final List<Widget> _pages = [];
+  late final LoginBloc loginBloc;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -32,7 +36,8 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
 
   @override
   void initState() {
-    userRole = ref.read(authNotifierProvider.notifier).currentUser?.role;
+    loginBloc = sl<LoginBloc>();
+    userRole = loginBloc.state.userEntity?.role;
     debugPrint("User Role is $userRole");
     if (userRole == AppRole.consumer.name) {
       _selectedIndex = 1;

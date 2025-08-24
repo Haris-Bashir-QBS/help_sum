@@ -31,8 +31,7 @@ Future<void> _initAuthDependencies() async {
   _registerAuthRemoteDatasources();
   _registerAuthRepositories();
   _registerAuthUsecases();
-
-  // _registerAuthBloc();
+  _registerAuthBloc();
 }
 
 void _registerAuthRemoteDatasources() {
@@ -45,6 +44,18 @@ void _registerAuthRepositories() {
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImplementation(remoteDataSource: sl()),
   );
+}
+
+void _registerAuthBloc() {
+  //Singleton for LoginBloc as it might be used across multiple screens
+  sl.registerLazySingleton<LoginBloc>(() => LoginBloc());
+
+  //Factory for SignupBloc as it is likely to be used in a single screen
+  sl.registerFactory<SignupBloc>(() => SignupBloc());
+  sl.registerFactory<VerifyOtpBloc>(() => VerifyOtpBloc());
+  sl.registerFactory<SkillBloc>(() => SkillBloc());
+  sl.registerFactory<ScheduleBloc>(() => ScheduleBloc());
+  sl.registerFactory<PortfolioBloc>(() => PortfolioBloc());
 }
 
 void _registerAuthUsecases() {
