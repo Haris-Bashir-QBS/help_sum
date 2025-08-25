@@ -113,7 +113,7 @@ class _AvatarWithBadgeState extends ConsumerState<AvatarWithBadge> {
         clipBehavior: Clip.none,
         children: [
           CircleAvatar(
-            radius: 28.r,
+            radius: 70.r,
             backgroundColor: Colors.grey.shade300,
             backgroundImage:
                 user?.image != null && user!.image!.isNotEmpty

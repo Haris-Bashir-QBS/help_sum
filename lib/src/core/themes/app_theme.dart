@@ -10,7 +10,7 @@ class AppTheme {
       primaryColor: AppPalette.primaryColor,
       colorScheme: ColorScheme.light(
         primary: AppPalette.primaryColor,
-        secondary: AppPalette.secondaryColor,
+        secondary: AppPalette.secondayColor,
         surface: AppPalette.whiteColor,
         error: AppPalette.errorColor,
         onPrimary: AppPalette.whiteColor,
@@ -34,6 +34,7 @@ class AppTheme {
       ),
 
       // Scaffold Theme
+      fontFamily: "Poppins",
       scaffoldBackgroundColor: AppPalette.backgroundColor,
 
       // Icon Theme
@@ -163,7 +164,11 @@ class AppTheme {
             borderRadius: BorderRadius.circular(8.r),
           ),
           padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-          textStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+          textStyle: TextStyle(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+            color: AppPalette.whiteColor,
+          ),
         ),
       ),
 
@@ -220,4 +225,11 @@ class AppTheme {
       useMaterial3: false,
     );
   }
+}
+
+extension ThemeExtensions on BuildContext {
+  ThemeData get theme => Theme.of(this);
+  TextTheme get textTheme => theme.textTheme;
+  ColorScheme get colorScheme => theme.colorScheme;
+  InputDecorationTheme get inputDecorationTheme => theme.inputDecorationTheme;
 }

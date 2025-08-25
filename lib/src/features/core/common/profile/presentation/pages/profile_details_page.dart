@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/animation/fade_and_scale.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
@@ -10,14 +10,11 @@ import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
-import 'package:help_sum/src/core/services/local_storage_service.dart';
+import 'package:help_sum/src/core/themes/app_theme.dart';
 import 'package:help_sum/src/core/utils/app_utils.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
-import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
-import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/stripe_merchant_setup_page.dart';
-import 'package:help_sum/src/features/core/common/profile/presentation/controller/user_state_provider.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_card.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_row.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/verification_status.dart';
@@ -92,13 +89,6 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
             if (user == null) {
               return Center(child: CustomText(text: 'No user data available'));
             }
-            // final userRole = user.role;
-            // debugPrint("userRole  is $userRole");
-            // UserEntity? user = ref.watch(currentUserProvider).user;
-            // debugPrint("userRole  is ${user?.role}");
-            // if (user == null) {
-            //   return Container(color: Colors.red, width: 1.sw, height: 200.h);
-            // }
 
             return ModalProgressHUD(
               inAsyncCall: state.isLoading,
@@ -111,12 +101,39 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                         children:
                             user.role == AppRole.consumer.name
                                 ? [
-                                  _buildMerchantProfileHeader(
-                                    context,
-                                    user,
-                                    showRating: false,
-                                  ),
+                                  _buildMerchantProfileHeader(context, user),
                                   SizedBox(height: 24.h),
+                                  CustomText(
+                                    text: "${user.firstName} ${user.lastName}",
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  20.verticalSpace,
+                                  CustomText(
+                                    text:
+                                        user.description ??
+                                        "No description added",
+                                  ),
+
+                                  20.verticalSpace,
+                                  ElevatedButton.icon(
+                                    icon: const Icon(Icons.edit, size: 18),
+                                    onPressed: () {
+                                      context.pushNamed(
+                                        AppRoutes.editBasicInfo,
+                                        extra: user,
+                                      );
+                                    },
+                                    label: CustomText(
+                                      text: AppTexts.edit,
+                                      color:
+                                          context.theme.colorScheme.onPrimary,
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  20.verticalSpace,
+
                                   _buildBasicInfoCard(context, user),
                                   26.verticalSpace,
                                   _buildContactInfoCard(context, user),
@@ -163,7 +180,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
         InfoRow(label: AppTexts.lastName, value: user.lastName ?? ""),
       ],
       onPressed: () {
-        context.pushNamed(AppRoutes.editBasicInfo, extra: user);
+        // context.pushNamed(AppRoutes.editBasicInfo, extra: user);
       },
     );
   }
@@ -181,7 +198,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
         InfoRow(label: AppTexts.phoneNumber, value: user.phone ?? ""),
       ],
       onPressed: () {
-        context.pushNamed(AppRoutes.editBasicInfo, extra: user);
+        // context.pushNamed(AppRoutes.editBasicInfo, extra: user);
       },
     );
   }
@@ -193,49 +210,46 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
   }) {
     return InkWell(
       onTap: () => context.pushNamed(AppRoutes.editBasicInfo, extra: user),
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
-        decoration: BoxDecoration(
-          color: const Color(0xffF5F5F5),
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Row(
+      child: SizedBox(
+        height: 0.27.sh,
+        child: Stack(
+          clipBehavior: Clip.none,
+          // fit: StackFit.passthrough,
           children: [
-            const AvatarWithBadge(),
-            SizedBox(width: 16.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${user.firstName} ${user.lastName}",
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
+            FadeScaleTransitionWidget(
+              duration: const Duration(milliseconds: 400),
+              child: Container(
+                height: .20.sh,
+                padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromARGB(255, 120, 128, 145),
+                      Color(0xFFEFF0F2),
+                      Color.fromARGB(255, 132, 139, 152),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  if (showRating ?? true) ...[
-                    Row(
-                      children: [
-                        ...List.generate(
-                          4,
-                          (i) => Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                            size: 16.sp,
-                          ),
-                        ),
-                        Icon(Icons.star_half, color: Colors.amber, size: 16.sp),
-                        SizedBox(width: 4.w),
-                        CustomText(text: user.rating ?? "N/A"),
-                      ],
-                    ),
-                  ],
-                  SizedBox(height: 4.h),
-                ],
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.r),
+                    topRight: Radius.circular(30.r),
+                  ),
+                ),
               ),
             ),
-            Image.asset(AppAssets.arrow),
+
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 0.12.sh,
+              child: Center(
+                child: FadeScaleTransitionWidget(
+                  duration: const Duration(milliseconds: 800),
+                  child: AvatarWithBadge(),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -243,68 +257,89 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
   }
 
   Widget _buildMerchantDetails(BuildContext context, UserEntity user) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFF9F9F9),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 12),
-      child: Column(
-        children: [
-          _buildMerchantInfoTile(
-            context,
-            icon: Icons.monetization_on_outlined,
-            title: 'Rates Per hour',
-            subtitle: '\$${user.hourlyRate}/hr',
-            onTap: () => context.pushNamed(AppRoutes.rates),
-          ),
-          const Divider(),
-          _buildMerchantInfoTile(
-            context,
-            icon: Icons.diamond_outlined,
-            title: 'Skill',
-            subtitle:
-                user.services != null && user.services!.isNotEmpty
-                    ? user.services!.map((e) => e['name']).join(', ').toString()
-                    : 'No Services Added',
-            onTap: () => context.pushNamed(AppRoutes.selectSkill, extra: true),
-          ),
-          const Divider(),
-          _buildMerchantInfoTile(
-            context,
-            icon: Icons.schedule,
-            title: 'Schedule',
-            subtitle: AppUtils.getTodayScheduleSubtitle(user),
-            onTap:
-                () => context.pushNamed(AppRoutes.createSchedule, extra: true),
-          ),
-          const Divider(),
-          _buildMerchantInfoTile(
-            context,
-            icon: Icons.description_outlined,
-            title: 'Description',
-            subtitle: user.description ?? "No description added",
-            onTap: () => context.pushNamed(AppRoutes.changeDescriptipon),
-            hasWarning: true,
-          ),
-          const Divider(),
-          _buildWorkPhotosGallery(context, user),
+    return Column(
+      children: [
+        CustomText(
+          text: "${user.firstName} ${user.lastName}",
+          fontSize: 20.sp,
+          fontWeight: FontWeight.w600,
+        ),
+        20.verticalSpace,
+        CustomText(text: user.description ?? "No description added"),
 
-          if (user.isConsumer != true) ...[
-            const Divider(),
-            _buildMerchantInfoTile(
-              context,
-              icon: Icons.schedule,
-              title: 'Setup Stripe Merchant Account',
-              subtitle: 'To receive payments',
-              onTap: () {
-                _loginBloc.add(FetchMerchantAccount(context: context));
-              },
-            ),
-          ],
-          const Divider(),
-        ],
-      ),
+        40.verticalSpace,
+        Container(
+          decoration: BoxDecoration(
+            color: context.theme.cardColor,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 12),
+          child: Column(
+            children: [
+              _buildMerchantInfoTile(
+                context,
+                icon: Icons.monetization_on_outlined,
+                title: 'Rates Per hour',
+                subtitle: '\$${user.hourlyRate}/hr',
+                onTap: () => context.pushNamed(AppRoutes.rates),
+              ),
+              const Divider(),
+              _buildMerchantInfoTile(
+                context,
+                icon: Icons.diamond_outlined,
+                title: 'Skill',
+                subtitle:
+                    user.services != null && user.services!.isNotEmpty
+                        ? user.services!
+                            .map((e) => e['name'])
+                            .join(', ')
+                            .toString()
+                        : 'No Services Added',
+                onTap:
+                    () => context.pushNamed(AppRoutes.selectSkill, extra: true),
+              ),
+              const Divider(),
+              _buildMerchantInfoTile(
+                context,
+                icon: Icons.schedule,
+                title: 'Schedule',
+                subtitle: AppUtils.getTodayScheduleSubtitle(user),
+                onTap:
+                    () => context.pushNamed(
+                      AppRoutes.createSchedule,
+                      extra: true,
+                    ),
+              ),
+              const Divider(),
+              _buildMerchantInfoTile(
+                context,
+                icon: Icons.description_outlined,
+                title: 'Description',
+                subtitle: user.description ?? "No description added",
+                onTap: () => context.pushNamed(AppRoutes.changeDescriptipon),
+                hasWarning: true,
+              ),
+              const Divider(),
+              _buildWorkPhotosGallery(context, user),
+
+              if (user.isConsumer != true) ...[
+                const Divider(),
+                _buildMerchantInfoTile(
+                  context,
+                  icon: Icons.schedule,
+                  title: 'Setup Stripe Merchant Account',
+                  subtitle: 'To receive payments',
+                  onTap: () {
+                    _loginBloc.add(FetchMerchantAccount(context: context));
+                  },
+                ),
+              ],
+              const Divider(),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

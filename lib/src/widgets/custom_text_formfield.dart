@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
+import 'package:help_sum/src/core/themes/app_theme.dart';
 
 import 'custom_text.dart';
 
@@ -38,7 +39,7 @@ class CustomTextFormField extends StatefulWidget {
     this.customHintStyle,
     this.hint,
     this.isPassword = false,
-    this.isOutlinedBorder = true,
+    this.isOutlinedBorder = false,
     this.initialValue,
     this.fillColor,
     this.focusNode,
@@ -67,7 +68,7 @@ class CustomTextFormField extends StatefulWidget {
     this.customHintStyle,
     required this.hint,
     this.isPassword = false,
-    this.isOutlinedBorder = true,
+    this.isOutlinedBorder = false,
     this.initialValue,
     this.fillColor = Colors.white,
     this.focusNode,
@@ -98,17 +99,17 @@ class CustomTextFormFieldState extends State<CustomTextFormField> {
 
   InputBorder _border(Color? color) {
     final borderSide = BorderSide(
-      color: color ?? AppPalette.lightGreyColor,
+      color: color ?? context.theme.colorScheme.secondary.withValues(alpha: .5),
       width: 1,
     );
 
     return widget.isOutlinedBorder
         ? OutlineInputBorder(
-          borderRadius: widget.borderRadius ?? BorderRadius.circular(10),
+          borderRadius: widget.borderRadius ?? BorderRadius.circular(0),
           borderSide: borderSide,
         )
         : UnderlineInputBorder(
-          borderRadius: widget.borderRadius ?? BorderRadius.circular(10),
+          borderRadius: widget.borderRadius ?? BorderRadius.circular(0),
           borderSide: borderSide,
         );
   }
@@ -160,7 +161,7 @@ class CustomTextFormFieldState extends State<CustomTextFormField> {
   InputDecoration buildInputDecoration(BuildContext context) {
     return InputDecoration(
       hintText: widget.hint,
-      filled: true,
+      filled: false,
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       errorMaxLines: 2,
       errorStyle: TextStyle(fontSize: 12.sp, color: AppPalette.errorColor),

@@ -62,7 +62,7 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        centerTitle: false,
+        centerTitle: true,
         showLeading: false,
         title:
             userRole == AppRole.consumer.name

@@ -24,6 +24,8 @@ final class AppAssets {
   static const String authIllustrationIcon =
       '$_iconPath/ic_auth_illustration.png';
 
+  static const String appLogo = '$_iconPath/ic_app_logo.png';
+
   /// Dashboard
   static const String dashboardIcon1 = '$_iconPath/d1.png';
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:help_sum/src/core/themes/app_theme.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class ClickableTextPair extends StatelessWidget {
@@ -9,13 +10,14 @@ class ClickableTextPair extends StatelessWidget {
   final TextStyle? secondTextStyle;
   final VoidCallback? onSecondTextTap;
 
-  const ClickableTextPair({super.key, 
+  const ClickableTextPair({
+    super.key,
     required this.firstText,
     this.firstTextStyle,
     required this.secondText,
     this.secondTextStyle,
     this.onSecondTextTap,
-  }) ;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +36,10 @@ class ClickableTextPair extends StatelessWidget {
             text: secondText,
             fontSize: secondTextStyle?.fontSize ?? 16.sp,
             fontWeight: secondTextStyle?.fontWeight ?? FontWeight.bold,
-            color: secondTextStyle?.color ?? Colors.orange,
+            color: secondTextStyle?.color ?? context.theme.colorScheme.primary,
           ),
         ),
       ],
     );
   }
-} 
+}

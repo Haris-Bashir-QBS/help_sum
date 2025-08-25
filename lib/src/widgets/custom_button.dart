@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/extensions/context_extensions.dart';
+import 'package:help_sum/src/core/themes/app_theme.dart';
 import 'custom_text.dart';
 
 class CustomButton extends StatelessWidget {
@@ -56,11 +57,11 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveTextColor =
-        textColor ??
-        (color == Colors.white ? Colors.black : AppPalette.whiteColor);
-    final effectiveBorderColor =
-        borderColor ?? (isBorder! ? context.primaryColor : Colors.transparent);
+    // final effectiveTextColor =
+    //     textColor ??
+    //     (color == Colors.white ? Colors.black : AppPalette.whiteColor);
+    // final effectiveBorderColor =
+    //     borderColor ?? (isBorder! ? context.primaryColor : Colors.transparent);
 
     return SizedBox(
       width: 1.sw,
@@ -69,15 +70,16 @@ class CustomButton extends StatelessWidget {
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(horizontal: 0),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(radius ?? 8),
-          border:
-              isBorder!
-                  ? Border.all(color: effectiveBorderColor, width: 1.5)
-                  : null,
-          color:
-              isLoading
-                  ? Colors.grey.withAlpha(100)
-                  : color ?? AppPalette.greyColor,
+          borderRadius: BorderRadius.circular(radius ?? 30),
+          color: color ?? context.colorScheme.primary,
+          // border:
+          //     isBorder!
+          //         ? Border.all(color: effectiveBorderColor, width: 1.5)
+          //         : null,
+          // color:
+          //     isLoading
+          //         ? Colors.grey.withAlpha(100)
+          //         : color ?? AppPalette.greyColor,
         ),
         child: Material(
           color: Colors.transparent,
@@ -103,15 +105,10 @@ class CustomButton extends StatelessWidget {
                   )
                 else ...[
                   if (icon != null || iconWidget != null) ...[
-                    iconWidget ??
-                        Icon(
-                          icon,
-                          color: iconColor ?? effectiveTextColor,
-                          size: 20,
-                        ),
+                    iconWidget ?? Icon(icon, color: iconColor, size: 20),
                     5.horizontalSpace,
                   ],
-                  _titleWidget(effectiveTextColor),
+                  _titleWidget(),
                 ],
               ],
             ),
@@ -121,18 +118,17 @@ class CustomButton extends StatelessWidget {
     );
   }
 
-  Widget _titleWidget(Color effectiveTextColor) {
-    print("Color is ${effectiveTextColor.hashCode}");
+  Widget _titleWidget() {
     return Align(
       alignment: Alignment.center,
       child:
           isLoading
-              ? const CircularProgressIndicator(color: Colors.white)
+              ? const CircularProgressIndicator(color: AppPalette.whiteColor)
               : CustomText(
                 text: text,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
-                color: effectiveTextColor,
+                color: textColor ?? AppPalette.whiteColor,
                 textAlign: TextAlign.center,
               ),
     );

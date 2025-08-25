@@ -6,7 +6,12 @@ class AppTexts {
   static const String pleaseLoginAgain = 'Please log in again.';
   static const String backToLogin = 'Back to Login';
   static const String login = 'Log In';
-  static const String loginAccountTitle = 'Log in to your account';
+  static const String loginSubtitle =
+      'Hi, enter your details to get sign in to your account.';
+
+  static const String signUpSubtitle =
+      'Hi, enter your details to get sign up to your account.';
+  static const String welcome = 'Welcome!';
   static const String phoneNumber = 'Phone Number';
   static const String password = 'Password';
   static const String dontHaveAccount = "Don't have an account? ";
@@ -310,6 +315,7 @@ class AppTexts {
   static const String camera = 'Camera';
   static const String photos = 'Photos';
   static const String file = 'File';
+  static const String edit = 'Edit';
   static const String noReviewsYet = 'No reviews yet';
   static const String noRecommendedMerchants =
       'No recommended merchants found.';

@@ -214,6 +214,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
@@ -261,6 +262,27 @@ class _LoginPageState extends State<LoginPage> {
               context: context,
               message: state.apiErrorMessage,
             );
+          } else if (state.userEntity != null) {
+            if (state.userEntity!.isVerified == false) {
+              context.goNamed(
+                AppRoutes.verifyOtp,
+                extra: {
+                  'userId': state.userEntity!.id,
+                  'phone': state.userEntity!.phone,
+                },
+              );
+            } else {
+              // context.goNamed(AppRoutes.mainNavigation);
+
+              if (state.userEntity!.role != AppRole.consumer.name &&
+                  //  state.userEntity!.isCompleted == false) {
+                  (state.userEntity!.services?.isEmpty == true ||
+                      state.userEntity!.schedule?.isEmpty == true)) {
+                context.goNamed(AppRoutes.selectSkill);
+              } else {
+                context.goNamed(AppRoutes.mainNavigation);
+              }
+            }
           }
         },
         builder: (context, state) {
@@ -274,31 +296,31 @@ class _LoginPageState extends State<LoginPage> {
                   child: Form(
                     key: _formKey,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         140.verticalSpace,
                         _buildIllustration(),
-                        72.verticalSpace,
+                        30.verticalSpace,
                         _buildLoginTitle(),
-                        72.verticalSpace,
+                        10.verticalSpace,
+                        _buildSubTitle(),
+                        50.verticalSpace,
                         _buildPhoneNumberTextField(),
                         15.verticalSpace,
                         _buildPasswordTextField(),
                         60.verticalSpace,
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 48.w),
-                          child: CustomButton(
-                            text: AppTexts.login,
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                context.read<LoginBloc>().add(
-                                  LoginUser(
-                                    phoneNumber: _phoneController.text,
-                                    password: _passwordController.text,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
+                        CustomButton(
+                          text: AppTexts.login,
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              context.read<LoginBloc>().add(
+                                LoginUser(
+                                  phoneNumber: _phoneController.text,
+                                  password: _passwordController.text,
+                                ),
+                              );
+                            }
+                          },
                         ),
                         26.verticalSpace,
                         _buildSignUpText(),
@@ -314,14 +336,17 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Widget _buildSubTitle() =>
+      CustomText(text: AppTexts.loginSubtitle, fontSize: 16.sp, maxLines: 3);
+
   Widget _buildIllustration() => GestureDetector(
     onTap: _fillMockDetails,
-    child: Image.asset(AppAssets.authIllustrationIcon, height: 200.h),
+    child: Image.asset(AppAssets.appLogo, height: 180.h, fit: BoxFit.contain),
   );
 
   Widget _buildLoginTitle() => CustomText(
-    text: AppTexts.loginAccountTitle,
-    fontSize: 24.sp,
+    text: AppTexts.welcome,
+    fontSize: 30.sp,
     fontWeight: FontWeight.bold,
   );
 

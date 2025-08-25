@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/animation/fade_and_scale.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
@@ -78,7 +79,10 @@ class _EditBasicInfoScreenState extends ConsumerState<EditBasicInfoScreen> {
         ),
         child: Row(
           children: [
-            AvatarWithBadge(),
+            FadeScaleTransitionWidget(
+              duration: const Duration(milliseconds: 900),
+              child: AvatarWithBadge(),
+            ),
             SizedBox(width: 16.w),
             Expanded(
               child: Column(
@@ -250,11 +254,14 @@ class _EditBasicInfoScreenState extends ConsumerState<EditBasicInfoScreen> {
 
                   // const Spacer(),
                   30.verticalSpace,
-                  CustomButton(
-                    text: AppTexts.saveChanges,
-                    textColor: Colors.white,
-                    color: AppPalette.primaryColor,
-                    onPressed: _saveChanges,
+                  FadeScaleTransitionWidget(
+                    duration: const Duration(milliseconds: 900),
+                    child: CustomButton(
+                      text: AppTexts.saveChanges,
+                      textColor: Colors.white,
+                      color: AppPalette.primaryColor,
+                      onPressed: _saveChanges,
+                    ),
                   ),
                 ],
               ),

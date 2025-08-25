@@ -31,7 +31,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           password: event.password,
         ),
       );
-      result.fold(
+      await result.fold(
         (error) {
           emit(
             state.copyWith(isLoading: false, apiErrorMessage: error.message),
@@ -52,6 +52,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         },
       );
     });
+
     on<UpdateUser>((event, emit) async {
       emit(state.copyWith(userEntity: event.userEntity));
       await _localStorageService.saveUser(
@@ -79,7 +80,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       );
       final result = await _fetchMerchantSetupDetails(NoParams());
       AppUtils.closeLoadingDialog(event.context);
-      result.match(
+      result.fold(
         (failure) {
           CustomToast.errorToast(
             context: event.context,
