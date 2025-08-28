@@ -19,6 +19,7 @@ class PortfolioBloc extends Bloc<PortfolioEvent, PortfolioState> {
 
   PortfolioBloc() : super(PortfolioState()) {
     on<UpdatePortfolioEvent>((event, emit) async {
+      emit(state.copyWith(fileUploaded: false, isLoading: true));
       final result = await _uploadFileUseCase(event.params);
       result.match(
         (failure) {
@@ -28,6 +29,7 @@ class PortfolioBloc extends Bloc<PortfolioEvent, PortfolioState> {
           emit(
             state.copyWith(
               fileUploaded: true,
+              isLoading: false,
               userEntity: state.userEntity?.copyWith(
                 media: files.map((e) => e.url).toList(),
               ),

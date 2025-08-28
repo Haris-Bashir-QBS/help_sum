@@ -200,7 +200,7 @@ class AppUtils {
         return Color(0xFFFFC680);
       case JobStatus.cancelled:
       case JobStatus.rejected:
-        return Color(0xFFFF0000);
+        return Color.fromARGB(255, 239, 160, 160);
       case JobStatus.all:
         return Colors.transparent;
     }

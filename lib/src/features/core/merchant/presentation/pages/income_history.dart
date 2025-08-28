@@ -57,7 +57,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                     title: 'Immediate',
                     jobCount: 0,
                     averageIncome: 0.00,
-                    color: Colors.orange.shade700,
+                    color: AppPalette.primaryColor,
                   ),
                   SizedBox(height: 10.h),
                   _buildJobTypeCard(
@@ -233,7 +233,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
           decoration: BoxDecoration(
             color:
                 isSelected
-                    ? const Color(0xFFFF9800)
+                    ? AppPalette.primaryColor
                     : Colors.transparent, // Orange when selected
             borderRadius: BorderRadius.circular(10.r),
           ),
@@ -241,7 +241,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
             child: Text(
               text,
               style: TextStyle(
-                color: isSelected ? Colors.black : Colors.black54,
+                color: isSelected ? Colors.white : AppPalette.secondayColor,
                 fontWeight: FontWeight.w500,
                 fontSize: 14.sp,
               ),

@@ -102,6 +102,7 @@ class AppTexts {
   static const String next = 'Next';
   static const String reviews = 'Reviews';
   static const String aboutMerchant = 'About Merchant';
+  static const String yourProgress = 'Your Progress';
   static const String serviceList = 'Service List';
   static const String sendMessage = 'Send Message';
   static const String bookNow = 'Book Now';

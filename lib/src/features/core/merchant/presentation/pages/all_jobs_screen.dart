@@ -44,15 +44,23 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(merchantJobsNotifierProvider);
-
-    return Column(
-      children: [
-        CustomSearchField(),
-        20.verticalSpace,
-        _buildJobsTabBar(),
-        20.verticalSpace,
-        _jobListView(state),
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // CustomSearchField(),
+          CustomText(
+            text: AppTexts.yourProgress,
+            fontSize: 22.sp,
+            fontWeight: FontWeight.bold,
+          ),
+          20.verticalSpace,
+          _buildJobsTabBar(),
+          20.verticalSpace,
+          _jobListView(state),
+        ],
+      ),
     );
   }
 
@@ -84,7 +92,8 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
                   refresh: true,
                 );
           },
-          child: ListView.builder(
+          child: ListView.separated(
+            separatorBuilder: (context, index) => 10.verticalSpace,
             itemCount: jobs.data.length,
             itemBuilder: (c, i) {
               final job = jobs.data[i];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class TimelinePainter extends CustomPainter {
@@ -79,8 +80,8 @@ class LocationTimeline extends StatelessWidget {
             child: CustomPaint(
               // The painter property takes an instance of our TimelinePainter.
               painter: TimelinePainter(
-                lineColor: Color(0xFF5C5C5C),
-                dotColor: Color(0xFF04DB00),
+                lineColor: AppPalette.secondayColor,
+                dotColor: AppPalette.primaryColor,
                 dotRadius: dotRadius,
               ),
             ),

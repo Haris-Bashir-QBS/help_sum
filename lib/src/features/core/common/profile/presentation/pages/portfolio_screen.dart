@@ -42,37 +42,8 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
     super.initState();
   }
 
-  // void _listener() {
-  //   ref.listen<AuthState>(authNotifierProvider, (prev, next) {
-  //     if (next is UploadingFileSuccess) {
-  //       final files = next.files;
-  //       ref
-  //           .read(currentUserProvider)
-  //           .user
-  //           ?.media
-  //           ?.addAll(files.map((e) => e.url));
-  //     } else if (next is UploadingFileError) {
-  //       CustomToast.errorToast(context: context, message: next.failure.message);
-  //     }
-  //     if (next is SavePortfolioSuccess) {
-  //       CustomToast.successToast(
-  //         context: context,
-  //         message: 'Portfolio updated successfully',
-  //       );
-  //       context.pop();
-  //     } else if (next is SavePortfolioError) {
-  //       CustomToast.errorToast(context: context, message: next.failure.message);
-  //     }
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // _listener();
-
-    // final state = ref.watch(authNotifierProvider);
-    // final userProvider = ref.watch(currentUserProvider);
-
     return BlocProvider.value(
       value: _portfolioBloc,
       child: BlocConsumer<PortfolioBloc, PortfolioState>(

@@ -42,18 +42,25 @@ class AppTabBar extends StatelessWidget {
                       ),
                       // width: ,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          AppDimensions.appBorderRadius.r,
-                        ),
-                        color:
+                        border:
                             selectedIndex == index
-                                ? AppPalette.orangeColor
+                                ? Border(
+                                  bottom: BorderSide(
+                                    color: AppPalette.primaryColor,
+                                    width: 2,
+                                  ),
+                                )
                                 : null,
                       ),
                       child: Center(
                         child: CustomText(
                           textAlign: TextAlign.start,
                           text: tabs[index],
+                          fontSize: selectedIndex == index ? 16.sp : 14.sp,
+                          color:
+                              selectedIndex == index
+                                  ? AppPalette.primaryColor
+                                  : AppPalette.secondayColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

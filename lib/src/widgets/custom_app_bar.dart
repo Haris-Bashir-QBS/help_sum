@@ -10,6 +10,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   List<Widget>? actions;
   final PreferredSizeWidget? bottomWidget;
   final VoidCallback? onBackButtonPressed;
+  
 
   CustomAppBar({
     super.key,
@@ -26,9 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: AppPalette.backgroundColor,
       elevation: 0,
-
       actions: actions,
-
       leading:
           showLeading
               ? IconButton(

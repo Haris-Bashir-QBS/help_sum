@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,18 +12,26 @@ import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
+import 'package:help_sum/src/core/services/media_picker_service.dart';
 import 'package:help_sum/src/core/themes/app_theme.dart';
 import 'package:help_sum/src/core/utils/app_utils.dart';
+import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
+import 'package:help_sum/src/features/auth/presentation/bloc/portfolio/bloc/portfolio_bloc.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/stripe_merchant_setup_page.dart';
+import 'package:help_sum/src/features/core/common/profile/bloc/bloc/profile_bloc.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/widgets/custom_overlay_loader.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/widgets/custom_tabbar.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_card.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_row.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/verification_status.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_image_slider.dart';
+import 'package:help_sum/src/widgets/comman_imageview.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/custom_toast.dart';
+import 'package:help_sum/src/widgets/enlarged_image_view_widget.dart';
 import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/avatar_with_badge.dart';
 
@@ -34,18 +44,32 @@ class ProfileDetailsPage extends StatefulWidget {
 
 class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
   late final LoginBloc _loginBloc;
+  late final ProfileBloc _profileBloc;
+  late final PortfolioBloc _portfolioBloc;
+
+  final tabList = [
+    TabBarItemModel(icon: Icons.person, label: "Profile"),
+    TabBarItemModel(icon: Icons.photo, label: "Work"),
+    TabBarItemModel(icon: Icons.favorite_border_outlined, label: "Rating"),
+  ];
 
   @override
   void initState() {
     _loginBloc = sl<LoginBloc>();
+    _profileBloc = sl<ProfileBloc>();
+    _portfolioBloc = sl<PortfolioBloc>();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: BlocProvider.value(
-        value: _loginBloc,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: _loginBloc),
+          BlocProvider.value(value: _profileBloc),
+          BlocProvider.value(value: _portfolioBloc),
+        ],
         child: BlocConsumer<LoginBloc, LoginState>(
           listener: (context, state) async {
             if (state.merchantSetupResposeEntitiy != null) {
@@ -104,7 +128,8 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                   _buildMerchantProfileHeader(context, user),
                                   SizedBox(height: 24.h),
                                   CustomText(
-                                    text: "${user.firstName} ${user.lastName}",
+                                    text:
+                                        "//${user.firstName} ${user.lastName}",
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -265,81 +290,114 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
           fontWeight: FontWeight.w600,
         ),
         20.verticalSpace,
-        CustomText(text: user.description ?? "No description added"),
-
-        40.verticalSpace,
-        Container(
-          decoration: BoxDecoration(
-            color: context.theme.cardColor,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 12),
-          child: Column(
-            children: [
-              _buildMerchantInfoTile(
-                context,
-                icon: Icons.monetization_on_outlined,
-                title: 'Rates Per hour',
-                subtitle: '\$${user.hourlyRate}/hr',
-                onTap: () => context.pushNamed(AppRoutes.rates),
-              ),
-              const Divider(),
-              _buildMerchantInfoTile(
-                context,
-                icon: Icons.diamond_outlined,
-                title: 'Skill',
-                subtitle:
-                    user.services != null && user.services!.isNotEmpty
-                        ? user.services!
-                            .map((e) => e['name'])
-                            .join(', ')
-                            .toString()
-                        : 'No Services Added',
-                onTap:
-                    () => context.pushNamed(AppRoutes.selectSkill, extra: true),
-              ),
-              const Divider(),
-              _buildMerchantInfoTile(
-                context,
-                icon: Icons.schedule,
-                title: 'Schedule',
-                subtitle: AppUtils.getTodayScheduleSubtitle(user),
-                onTap:
-                    () => context.pushNamed(
-                      AppRoutes.createSchedule,
-                      extra: true,
-                    ),
-              ),
-              const Divider(),
-              _buildMerchantInfoTile(
-                context,
-                icon: Icons.description_outlined,
-                title: 'Description',
-                subtitle: user.description ?? "No description added",
-                onTap: () => context.pushNamed(AppRoutes.changeDescriptipon),
-                hasWarning: true,
-              ),
-              const Divider(),
-              _buildWorkPhotosGallery(context, user),
-
-              if (user.isConsumer != true) ...[
-                const Divider(),
-                _buildMerchantInfoTile(
-                  context,
-                  icon: Icons.schedule,
-                  title: 'Setup Stripe Merchant Account',
-                  subtitle: 'To receive payments',
-                  onTap: () {
-                    _loginBloc.add(FetchMerchantAccount(context: context));
-                  },
-                ),
-              ],
-              const Divider(),
-            ],
-          ),
+        CustomText(
+          text: user.description ?? "No description added",
+          color: AppPalette.greyColor,
         ),
+        20.verticalSpace,
+        BlocBuilder<ProfileBloc, ProfileBlocState>(
+          builder: (context, state) {
+            return CustomTabbar(
+              tabs: tabList,
+              selectedIndex: state.selectedIndex,
+              onTapChanged: (index) {
+                _profileBloc.add(ProfileTabChanged(selectedIndex: index));
+              },
+            );
+          },
+        ),
+        10.verticalSpace,
+        _tabBarView(user),
       ],
+    );
+  }
+
+  _tabBarView(UserEntity user) {
+    return BlocBuilder<ProfileBloc, ProfileBlocState>(
+      builder: (context, state) {
+        switch (state.selectedIndex) {
+          case 0:
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                children: [
+                  _buildMerchantInfoTile(
+                    context,
+                    icon: Icons.monetization_on_outlined,
+                    title: 'Rates Per hour',
+                    subtitle: '\$${user.hourlyRate}/hr',
+                    onTap: () => context.pushNamed(AppRoutes.rates),
+                  ),
+                  8.verticalSpace,
+
+                  _buildMerchantInfoTile(
+                    context,
+                    icon: Icons.diamond_outlined,
+                    title: 'Skill',
+                    subtitle:
+                        user.services != null && user.services!.isNotEmpty
+                            ? user.services!
+                                .map((e) => e['name'])
+                                .join(', ')
+                                .toString()
+                            : 'No Services Added',
+                    onTap:
+                        () => context.pushNamed(
+                          AppRoutes.selectSkill,
+                          extra: true,
+                        ),
+                  ),
+                  8.verticalSpace,
+
+                  _buildMerchantInfoTile(
+                    context,
+                    icon: Icons.schedule,
+                    title: 'Schedule',
+                    subtitle: AppUtils.getTodayScheduleSubtitle(user),
+                    onTap:
+                        () => context.pushNamed(
+                          AppRoutes.createSchedule,
+                          extra: true,
+                        ),
+                  ),
+                  8.verticalSpace,
+                  _buildMerchantInfoTile(
+                    context,
+                    icon: Icons.description_outlined,
+                    title: 'Description',
+                    subtitle: user.description ?? "No description added",
+                    onTap:
+                        () => context.pushNamed(AppRoutes.changeDescriptipon),
+                    hasWarning: true,
+                  ),
+                  8.verticalSpace,
+
+                  // _buildWorkPhotosGallery(context, user),
+                  if (user.isConsumer != true) ...[
+                    8.verticalSpace,
+                    _buildMerchantInfoTile(
+                      context,
+                      icon: Icons.schedule,
+                      title: 'Setup Stripe Merchant Account',
+                      subtitle: 'To receive payments',
+                      onTap: () {
+                        _loginBloc.add(FetchMerchantAccount(context: context));
+                      },
+                    ),
+                  ],
+                  8.verticalSpace,
+                ],
+              ),
+            );
+
+          case 1:
+            return _buildMediaGrid(user);
+          case 2:
+            return CustomText(text: 'Ratings and Reviews coming soon!');
+          default:
+            return SizedBox.shrink();
+        }
+      },
     );
   }
 
@@ -353,24 +411,30 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
   }) {
     return InkWell(
       onTap: onTap,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.h),
-        child: Row(
-          children: [
-            _buildIconWithBadge(icon: icon, hasWarning: hasWarning),
-            SizedBox(width: 16.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomText(text: title, fontWeight: FontWeight.w600),
-                  SizedBox(height: 10.h),
-                  CustomText(text: subtitle, maxLines: 1, fontSize: 15.sp),
-                ],
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.r),
+          color: AppPalette.whiteColor,
+          border: Border.all(color: AppPalette.lightGreyColor),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
+          child: Row(
+            children: [
+              _buildIconWithBadge(icon: icon, hasWarning: hasWarning),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText(text: title, fontWeight: FontWeight.w600),
+                    SizedBox(height: 10.h),
+                    CustomText(text: subtitle, maxLines: 1, fontSize: 15.sp),
+                  ],
+                ),
               ),
-            ),
-            Image.asset(AppAssets.arrow),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -388,7 +452,10 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
         clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
-          Icon(icon, size: 28.sp, color: Colors.grey.shade700),
+          CircleAvatar(
+            backgroundColor: AppPalette.lightGreyColor,
+            child: Icon(icon, size: 28.sp, color: Colors.grey.shade700),
+          ),
           if (hasWarning)
             Positioned(
               top: -4,
@@ -407,45 +474,105 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     );
   }
 
-  Widget _buildWorkPhotosGallery(BuildContext context, UserEntity user) {
-    return InkWell(
-      onTap: () {
-        context.pushNamed(AppRoutes.portfolio);
+  _buildMediaGrid(UserEntity? user) {
+    return BlocConsumer<PortfolioBloc, PortfolioState>(
+      listener: (context, state) {
+        if (state.apiErrorMessage != '') {
+          CustomToast.errorToast(
+            context: context,
+            message: state.apiErrorMessage,
+          );
+        }
+
+        if (state.isLoading && state.fileUploaded == false) {
+          CustomOverlayLoader.show(
+            context,
+            message: "Please wait image upload is in progress...",
+          );
+        } else {
+          CustomOverlayLoader.hide();
+        }
       },
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      builder: (context, state) {
+        return Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Icon(
-                  Icons.photo_library_outlined,
-                  size: 28.sp,
-                  color: Colors.grey.shade700,
+                CustomText(
+                  text: "Upload New Portfolio",
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
                 ),
-                SizedBox(width: 16.w),
-                Expanded(
-                  child: CustomText(
-                    text: 'Work Photos Gallery',
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
+                IconButton(
+                  onPressed: () {
+                    MediaPickerService().imageGalleryBottomSheet(
+                      onMediaChanged: (v) {
+                        if (v != null) {
+                          final files = UploadFileRequest([File(v)]);
+
+                          _portfolioBloc.add(
+                            UpdatePortfolioEvent(params: files),
+                          );
+                        }
+                      },
+                      context: context,
+                    );
+                  },
+                  icon: Icon(
+                    Icons.add_a_photo_outlined,
+                    color: AppPalette.primaryColor,
                   ),
                 ),
-                Image.asset(AppAssets.arrow),
               ],
             ),
-            SizedBox(height: 12.h),
-            user.media?.isNotEmpty == true
-                ? JobImageSlider(showDivider: false, imageUrls: user.media!)
-                : Padding(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: CustomText(text: 'No media added '),
+            10.verticalSpace,
+            SizedBox(
+              height: 0.4.sh,
+              child: GridView.builder(
+                itemCount: user?.media?.length ?? 0,
+                padding: EdgeInsets.only(top: 5.h),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                  childAspectRatio: 1,
                 ),
+                itemBuilder: (context, index) {
+                  final url = user?.media![index];
+                  final tag = 'job_image_hero_' + index.toString();
+
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          opaque: false,
+                          pageBuilder: (BuildContext context, _, __) {
+                            return EnlargedImageView(imageUrl: url!, tag: tag);
+                          },
+                          transitionsBuilder: (_, animation, __, child) {
+                            return FadeTransition(
+                              opacity: animation,
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: CustomImageView(
+                      imageType: ImageType.network,
+                      imagePath: url,
+                      fit: BoxFit.cover,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -458,10 +585,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
         color: AppPalette.primaryColor,
         onPressed: () async {
           context.goNamed(AppRoutes.roleSelection, extra: true);
-          // await LocalStorageService().clearAll();
           _loginBloc.add(const LogoutUser());
-
-          debugPrint('Signing out...');
         },
       ),
     );

@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/core/use_cases/use_case.dart';
-import 'package:help_sum/src/core/utils/app_utils.dart';
 import 'package:help_sum/src/features/auth/data/models/request/login_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/user_model.dart';
 import 'package:help_sum/src/features/auth/domain/entities/merchant_setup_respose_entitiy.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/fetch_merchant_setup_details.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/login_usecase.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/widgets/custom_overlay_loader.dart';
 import 'package:help_sum/src/widgets/custom_toast.dart';
 
 part 'login_event.dart';
@@ -74,12 +74,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     });
 
     on<FetchMerchantAccount>((event, emit) async {
-      AppUtils.showLoadingDialog(
-        context: event.context,
-        message: "Fetching Merchant Setup Details...",
+      CustomOverlayLoader.show(
+        event.context,
+        message: "Please wait we are fetching merchant account details...",
       );
       final result = await _fetchMerchantSetupDetails(NoParams());
-      AppUtils.closeLoadingDialog(event.context);
+      CustomOverlayLoader.hide();
       result.fold(
         (failure) {
           CustomToast.errorToast(
