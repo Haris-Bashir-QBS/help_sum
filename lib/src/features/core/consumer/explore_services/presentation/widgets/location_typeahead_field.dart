@@ -96,7 +96,12 @@ class LocationTypeAheadField extends StatelessWidget {
             hintText: 'Search location',
             prefixIcon: const Icon(Icons.search),
             filled: true,
-            fillColor: Colors.grey[200],
+            //       fillColor: Colors.grey[200],
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 12,
+              horizontal: 16,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide.none,

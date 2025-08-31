@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -22,75 +23,115 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   late final FetchMerchantSetupDetails _fetchMerchantSetupDetails = sl();
 
   LoginBloc() : super(LoginState()) {
-    on<LoginUser>((event, emit) async {
-      emit(state.copyWith(isLoading: true, apiErrorMessage: ''));
+    on<LoginUser>(_onLoginUSer);
+    on<UpdateUser>(_onUpdateuser);
+    on<CheckUserLoggedIn>(_onCheckUserLoggedIn);
+    on<LogoutUser>(_onLogoutUser);
+    on<FetchMerchantAccount>(_onFetchMerchantAccount);
+    //New
+    on<UpdateHourlyRateEvent>(_onHourlyRateChanged);
+    on<UpdateDescriptionEvent>(_onDescriptionChanged);
+  }
 
-      final result = await _loginUseCase(
-        LoginRequestModel(
-          phoneNumber: event.phoneNumber,
-          password: event.password,
-        ),
-      );
-      await result.fold(
-        (error) {
-          emit(
-            state.copyWith(isLoading: false, apiErrorMessage: error.message),
-          );
-        },
-        (success) async {
-          final (user, token) = success;
-          await _localStorageService.saveAccessToken(token);
-          await _localStorageService.saveUser(UserModel.fromEntity(user));
+  FutureOr<void> _onUpdatePortfolioEvent(event, emit) async {
+    final currentUser = state.userEntity;
+    if (currentUser != null) {
+      final updatedUser = currentUser.copyWith(media: event.images);
+      LocalStorageService().saveUser(UserModel.fromEntity(updatedUser));
+      emit(state.copyWith(userEntity: updatedUser));
+    }
+  }
 
-          emit(
-            state.copyWith(
-              isLoading: false,
-              apiErrorMessage: '',
-              userEntity: user,
-            ),
-          );
-        },
-      );
-    });
+  FutureOr<void> _onFetchMerchantAccount(event, emit) async {
+    CustomOverlayLoader.show(
+      event.context,
+      message: "Please wait we are fetching merchant account details...",
+    );
+    final result = await _fetchMerchantSetupDetails(NoParams());
+    CustomOverlayLoader.hide();
+    result.fold(
+      (failure) {
+        CustomToast.errorToast(
+          context: event.context,
+          message: state.apiErrorMessage,
+        );
+      },
+      (data) {
+        emit(state.copyWith(merchantSetupResposeEntitiy: data));
+      },
+    );
+  }
 
-    on<UpdateUser>((event, emit) async {
-      emit(state.copyWith(userEntity: event.userEntity));
-      await _localStorageService.saveUser(
-        UserModel.fromEntity(event.userEntity),
-      );
-    });
+  FutureOr<void> _onLogoutUser(event, emit) async {
+    await _localStorageService.clearAll();
+    emit(state.copyWith(userEntity: null, clearUser: true));
+  }
 
-    on<CheckUserLoggedIn>((event, emit) async {
-      final user = _localStorageService.user;
-      if (user != null) {
-        emit(state.copyWith(userEntity: user));
-      } else {
-        emit(state.copyWith(clearUser: true));
-      }
-    });
-    on<LogoutUser>((event, emit) async {
-      await _localStorageService.clearAll();
-      emit(state.copyWith(userEntity: null, clearUser: true));
-    });
+  FutureOr<void> _onCheckUserLoggedIn(event, emit) async {
+    final user = _localStorageService.user;
+    if (user != null) {
+      emit(state.copyWith(userEntity: user));
+    } else {
+      emit(state.copyWith(clearUser: true));
+    }
+  }
 
-    on<FetchMerchantAccount>((event, emit) async {
-      CustomOverlayLoader.show(
-        event.context,
-        message: "Please wait we are fetching merchant account details...",
+  FutureOr<void> _onUpdateuser(event, emit) async {
+    emit(state.copyWith(userEntity: event.userEntity));
+    await _localStorageService.saveUser(UserModel.fromEntity(event.userEntity));
+  }
+
+  FutureOr<void> _onLoginUSer(event, emit) async {
+    emit(state.copyWith(isLoading: true, apiErrorMessage: ''));
+
+    final result = await _loginUseCase(
+      LoginRequestModel(
+        phoneNumber: event.phoneNumber,
+        password: event.password,
+      ),
+    );
+    await result.fold(
+      (error) {
+        emit(state.copyWith(isLoading: false, apiErrorMessage: error.message));
+      },
+      (success) async {
+        final (user, token) = success;
+        await _localStorageService.saveAccessToken(token);
+        await _localStorageService.saveUser(UserModel.fromEntity(user));
+
+        emit(
+          state.copyWith(
+            isLoading: false,
+            apiErrorMessage: '',
+            userEntity: user,
+          ),
+        );
+      },
+    );
+  }
+
+  FutureOr<void> _onHourlyRateChanged(event, emit) async {
+    final currentUser = state.userEntity;
+    if (currentUser != null) {
+      final updatedUser = currentUser.copyWith(
+        hourlyRate: int.tryParse(event.newRate.toString()),
       );
-      final result = await _fetchMerchantSetupDetails(NoParams());
-      CustomOverlayLoader.hide();
-      result.fold(
-        (failure) {
-          CustomToast.errorToast(
-            context: event.context,
-            message: state.apiErrorMessage,
-          );
-        },
-        (data) {
-          emit(state.copyWith(merchantSetupResposeEntitiy: data));
-        },
+      LocalStorageService().saveUser(UserModel.fromEntity(updatedUser));
+      emit(state.copyWith(userEntity: updatedUser));
+    }
+  }
+
+  FutureOr<void> _onDescriptionChanged(
+    UpdateDescriptionEvent event,
+    emit,
+  ) async {
+    final currentUser = state.userEntity;
+    if (currentUser != null) {
+      final updatedUser = currentUser.copyWith(
+        description: event.newDescription,
       );
-    });
+      LocalStorageService().saveUser(UserModel.fromEntity(updatedUser));
+      emit(state.copyWith(userEntity: updatedUser));
+    }
   }
 }

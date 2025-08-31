@@ -65,31 +65,35 @@ class CardList extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    if (!context.isBottomInsetZero) return const SizedBox.shrink();
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.credit_card_outlined,
-            size: 64.sp,
-            color: AppPalette.greyColor,
-          ),
-          16.verticalSpace,
-          CustomText(
-            text: AppTexts.noCardsAdded,
-            fontSize: 16.sp,
-            color: AppPalette.greyColor,
-            textAlign: TextAlign.center,
-          ),
-          8.verticalSpace,
-          CustomText(
-            text: AppTexts.addYourFirstCard,
-            fontSize: 14.sp,
-            color: AppPalette.greyColor.withOpacity(0.7),
-            textAlign: TextAlign.center,
-          ),
-        ],
+    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+
+    return Visibility(
+      visible: !isKeyboardOpen,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.credit_card_outlined,
+              size: 64.sp,
+              color: AppPalette.greyColor,
+            ),
+            16.verticalSpace,
+            CustomText(
+              text: AppTexts.noCardsAdded,
+              fontSize: 16.sp,
+              color: AppPalette.greyColor,
+              textAlign: TextAlign.center,
+            ),
+            8.verticalSpace,
+            CustomText(
+              text: AppTexts.addYourFirstCard,
+              fontSize: 14.sp,
+              color: AppPalette.greyColor.withOpacity(0.7),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

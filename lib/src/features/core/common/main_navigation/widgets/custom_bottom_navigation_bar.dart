@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
@@ -23,6 +24,7 @@ class AppBottomNavigationBar extends StatelessWidget {
             : AppStaticData.merchantDestinations;
 
     return Container(
+      //padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 8.h),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -35,14 +37,45 @@ class AppBottomNavigationBar extends StatelessWidget {
           top: BorderSide(color: Colors.grey.withOpacity(0.5), width: 1),
         ),
       ),
-      child: NavigationBar(
-        selectedIndex: selectedIndex,
-        onDestinationSelected: onTap,
-        destinations: destinations,
-        elevation: 120,
-        height: 65,
-        backgroundColor: AppPalette.lightGreyColor,
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+      child: BottomNavigationBar(
+        currentIndex: selectedIndex,
+        onTap: onTap,
+        type: BottomNavigationBarType.fixed,
+        // backgroundColor: AppPalette.lightGreyColor,
+        elevation: 20,
+        selectedLabelStyle: TextStyle(
+          fontSize: 12.sp,
+          color: AppPalette.primaryColor,
+          fontWeight: FontWeight.w500,
+        ),
+        selectedItemColor: AppPalette.primaryColor,
+        selectedIconTheme: IconThemeData(
+          size: 24.sp,
+          color: AppPalette.primaryColor,
+        ),
+        unselectedLabelStyle: TextStyle(fontSize: 10.sp),
+        // showSelectedLabels: false,
+        // showUnselectedLabels: false,
+        items:
+            destinations.map((dest) {
+              return BottomNavigationBarItem(
+                icon: Icon(
+                  dest.iconPath,
+                  size: 30,
+                  // width: 24.w,
+                  // height: 24.w,
+                  color: Colors.grey.withAlpha(200), // unselected color
+                ),
+                activeIcon: Icon(
+                  dest.iconPath,
+                  size: 30,
+                  // width: 24.w,
+                  // height: 24.w,
+                  color: AppPalette.primaryColor, // selected color
+                ),
+                label: dest.label, // hides label
+              );
+            }).toList(),
       ),
     );
   }

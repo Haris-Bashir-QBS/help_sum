@@ -33,6 +33,6 @@ abstract interface class AuthRepository {
   });
 
   Future<Either<Failure, List<GroupedCategoryEntity>>> getServices();
-  Future<Either<Failure, MerchantSetupResposeEntitiy>>
+  Future<Either<Failure, MerchantSetupResponseEntitiy>>
   getMerchantSetupDetails();
 }

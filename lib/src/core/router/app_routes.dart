@@ -48,4 +48,5 @@ class AppRoutes {
   //
   static const String jobDetail = '/JobDetail';
   static const String manageJob = '/manageJob';
+  static const String content = '/content';
 }

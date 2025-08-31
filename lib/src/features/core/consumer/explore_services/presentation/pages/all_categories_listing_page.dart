@@ -76,7 +76,7 @@ class _AllCategoriesListingPageState
     if (state is GetCategoriesLoading) {
       return Padding(
         padding: EdgeInsets.all(16.w),
-        child: const CategorySkeleton(),
+        child: CategorySkeleton(itemCount: 20),
       );
     }
 
@@ -105,6 +105,7 @@ class _AllCategoriesListingPageState
             child: GridView.builder(
               controller: _scrollController,
               padding: EdgeInsets.all(16.w),
+              physics: const AlwaysScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 10.w,
@@ -123,7 +124,7 @@ class _AllCategoriesListingPageState
                 }
 
                 final category = state.categories[index];
-                return CategoryCard(
+                return CategoryCard.glassmorphic(
                   title: category.name,
                   icon: category.icon,
                   onTap: () {

@@ -12,6 +12,7 @@ import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_card.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/rich_booking_card.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_states.dart';
 import 'package:help_sum/src/widgets/app_tab_bar.dart';
@@ -78,7 +79,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
 
       if (jobs.data.isEmpty == true) {
         return const Expanded(
-          child: Center(child: CustomText(text: "No Data Found")),
+          child: Center(child: CustomText(text: "No Jobs Found")),
         );
       }
 
@@ -97,10 +98,10 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
             itemCount: jobs.data.length,
             itemBuilder: (c, i) {
               final job = jobs.data[i];
-              return JobCardMerchant(
+              return RichBookingCard(
                 job: job,
-                showStatus: true,
-                index: i,
+                isMerchant: true,
+                showStatus: selectedIndex == 0,
                 onTap: () => _navigateToJobDetailScreen(job),
               );
             },

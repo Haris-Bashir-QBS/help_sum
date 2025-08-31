@@ -31,102 +31,79 @@ class BookingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(color: AppPalette.lightGreyColor),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            0.verticalSpace,
-            AppointmentDateTimeCard(date: job.date ?? "", time: job.time ?? ""),
-
-            20.verticalSpace,
-
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.paddingAllSides,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        elevation: 4,
+        margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
+        shadowColor: Colors.black26,
+        child: Padding(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppointmentDateTimeCard(
+                date: job.date ?? "",
+                time: job.time ?? "",
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: CustomText(
-                      text: job.title,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  // CustomText(
-                  //   text: '#${job.id}',
-                  //   fontSize: 16.sp,
-                  //   fontWeight: FontWeight.normal,
-                  //   color: AppPalette.hintColor,
-                  // ),
-                ],
-              ),
-            ),
-
-            10.verticalSpace,
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.paddingAllSides,
-              ),
-              child: CustomText(
-                text: job.serviceId.name ?? "",
-                fontWeight: FontWeight.normal,
-                fontSize: 16.sp,
-                color: AppPalette.hintColor,
-              ),
-            ),
-            30.verticalSpace,
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: LocationTimeline(
-                sourceLocation:
-                    "${job.merchantId.location?.address ?? ""},${job.merchantId.location?.city ?? ""},${job.merchantId.location?.state ?? ""}",
-                destinationLocation:
-                    "${job.location.address ?? ""},${job.location.city ?? ""},${job.location.state ?? ""}",
-              ),
-            ),
-            16.verticalSpace,
-
-            Visibility(
-              visible: showStatus == true,
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  margin: EdgeInsets.only(right: 12.w),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.w,
-                    vertical: 6.w,
-                  ),
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(-2, 5),
-                        spreadRadius: 2,
-                        color: AppPalette.greyColor,
-                        blurRadius: 5,
-                      ),
-                    ],
-                    color: AppUtils.getJobColor(_parseJobStatus(job.status)),
-                    borderRadius: BorderRadius.circular(
-                      AppDimensions.appBorderRadius,
-                    ),
-                  ),
-                  child: CustomText(
-                    color:
-                        _parseJobStatus(job.status) == JobStatus.cancelled
-                            ? AppPalette.backgroundColor
-                            : null,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13.sp,
-                    text: AppUtils.getJobString(_parseJobStatus(job.status)),
-                  ),
+              16.verticalSpace,
+              Text(
+                job.title,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[900],
                 ),
               ),
-            ),
-
-            10.verticalSpace,
-          ],
+              4.verticalSpace,
+              Text(
+                job.serviceId.name ?? "",
+                style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
+              ),
+              16.verticalSpace,
+              LocationTimeline(
+                sourceLocation:
+                    "${job.merchantId.location?.address ?? ""}, ${job.merchantId.location?.city ?? ""}, ${job.merchantId.location?.state ?? ""}",
+                destinationLocation:
+                    "${job.location.address ?? ""}, ${job.location.city ?? ""}, ${job.location.state ?? ""}",
+              ),
+              16.verticalSpace,
+              if (showStatus == true)
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.r),
+                      gradient: LinearGradient(
+                        colors: _getStatusGradient(_parseJobStatus(job.status)),
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 6,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      AppUtils.getJobString(_parseJobStatus(job.status)),
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -154,7 +131,27 @@ class BookingCard extends StatelessWidget {
         return JobStatus.all;
     }
   }
+
+  List<Color> _getStatusGradient(JobStatus status) {
+    switch (status) {
+      case JobStatus.completed:
+        return [Colors.green.shade400, Colors.green.shade700];
+      case JobStatus.in_progress:
+        return [Colors.blue.shade400, Colors.blue.shade700];
+      case JobStatus.pending:
+      case JobStatus.waitingConfirmation:
+      case JobStatus.waitingPayment:
+        return [Colors.orange.shade400, Colors.orange.shade700];
+      case JobStatus.cancelled:
+      case JobStatus.rejected:
+        return [Colors.red.shade400, Colors.red.shade700];
+      default:
+        return [Colors.grey.shade400, Colors.grey.shade600];
+    }
+  }
 }
+
+// -------------------------- JobCardMerchant -------------------------- //
 
 class JobCardMerchant extends StatelessWidget {
   final JobData job;
@@ -174,134 +171,104 @@ class JobCardMerchant extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppPalette.whiteColor,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: AppPalette.lightGreyColor),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            20.verticalSpace,
-
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.paddingAllSides,
-              ),
-              child: Row(
+        elevation: 4,
+        margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
+        shadowColor: Colors.black26,
+        child: Padding(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
                   Expanded(
-                    child: CustomText(
-                      text: job.title ?? "",
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      context.pushNamed(AppRoutes.chatScreen);
-                    },
-                    child: CircleAvatar(
-                      backgroundColor: AppPalette.primaryGreyColor,
-                      child: Image.asset(
-                        AppAssets.chatIcon,
-                        color: AppPalette.blackColor,
-                        width: 24.w,
-                        height: 24.h,
+                    child: Text(
+                      job.title ?? "",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[900],
                       ),
                     ),
                   ),
-                  // CustomText(
-                  //   text: '#${job.id}',
-                  //   fontSize: 16.sp,
-                  //   fontWeight: FontWeight.normal,
-                  //   color: AppPalette.hintColor,
-                  // ),
+                  GestureDetector(
+                    onTap: () => context.pushNamed(AppRoutes.chatScreen),
+                    child: CircleAvatar(
+                      radius: 20.r,
+                      backgroundColor: AppPalette.primaryGreyColor,
+                      child: Image.asset(
+                        AppAssets.chatIcon,
+                        width: 24.w,
+                        height: 24.h,
+                        color: AppPalette.blackColor,
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
-
-            10.verticalSpace,
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.paddingAllSides,
+              4.verticalSpace,
+              Text(
+                job.serviceId.name ?? "",
+                style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
               ),
-              child: CustomText(
-                text: job.serviceId.name ?? "",
-                fontWeight: FontWeight.normal,
-                fontSize: 16.sp,
-                color: AppPalette.hintColor,
-              ),
-            ),
-            30.verticalSpace,
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: LocationTimeline(
-                //sourceLocation: "${job.consumerId.location?.address ?? ""},${job.consumerId.location?.city ?? ""},${job.consumerId.location?.state ?? ""}",
+              16.verticalSpace,
+              LocationTimeline(
                 sourceLocation:
-                    "${job.consumerId.location?.address ?? ""},${job.consumerId.location?.city ?? ""},${job.consumerId.location?.state ?? ""}",
+                    "${job.consumerId.location?.address ?? ""}, ${job.consumerId.location?.city ?? ""}, ${job.consumerId.location?.state ?? ""}",
                 destinationLocation:
-                    "${job.location.address} ${job.location.city}${job.location.state}",
+                    "${job.location.address ?? ""}, ${job.location.city ?? ""}, ${job.location.state ?? ""}",
               ),
-            ),
-            16.verticalSpace,
-
-            Visibility(
-              visible: showStatus == true,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                child: Row(
+              16.verticalSpace,
+              if (showStatus == true)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: CustomText(
-                        text: job.date,
+                    Text(
+                      job.date ?? "",
+                      style: TextStyle(
                         fontSize: 14.sp,
                         color: AppPalette.secondayColor,
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(right: 12.w),
                       padding: EdgeInsets.symmetric(
-                        horizontal: 10.w,
-                        vertical: 6.w,
+                        horizontal: 12.w,
+                        vertical: 6.h,
                       ),
                       decoration: BoxDecoration(
-                        color: AppPalette.lightGreyColor,
-                        border: Border.all(color: AppPalette.primaryColor),
+                        borderRadius: BorderRadius.circular(12.r),
+                        gradient: LinearGradient(
+                          colors: _getStatusGradient(
+                            _parseJobStatus(job.status),
+                          ),
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
                         boxShadow: [
                           BoxShadow(
-                            offset: Offset(2, 2),
-                            spreadRadius: 1,
-                            color: AppPalette.greyColor.withValues(alpha: .4),
-                            blurRadius: 1,
+                            color: Colors.black12,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
                           ),
                         ],
-                        // color: AppUtils.getJobColor(_parseJobStatus(job.status)),
-                        borderRadius: BorderRadius.circular(
-                          AppDimensions.appBorderRadius,
-                        ),
                       ),
-                      child: CustomText(
-                        color: AppPalette.blackColor,
-                        // _parseJobStatus(job.status) == JobStatus.cancelled
-                        //     ? AppPalette.backgroundColor
-                        //     : null,,
-                        fontWeight: FontWeight.bold,
-
-                        fontSize: 13.sp,
-                        text: AppUtils.getJobString(
-                          _parseJobStatus(job.status),
+                      child: Text(
+                        AppUtils.getJobString(_parseJobStatus(job.status)),
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ),
-
-            10.verticalSpace,
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -327,6 +294,24 @@ class JobCardMerchant extends StatelessWidget {
         return JobStatus.rejected;
       default:
         return JobStatus.all;
+    }
+  }
+
+  List<Color> _getStatusGradient(JobStatus status) {
+    switch (status) {
+      case JobStatus.completed:
+        return [Colors.green.shade400, Colors.green.shade700];
+      case JobStatus.in_progress:
+        return [Colors.blue.shade400, Colors.blue.shade700];
+      case JobStatus.pending:
+      case JobStatus.waitingConfirmation:
+      case JobStatus.waitingPayment:
+        return [Colors.orange.shade400, Colors.orange.shade700];
+      case JobStatus.cancelled:
+      case JobStatus.rejected:
+        return [Colors.red.shade400, Colors.red.shade700];
+      default:
+        return [Colors.grey.shade400, Colors.grey.shade600];
     }
   }
 }

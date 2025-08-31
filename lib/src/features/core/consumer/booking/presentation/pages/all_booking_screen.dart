@@ -7,6 +7,7 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/rich_booking_card.dart';
 import 'package:help_sum/src/widgets/app_tab_bar.dart';
 import 'package:help_sum/src/widgets/custom_refresh_indicator.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
@@ -104,10 +105,10 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
                       );
                     }
 
-                    return BookingCard(
+                    return RichBookingCard(
                       job: jobs[i],
                       showStatus: selectedIndex == 0,
-                      index: i,
+                      //  index: i,
                       onTap: () {
                         // _navigateToPaymentScreen(context, jobs, i);
                         _navigateToJobDetailPage(context, jobs, i);
@@ -127,7 +128,7 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
             error:
                 (e, st) => Center(
                   child: CustomText(
-                    text: '${AppTexts.somethingWentWrong}: ${e.toString()}',
+                    text: e.toString(),
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),

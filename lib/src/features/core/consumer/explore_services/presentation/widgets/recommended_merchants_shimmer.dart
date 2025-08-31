@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class RecommendedMerchantsShimmer extends StatelessWidget {
@@ -20,7 +21,7 @@ class RecommendedMerchantsShimmer extends StatelessWidget {
                 margin: EdgeInsets.symmetric(vertical: 8.h),
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppPalette.primaryColor.withAlpha(190),
                   borderRadius: BorderRadius.circular(12.r),
                   boxShadow: [
                     BoxShadow(

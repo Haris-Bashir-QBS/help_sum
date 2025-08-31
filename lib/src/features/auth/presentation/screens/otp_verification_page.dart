@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/features/auth/data/models/request/otp_request_model.dart';
@@ -108,7 +109,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
             timerStart();
           } else if (state.userEntity != null) {
             _loginBloc.add(UpdateUser(userEntity: state.userEntity!));
-            context.goNamed(AppRoutes.mainNavigation);
+            _navigateToSpecificScreen(state, context);
           }
         },
         builder: (context, state) {
@@ -152,6 +153,20 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         },
       ),
     );
+  }
+
+  void _navigateToSpecificScreen(VerifyOtpState state, BuildContext context) {
+    if (state.userEntity?.role != AppRole.consumer.name) {
+      if (state.userEntity?.services?.isEmpty == true) {
+        context.goNamed(AppRoutes.selectSkill);
+      } else if (state.userEntity?.schedule?.isEmpty == true) {
+        context.goNamed(AppRoutes.createSchedule);
+      } else {
+        context.goNamed(AppRoutes.mainNavigation);
+      }
+    } else {
+      context.goNamed(AppRoutes.mainNavigation);
+    }
   }
 
   Widget _buildVerificationTitle() {

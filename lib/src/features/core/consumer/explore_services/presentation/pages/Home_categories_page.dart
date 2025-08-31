@@ -4,11 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
-import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/category_route_params.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/category_card.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/heading_with_view_all.dart';
-import 'package:help_sum/src/features/core/common/main_navigation/widgets/home_service_provider_card.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_provider.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_state.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/domain/entities/category_entity.dart';
@@ -16,9 +14,7 @@ import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/recommended_merchants_shimmer.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/category_skeleton.dart';
-import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/merchant_list_shimmer.dart';
-import 'package:help_sum/src/widgets/custom_text.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:help_sum/src/widgets/no_data_found.dart';
 
 class HomeCategoriesPage extends ConsumerStatefulWidget {
   const HomeCategoriesPage({super.key});
@@ -85,7 +81,7 @@ class _HomeCategoriesPageState extends ConsumerState<HomeCategoriesPage> {
             context.pushNamed(AppRoutes.allCategoriesListing);
           },
         ),
-        5.verticalSpace,
+        10.verticalSpace,
         _buildCategoryContent(categoryAsync),
       ],
     );
@@ -144,7 +140,7 @@ class _HomeCategoriesPageState extends ConsumerState<HomeCategoriesPage> {
       itemCount: displayCategories.length,
       itemBuilder: (context, index) {
         final category = displayCategories[index];
-        return CategoryCard(
+        return CategoryCard.glassmorphic(
           title: category.name,
           icon: category.icon,
           onTap: () {
@@ -179,29 +175,33 @@ class _HomeCategoriesPageState extends ConsumerState<HomeCategoriesPage> {
         if (categoryState is GetCategoriesLoading)
           const RecommendedMerchantsShimmer()
         else
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                20.verticalSpace,
-                Icon(
-                  Icons.search_off,
-                  size: 48,
-                  color: AppPalette.darkGreyColor,
-                ),
-                SizedBox(height: 12),
-                CustomText(
-                  text: AppTexts.noRecommendedMerchants,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  maxLines: 2,
-                  color: AppPalette.darkGreyColor,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
+          Padding(
+            padding: EdgeInsets.only(top: 35.h),
+            child: NoDataFound(message: AppTexts.noRecommendedMerchants),
           ),
+        // Center(
+        //   child: Column(
+        //     mainAxisSize: MainAxisSize.min,
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     children: [
+        //       20.verticalSpace,
+        //       Icon(
+        //         Icons.search_off,
+        //         size: 48,
+        //         color: AppPalette.primaryColor,
+        //       ),
+        //       SizedBox(height: 12),
+        //       CustomText(
+        //         text: AppTexts.noRecommendedMerchants,
+        //         fontSize: 16,
+        //         fontWeight: FontWeight.w500,
+        //         maxLines: 2,
+        //         color: AppPalette.primaryColor,
+        //         textAlign: TextAlign.center,
+        //       ),
+        //     ],
+        //   ),
+        // ),
         // SizedBox(
         //   height: 150.h,
         //   child: ListView.builder(

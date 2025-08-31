@@ -19,7 +19,7 @@ class AppTexts {
   static const String createAccountTitle = 'Create new account';
   static const String fullName = 'Full Name';
   static const String confirmPassword = 'Confirm Password';
-  static const String alreadyHaveAccount = 'Already have an account?';
+  static const String alreadyHaveAccount = 'Already have an account? ';
   static const String loginHere = 'Login here.';
   static const String settings = 'Settings';
   static const String roleSelectionHeading =
@@ -318,6 +318,5 @@ class AppTexts {
   static const String file = 'File';
   static const String edit = 'Edit';
   static const String noReviewsYet = 'No reviews yet';
-  static const String noRecommendedMerchants =
-      'No recommended merchants found.';
+  static const String noRecommendedMerchants = 'No merchants found.';
 }

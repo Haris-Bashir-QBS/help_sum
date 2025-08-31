@@ -12,17 +12,17 @@ class AnimatedStatusDialog extends StatefulWidget {
   final bool isSuccess;
   final String? title;
   final String? message;
-  final String? primaryButtonText, primaryButtonIcon, secondaryButtonIcon;
-  final VoidCallback? onPrimaryTap;
+  final String? primaryButtonText;
   final String? secondaryButtonText;
+  final VoidCallback? onPrimaryTap;
   final VoidCallback? onSecondaryTap;
-  final bool sucessOnly;
-  final bool isShowTimer; // ✅ New flag
+  final bool successOnly;
+  final bool isShowTimer;
   final Function()? onBack;
 
   const AnimatedStatusDialog({
     super.key,
-    this.sucessOnly = false,
+    this.successOnly = false,
     this.isShowTimer = false,
     this.onBack,
     this.icon,
@@ -33,26 +33,21 @@ class AnimatedStatusDialog extends StatefulWidget {
     this.onPrimaryTap,
     this.secondaryButtonText,
     this.onSecondaryTap,
-    this.primaryButtonIcon,
-    this.secondaryButtonIcon,
   });
 
-  /// 💥 Show function for convenience
   static Future<void> show({
     required BuildContext context,
     Widget? icon,
     required bool isSuccess,
-    bool sucessOnly = false,
+    bool successOnly = false,
     String? title,
     String? message,
     String? primaryButtonText,
     VoidCallback? onPrimaryTap,
     String? secondaryButtonText,
-    String? primaryButtonIcon,
-    String? secondaryButtonIcon,
-    Function()? onBack,
     VoidCallback? onSecondaryTap,
-    bool isShowTimer = false, // ✅ Passed to dialog
+    bool isShowTimer = false,
+    Function()? onBack,
   }) {
     return showDialog(
       context: context,
@@ -67,11 +62,9 @@ class AnimatedStatusDialog extends StatefulWidget {
             onPrimaryTap: onPrimaryTap,
             secondaryButtonText: secondaryButtonText,
             onSecondaryTap: onSecondaryTap,
-            primaryButtonIcon: primaryButtonIcon,
-            secondaryButtonIcon: secondaryButtonIcon,
+            successOnly: successOnly,
             isShowTimer: isShowTimer,
             onBack: onBack,
-            sucessOnly: sucessOnly,
           ),
     );
   }
@@ -84,29 +77,23 @@ class _AnimatedStatusDialogState extends State<AnimatedStatusDialog>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnim;
-  final bool loading = true;
 
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 350),
+      duration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    _scaleAnim = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutBack,
-    );
+    _scaleAnim = CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
     _controller.forward();
 
-    WidgetsBinding.instance.addPostFrameCallback((t) {
-      if (widget.isShowTimer) {
-        Future.delayed((Duration(seconds: 3)), () {
-          widget.onBack?.call();
-        });
-      }
-    });
+    if (widget.isShowTimer) {
+      Future.delayed(const Duration(seconds: 3), () {
+        widget.onBack?.call();
+        if (mounted) Navigator.pop(context);
+      });
+    }
   }
 
   @override
@@ -120,70 +107,87 @@ class _AnimatedStatusDialogState extends State<AnimatedStatusDialog>
     return ScaleTransition(
       scale: _scaleAnim,
       child: Dialog(
-        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(20.r),
         ),
+        elevation: 10,
+        backgroundColor: Colors.white,
         child: Padding(
           padding: EdgeInsets.all(24.w),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children:
-                widget.sucessOnly
-                    ? [
-                      widget.icon ??
-                          Image.asset(
-                            widget.isSuccess
-                                ? AppAssets.successIcon
-                                : AppAssets.starIcon,
-                            width: 100.w,
-                            height: 100.w,
-                            // color:
-                            //     widget.isSuccess
-                            //         ? null
-                            //         : AppPalette.yellowColor,
-                          ),
-
-                      _title(),
-
-                      if (widget.isShowTimer) ...[
-                        30.verticalSpace,
-                        _description(),
-                        30.verticalSpace,
-                        Center(
-                          child: CircularProgressIndicator(
-                            color: AppPalette.primaryColor,
-                          ),
-                        ),
-                        30.verticalSpace,
-                      ],
-                    ]
-                    : [
-                      if (widget.icon != null) ...[
-                        widget.icon!,
-                        10.verticalSpace,
-                      ],
-                      // widget.icon ??
-                      //     Image.asset(
-                      //       widget.isSuccess
-                      //           ? AppAssets.successIcon
-                      //           : AppAssets.warningIcon,
-                      //       width: 100.w,
-                      //       height: 100.w,
-                      //       color: widget.isSuccess ? null : AppPalette.yellowColor,
-                      //     ),
-                      SizedBox(height: 20.h),
-                      _title(),
-                      SizedBox(height: 8.h),
-                      _description(),
-                      SizedBox(height: 24.h),
-                      _actions(),
-                    ],
+            children: [
+              _buildIcon(),
+              16.verticalSpace,
+              _title(),
+              8.verticalSpace,
+              _description(),
+              24.verticalSpace,
+              if (!widget.successOnly) _actions(),
+            ],
           ),
         ),
       ),
     );
   }
+
+  Widget _buildIcon() {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        // gradient: LinearGradient(
+        //   colors:
+        //       widget.isSuccess
+        //           ? [
+        //             Colors.green.shade400,
+        //             Colors.green.shade700,
+        //           ] // Success gradient
+        //           : [
+        //             Colors.orange.shade300,
+        //             Colors.red.shade400,
+        //           ], // Warning gradient
+        //   begin: Alignment.topLeft,
+        //   end: Alignment.bottomRight,
+        // ),
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black.withOpacity(0.1),
+        //     blurRadius: 10,
+        //     offset: const Offset(0, 5),
+        //   ),
+        //   ],
+      ),
+      child:
+          widget.icon ??
+          Image.asset(
+            widget.isSuccess ? AppAssets.successIcon : AppAssets.successIcon,
+            width: 80.w,
+            height: 80.w,
+          ),
+    );
+  }
+
+  CustomText _title() => CustomText(
+    text:
+        widget.title ??
+        (widget.isSuccess ? AppTexts.success : AppTexts.somethingWentWrong),
+    fontSize: 18.sp,
+    fontWeight: FontWeight.bold,
+    color: AppPalette.darkGreyColor,
+    textAlign: TextAlign.center,
+  );
+
+  CustomText _description() => CustomText(
+    text:
+        widget.message ??
+        (widget.isSuccess
+            ? AppTexts.actionCompletedSuccessfully
+            : AppTexts.tryAgainLater),
+    fontSize: 14.sp,
+    color: AppPalette.greyColor,
+    textAlign: TextAlign.center,
+  );
 
   Widget _actions() {
     return Row(
@@ -199,73 +203,30 @@ class _AnimatedStatusDialogState extends State<AnimatedStatusDialog>
                 Navigator.pop(context);
                 widget.onSecondaryTap?.call();
               },
-              text: widget.secondaryButtonText ?? AppTexts.cancel,
+              text: widget.secondaryButtonText!,
               color: AppPalette.warningColor,
               textColor: Colors.white,
-              iconWidget:
-                  widget.secondaryButtonIcon == null
-                      ? null
-                      : Image.asset(
-                        widget.secondaryButtonIcon!,
-                        width: 17,
-                        height: 17,
-                        color: context.primaryColor,
-                      ),
+              height: 45.h,
+              radius: 12.r,
+              // shadow: true,
             ),
           ),
-        5.horizontalSpace,
+        if (widget.secondaryButtonText != null) 10.horizontalSpace,
         Expanded(
           child: CustomButton(
             onPressed: () {
               Navigator.pop(context);
               widget.onPrimaryTap?.call();
             },
-            isBorder: true,
-            //  color: context.primaryColor,
-            textColor: AppPalette.warningColor,
-            borderColor: AppPalette.warningColor,
-            color: Colors.white,
-
-            iconWidget:
-                widget.primaryButtonIcon == null
-                    ? null
-                    : Image.asset(
-                      widget.primaryButtonIcon!,
-                      width: 17,
-                      height: 17,
-                      color: Colors.white,
-                    ),
             text: widget.primaryButtonText ?? AppTexts.continuee,
+            color: AppPalette.primaryColor,
+            textColor: Colors.white,
+            height: 45.h,
+            radius: 12.r,
+            // shadow: true,
           ),
         ),
       ],
-    );
-  }
-
-  CustomText _description() {
-    return CustomText(
-      text:
-          widget.message ??
-          (widget.isSuccess
-              ? AppTexts.actionCompletedSuccessfully
-              : AppTexts.tryAgainLater),
-      fontSize: 15.sp,
-      color: AppPalette.greyColor,
-      textAlign: TextAlign.center,
-      maxLines: 10,
-    );
-  }
-
-  CustomText _title() {
-    return CustomText(
-      text:
-          widget.title ??
-          (widget.isSuccess ? AppTexts.success : AppTexts.somethingWentWrong),
-      fontSize: 17.sp,
-      fontWeight: FontWeight.bold,
-      color: AppPalette.darkGreyColor,
-      textAlign: TextAlign.center,
-      maxLines: 4,
     );
   }
 }

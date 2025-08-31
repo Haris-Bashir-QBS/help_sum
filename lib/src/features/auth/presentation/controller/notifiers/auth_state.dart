@@ -146,7 +146,10 @@ class SavePortfolioError extends AuthState {
 
 class SaveBasicInfoLoading extends AuthState {}
 
-class SaveBasicInfoSuccess extends AuthState {}
+class SaveBasicInfoSuccess extends AuthState {
+  final UserEntity userEntity;
+  SaveBasicInfoSuccess(this.userEntity);
+}
 
 class SaveBasicInfoError extends AuthState {
   final Failure failure;
@@ -156,7 +159,7 @@ class SaveBasicInfoError extends AuthState {
 class MerchantSetupLoading extends AuthState {}
 
 class MerchantSetupSuccess extends AuthState {
-  final MerchantSetupResposeEntitiy merchantSetupResposeEntitiy;
+  final MerchantSetupResponseEntitiy merchantSetupResposeEntitiy;
   MerchantSetupSuccess(this.merchantSetupResposeEntitiy);
 }
 

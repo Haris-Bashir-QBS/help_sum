@@ -81,6 +81,7 @@ class _PaymentMethodScreenState extends ConsumerState<PaymentMethodScreen> {
                 color: AppPalette.primaryColor,
                 textColor: Colors.white,
                 isLoading: _paying,
+                radius: 10,
                 onPressed: () {
                   if (_cards.isNotEmpty) {
                     ref

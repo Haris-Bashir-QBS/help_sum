@@ -222,7 +222,7 @@ class AuthNotifier extends _$AuthNotifier {
         _currentUser = user;
         await LocalStorageService().saveUser(UserModel.fromEntity(user));
         ref.read(currentUserProvider.notifier).setUser(user);
-        state = SaveBasicInfoSuccess();
+        state = SaveBasicInfoSuccess(user);
       },
     );
   }

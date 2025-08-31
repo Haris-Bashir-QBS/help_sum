@@ -22,6 +22,7 @@ import 'package:help_sum/src/features/core/consumer/explore_services/presentatio
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/location_typeahead_field.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/merchant_list_shimmer.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/recommended_service_provider_card.dart';
+import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../data/models/response/merchant_response_model.dart';
@@ -41,8 +42,6 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
   gmaps.GoogleMapController? _mapController;
   final ScrollController _listScrollController = ScrollController();
 
-  static final gmaps.CameraPosition _initialCameraPosition =
-      gmaps.CameraPosition(target: gmaps.LatLng(33.6844, 73.0479), zoom: 14.0);
   var showBottomButtons = false;
   var showRecommendedMerchants = false;
   double lat = 0.0;
@@ -50,6 +49,7 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
 
   places_sdk.FlutterGooglePlacesSdk? _places;
   bool _locationPermissionGranted = false;
+  bool _isInitializing = true;
 
   @override
   void initState() {
@@ -60,56 +60,72 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
     _tabController.addListener(_handleTabSelection);
     _searchController.addListener(_handleSearchInput);
     _places = places_sdk.FlutterGooglePlacesSdk(AppSecrets.googleApiKey);
-    _checkLocationPermission(); // Check and request permission first
+    _checkLocationPermission();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    // Start loading immediately without waiting for postFrameCallback
+    _initializeLocationAndFetchData();
+  }
+
+  Future<void> _initializeLocationAndFetchData() async {
+    try {
       final position = await AppUtils.getLocation();
 
-      if (position != null) {
+      if (position != null && mounted) {
         setState(() {
           lat = position.latitude;
           long = position.longitude;
         });
         log("Fetched real location: Lat=$lat, Long=$long");
 
-        // Animate map to current location if controller is available
-        if (_mapController != null) {
-          _mapController!.animateCamera(
-            gmaps.CameraUpdate.newCameraPosition(
-              gmaps.CameraPosition(
-                target: gmaps.LatLng(lat, long),
-                zoom: 14.0, // Adjust zoom level as needed
-              ),
-            ),
-          );
-        }
-
-        ref.invalidate(nearbyMerchantsProvider);
-        ref
+        // Fetch merchants immediately
+        await ref
             .read(nearbyMerchantsProvider.notifier)
             .fetchNearbyMerchants(
-              lat: lat, // Use real latitude
-              long: long, // Use real longitude
+              lat: lat,
+              long: long,
               serviceId: widget.bookingRouteParams?.serviceId,
-              refresh: true, // force refresh
+              refresh: true,
             );
-        // Initially show recommended merchants on map tab if no search
-        if (_tabController.index == 0 && _searchController.text.isEmpty) {
+
+        // Set recommended merchants visibility after data is loaded
+        if (mounted &&
+            _tabController.index == 0 &&
+            _searchController.text.isEmpty) {
           setState(() {
             showRecommendedMerchants = true;
+            _isInitializing = false;
+          });
+        } else {
+          setState(() {
+            _isInitializing = false;
           });
         }
       } else {
         log("Location not available or permission denied.");
-        if (!mounted) return;
-        CherryToast.info(
-          title: const Text("Location not available"),
-          description: const Text(
-            "Please enable location services or grant permission.",
-          ),
+        if (mounted) {
+          setState(() {
+            _isInitializing = false;
+          });
+          CherryToast.info(
+            title: const Text("Location not available"),
+            description: const Text(
+              "Please enable location services or grant permission.",
+            ),
+          ).show(context);
+        }
+      }
+    } catch (e) {
+      log("Error initializing location and data: $e");
+      if (mounted) {
+        setState(() {
+          _isInitializing = false;
+        });
+        CherryToast.error(
+          title: const Text("Error"),
+          description: const Text("Failed to load location data."),
         ).show(context);
       }
-    });
+    }
   }
 
   Set<gmaps.Marker> generateMarkers(
@@ -136,9 +152,7 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
     // Add merchant markers
     for (var m in merchants) {
       // Ensure coordinates array has at least 2 elements and they are not null
-      if (m.location.coordinates.length >= 2 &&
-          m.location.coordinates[1] != null && // Latitude (index 1)
-          m.location.coordinates[0] != null) // Longitude (index 0)
+      if (m.location.coordinates.length >= 2) // Longitude (index 0)
       {
         markers.add(
           gmaps.Marker(
@@ -294,75 +308,181 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
               ],
             ),
             10.verticalSpace,
-            TabBar(
-              controller: _tabController,
-              indicatorColor: AppPalette.primaryColor,
-              indicatorSize: TabBarIndicatorSize.tab,
-              labelColor: AppPalette.primaryColor,
-              unselectedLabelColor: AppPalette.greyColor,
-              tabs: const [Tab(text: AppTexts.map), Tab(text: AppTexts.list)],
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: Color(0xFFF5F7FA),
+                borderRadius: BorderRadius.circular(18.r),
+                //  border: Border.all(color: Colors.grey[300]!, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+
+              child: TabBar(
+                controller: _tabController,
+                indicator: BoxDecoration(
+                  color: AppPalette.whiteColor,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(
+                    color: AppPalette.primaryColor.withAlpha(100),
+                    width: 0.3,
+                  ),
+                ),
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorPadding: EdgeInsets.all(4.w),
+                labelColor: Colors.white,
+                unselectedLabelColor: AppPalette.greyColor,
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14.sp,
+                  color: AppPalette.primaryColor,
+                ),
+                unselectedLabelStyle: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp,
+                  color: AppPalette.primaryColor,
+                ),
+                dividerColor: Colors.transparent,
+                overlayColor: WidgetStateProperty.all(Colors.transparent),
+                tabs: [
+                  Tab(
+                    child: Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: CustomText(text: AppTexts.map),
+                    ),
+                  ),
+                  Tab(
+                    child: Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: CustomText(text: AppTexts.list),
+                    ),
+                  ),
+                ],
+              ),
             ),
+            Container(),
+            // Option 1: Compact horizontal chips
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.w,
+              ).copyWith(top: 5.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  if (widget.bookingRouteParams?.categoryName != null &&
+                      widget.bookingRouteParams!.categoryName?.isNotEmpty ==
+                          true)
+                    Container(
+                      margin: EdgeInsets.only(right: 8.w),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppPalette.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20.r),
+                        border: Border.all(
+                          color: AppPalette.primaryColor.withOpacity(0.3),
+                        ),
+                      ),
+                      child: Text(
+                        widget.bookingRouteParams!.categoryName!,
+                        style: TextStyle(
+                          color: AppPalette.primaryColor,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  if (widget.bookingRouteParams?.serviceName != null &&
+                      widget.bookingRouteParams!.serviceName?.isNotEmpty ==
+                          true)
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppPalette.primaryColor,
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Text(
+                        widget.bookingRouteParams!.serviceName!,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            10.verticalSpace,
             Expanded(
               child: Stack(
                 children: [
                   TabBarView(
                     controller: _tabController,
                     children: [
-                      // Map Tab Content
+                      // Map Tab Content - Improved version
                       Builder(
                         builder: (context) {
                           final state = ref.watch(nearbyMerchantsProvider);
-                          // Show a message if location is not yet available or permission is denied
-                          if (lat == 0.0 &&
-                              long == 0.0 &&
-                              !_locationPermissionGranted) {
-                            return const Center(
-                              child: LinearProgressIndicator(),
-                            );
-                          }
-                          if (state is NearbyMerchantsLoading ||
-                              state is NearbyMerchantsInitial) {
+
+                          // Show loading only during initialization or when no location
+                          if (_isInitializing || (lat == 0.0 && long == 0.0)) {
                             return const Center(
                               child: CircularProgressIndicator(),
                             );
-                          } else if (state is NearbyMerchantsLoaded) {
-                            return gmaps.GoogleMap(
-                              mapType: gmaps.MapType.normal,
-                              // Set initial camera position to current location if available, otherwise default
-                              initialCameraPosition:
-                                  (lat != 0.0 && long != 0.0)
-                                      ? gmaps.CameraPosition(
-                                        target: gmaps.LatLng(lat, long),
-                                        zoom: 14.0,
-                                      )
-                                      : _initialCameraPosition, // Fallback
-                              onMapCreated: (
-                                gmaps.GoogleMapController controller,
-                              ) {
-                                _mapController = controller;
-                                // Animate to user's real location if available right after map creation
-                                if (lat != 0.0 && long != 0.0) {
-                                  log(
-                                    "Map created, animating to user location: $lat, $long",
-                                  );
-                                  _mapController!.animateCamera(
-                                    gmaps.CameraUpdate.newCameraPosition(
-                                      gmaps.CameraPosition(
-                                        target: gmaps.LatLng(lat, long),
-                                        zoom: 14.0,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                              markers: generateMarkers(
-                                state.merchants,
-                                lat,
-                                long,
+                          }
+
+                          // Show error state with retry option
+                          if (state is NearbyMerchantsError) {
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(state.message),
+                                  10.verticalSpace,
+                                  ElevatedButton(
+                                    onPressed:
+                                        () => _initializeLocationAndFetchData(),
+                                    child: const Text('Retry'),
+                                  ),
+                                ],
                               ),
                             );
                           }
-                          return const SizedBox.shrink(); // Fallback for other states
+
+                          // Show map for all other states (loaded, loading with existing data)
+                          final merchants =
+                              state is NearbyMerchantsLoaded
+                                  ? state.merchants
+                                  : <MerchantModel>[];
+
+                          return gmaps.GoogleMap(
+                            mapType: gmaps.MapType.normal,
+                            initialCameraPosition: gmaps.CameraPosition(
+                              target: gmaps.LatLng(lat, long),
+                              zoom: 14.0,
+                            ),
+                            onMapCreated: (
+                              gmaps.GoogleMapController controller,
+                            ) {
+                              _mapController = controller;
+                              // No need to animate here since initialCameraPosition is already set correctly
+                            },
+                            markers: generateMarkers(merchants, lat, long),
+                          );
                         },
                       ),
                       // List Tab Content (existing logic)
@@ -445,23 +565,7 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
       icon: const Icon(Icons.arrow_back_ios_new, size: 25),
       color: AppPalette.blackColor,
       onPressed: () {
-        if (showRecommendedMerchants == true) {
-          // If recommended merchants are showing, hide them first
-          setState(() {
-            showRecommendedMerchants = false;
-            showBottomButtons =
-                false; // Also hide bottom buttons if they were linked
-          });
-        } else if (showBottomButtons == true) {
-          // If search-related buttons are showing, hide them and clear search
-          setState(() {
-            showBottomButtons = false;
-            _searchController.clear();
-          });
-        } else {
-          // Otherwise, pop the screen
-          context.pop();
-        }
+        context.pop();
       },
     );
   }

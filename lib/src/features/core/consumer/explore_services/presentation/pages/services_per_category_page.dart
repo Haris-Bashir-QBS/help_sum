@@ -127,6 +127,7 @@ class _ServicesPerCategoryPageState
             childAspectRatio: 1.2,
           ),
           itemCount: services.length + (state.hasMore ? 1 : 0),
+          physics: AlwaysScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             if (index == services.length) {
               return Center(
@@ -140,7 +141,7 @@ class _ServicesPerCategoryPageState
             }
 
             final service = services[index];
-            return ServiceCard(
+            return ServiceCard.glassmorphic(
               title: service.name,
               photo: service.photo,
               onTap: () {
@@ -149,6 +150,8 @@ class _ServicesPerCategoryPageState
                   extra: BookingRouteParams(
                     serviceId: service.id,
                     categoryId: widget.categoryId,
+                    categoryName: widget.categoryName,
+                    serviceName: service.name,
                   ),
                 );
               },
@@ -203,7 +206,7 @@ class _ServicesPerCategoryPageState
         ),
         itemCount: 10,
         itemBuilder: (context, index) {
-          return ServiceCard(title: 'Service Name', onTap: () {});
+          return ServiceCard.glassmorphic(title: 'Service Name', onTap: () {});
         },
       ),
     );

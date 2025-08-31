@@ -20,6 +20,9 @@ import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_toast.dart';
 import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 
+import '../../../../../../core/dependency_injection/di_barrel.dart';
+import '../../../../../auth/presentation/bloc/login/login_bloc.dart';
+
 class EditBasicInfoScreen extends ConsumerStatefulWidget {
   final UserEntity user;
 
@@ -101,24 +104,6 @@ class _EditBasicInfoScreenState extends ConsumerState<EditBasicInfoScreen> {
                     isVerified: widget.user.isVerified == true,
                     alignment: Alignment.topLeft,
                   ),
-                  // Row(
-                  //   children: [
-                  //     ...List.generate(
-                  //       4,
-                  //       (i) =>
-                  //           Icon(Icons.star, color: Colors.amber, size: 16.sp),
-                  //     ),
-                  //     Icon(Icons.star_half, color: Colors.amber, size: 16.sp),
-                  //     SizedBox(width: 4.w),
-                  //     Text(
-                  //       '4.5',
-                  //       style: TextStyle(
-                  //         fontSize: 14.sp,
-                  //         color: Colors.grey.shade600,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                 ],
               ),
             ),
@@ -170,6 +155,8 @@ class _EditBasicInfoScreenState extends ConsumerState<EditBasicInfoScreen> {
   void _listener() {
     ref.listen<AuthState>(authNotifierProvider, (prev, next) {
       if (next is SaveBasicInfoSuccess) {
+        CustomToast.successToast(context: context, message: 'Profile updated');
+        sl<LoginBloc>().add(UpdateUser(userEntity: next.userEntity));
         context.pop();
       } else if (next is SaveBasicInfoError) {
         CustomToast.errorToast(context: context, message: next.failure.message);

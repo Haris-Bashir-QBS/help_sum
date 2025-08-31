@@ -45,7 +45,7 @@ class CustomSearchField extends StatelessWidget {
         suffixIcon: Container(
           width: 30.w,
           decoration: BoxDecoration(
-            color: AppPalette.orangeColor,
+            color: AppPalette.primaryColor,
             borderRadius: BorderRadius.circular(
               AppDimensions.appBorderRadius.r,
             ),
@@ -54,7 +54,7 @@ class CustomSearchField extends StatelessWidget {
             child: IconButton(
               icon: Icon(
                 Icons.search,
-                color: AppPalette.blackColor,
+                color: AppPalette.whiteColor,
                 size: 30,
                 weight: 900,
               ),

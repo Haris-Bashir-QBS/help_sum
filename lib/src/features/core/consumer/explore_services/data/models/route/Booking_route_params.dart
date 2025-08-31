@@ -1,6 +1,13 @@
-class BookingRouteParams{
+class BookingRouteParams {
   final String categoryId;
   final String serviceId;
+  final String? categoryName;
+  final String? serviceName;
 
-  BookingRouteParams({required this.categoryId, required this.serviceId});
+  BookingRouteParams({
+    this.categoryName,
+    this.serviceName,
+    required this.categoryId,
+    required this.serviceId,
+  });
 }

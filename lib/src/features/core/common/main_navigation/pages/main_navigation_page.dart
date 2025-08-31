@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
+import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
@@ -50,7 +53,7 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
       _selectedIndex = 1;
       _pages.addAll([
         const AllJobsScreen(),
-        MerchantHome(),
+        MerchantMapScreen(),
         IncomeScreen(),
         ProfileDetailsPage(),
       ]);
@@ -62,13 +65,39 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        
         centerTitle: true,
         showLeading: false,
         title:
             userRole == AppRole.consumer.name
                 ? AppStaticData.consumerAppbarTitles[_selectedIndex]
                 : AppStaticData.merchantAppBarTitles[_selectedIndex],
+        actions: [
+          if ((_selectedIndex == 2 && userRole == AppRole.consumer.name) ||
+              (_selectedIndex == 3 && userRole == AppRole.merchant.name)) ...[
+            Padding(
+              padding: const EdgeInsets.only(right: 0.0),
+              child: IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: () {
+                  context.pushNamed(AppRoutes.settings);
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.logout_rounded,
+                  color: AppPalette.errorColor.withAlpha(150),
+                ),
+                onPressed: () {
+                  loginBloc.add(const LogoutUser());
+                  context.goNamed(AppRoutes.roleSelection);
+                },
+              ),
+            ),
+          ],
+        ],
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: AppBottomNavigationBar(

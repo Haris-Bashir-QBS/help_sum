@@ -64,7 +64,7 @@ class CardListItem extends ConsumerWidget {
         child: Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: AppPalette.fillColor,
+            color: AppPalette.fillColor.withAlpha(100),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: AppPalette.greyColor.withOpacity(0.3)),
           ),

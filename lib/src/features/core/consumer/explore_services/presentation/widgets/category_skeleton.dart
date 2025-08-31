@@ -3,7 +3,8 @@ import 'package:help_sum/src/features/core/consumer/explore_services/presentatio
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CategorySkeleton extends StatelessWidget {
-  const CategorySkeleton({super.key});
+  final int? itemCount;
+  const CategorySkeleton({super.key, this.itemCount});
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +33,10 @@ class CategorySkeleton extends StatelessWidget {
           mainAxisSpacing: 10,
           childAspectRatio: 1.0,
         ),
-        itemCount: dummyCategories.length,
+        itemCount: itemCount ?? 9,
         itemBuilder: (context, index) {
-          final category = dummyCategories[index];
-          return CategoryCard(title: category['name'] as String, onTap: () {});
+          // final category = dummyCategories[index];
+          return CategoryCard.glassmorphic(title: "ABC", onTap: () {});
         },
       ),
     );

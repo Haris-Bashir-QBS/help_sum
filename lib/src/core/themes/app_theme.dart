@@ -1,8 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
+import 'package:help_sum/src/core/extensions/context_extensions.dart';
 
 class AppTheme {
+  AppTheme._();
+  static ThemeData timePickerTheme(BuildContext context) => ThemeData(
+    timePickerTheme: TimePickerThemeData(
+      backgroundColor: const Color(0xFF303030),
+      hourMinuteTextColor: Colors.white,
+      dayPeriodTextColor: Colors.white,
+      entryModeIconColor: context.primaryColor,
+      dialHandColor: context.primaryColor,
+      dialBackgroundColor: Colors.grey.shade800,
+      dialTextColor: MaterialStateColor.resolveWith(
+        (states) =>
+            states.contains(MaterialState.selected)
+                ? Colors.black
+                : Colors.white,
+      ),
+      hourMinuteColor: MaterialStateColor.resolveWith(
+        (states) =>
+            states.contains(MaterialState.selected)
+                ? context.primaryColor
+                : Colors.grey.shade800,
+      ),
+    ),
+    colorScheme: ColorScheme.dark(
+      primary: context.primaryColor,
+      onPrimary: Colors.black,
+      surface: Colors.white,
+      onSurface: Colors.white,
+    ),
+  );
+
   static ThemeData get lightTheme {
     return ThemeData(
       // Primary Colors
@@ -222,7 +253,7 @@ class AppTheme {
       ),
 
       // Use Material 3
-      useMaterial3: false,
+      useMaterial3: true,
     );
   }
 }

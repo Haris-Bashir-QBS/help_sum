@@ -8,9 +8,7 @@ import 'package:help_sum/src/core/animation/fade_and_scale.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
-import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
-import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/services/media_picker_service.dart';
 import 'package:help_sum/src/core/themes/app_theme.dart';
@@ -26,9 +24,7 @@ import 'package:help_sum/src/features/core/common/profile/presentation/widgets/c
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_card.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/info_row.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/verification_status.dart';
-import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_image_slider.dart';
 import 'package:help_sum/src/widgets/comman_imageview.dart';
-import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/custom_toast.dart';
 import 'package:help_sum/src/widgets/enlarged_image_view_widget.dart';
@@ -98,15 +94,23 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                 //}
               }
             }
-            if (state.apiErrorMessage.isNotEmpty) {
-              CustomToast.errorToast(
+            if (state.merchantSetupResposeEntitiy != null &&
+                state.merchantSetupResposeEntitiy?.url == null &&
+                state.merchantSetupResposeEntitiy?.message != null) {
+              CustomToast.successToast(
                 context: context,
-                message: state.apiErrorMessage,
+                message: state.merchantSetupResposeEntitiy?.message ?? "",
               );
             }
-            // if (state.apiErrorMessage.isNotEmpty) {
-            //   AppUtils.showErrorSnackBar(context, state.apiErrorMessage);
-            // }
+
+            if (state.apiErrorMessage.isNotEmpty) {
+              if (context.mounted) {
+                CustomToast.errorToast(
+                  context: context,
+                  message: state.apiErrorMessage,
+                );
+              }
+            }
           },
           builder: (event, state) {
             final user = state.userEntity;
@@ -128,8 +132,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                   _buildMerchantProfileHeader(context, user),
                                   SizedBox(height: 24.h),
                                   CustomText(
-                                    text:
-                                        "//${user.firstName} ${user.lastName}",
+                                    text: "${user.firstName} ${user.lastName}",
                                     fontSize: 20.sp,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -158,7 +161,6 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                     ),
                                   ),
                                   20.verticalSpace,
-
                                   _buildBasicInfoCard(context, user),
                                   26.verticalSpace,
                                   _buildContactInfoCard(context, user),
@@ -172,27 +174,14 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                     ),
                   ),
 
-                  _buildSettingButton(context),
-                  10.verticalSpace,
-                  _buildSignOutButton(context),
+                  // _buildSettingButton(context),
+                  // 10.verticalSpace,
+                  //   _buildSignOutButton(context),
                 ],
               ),
             );
           },
         ),
-      ),
-    );
-  }
-
-  Padding _buildSettingButton(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: CustomButton(
-        text: AppTexts.settings,
-        onPressed: () {
-          context.pushNamed(AppRoutes.settings);
-        },
-        color: context.primaryColor,
       ),
     );
   }
@@ -218,7 +207,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
         InfoRow(
           label: AppTexts.emailAddress,
           value: user.email ?? "",
-          visible: (user.email ?? "")!.isNotEmpty,
+          visible: (user.email ?? "").isNotEmpty,
         ),
         InfoRow(label: AppTexts.phoneNumber, value: user.phone ?? ""),
       ],
@@ -294,7 +283,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
           text: user.description ?? "No description added",
           color: AppPalette.greyColor,
         ),
-        20.verticalSpace,
+        16.verticalSpace,
         BlocBuilder<ProfileBloc, ProfileBlocState>(
           builder: (context, state) {
             return CustomTabbar(
@@ -329,7 +318,6 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                     onTap: () => context.pushNamed(AppRoutes.rates),
                   ),
                   8.verticalSpace,
-
                   _buildMerchantInfoTile(
                     context,
                     icon: Icons.diamond_outlined,
@@ -368,7 +356,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                     subtitle: user.description ?? "No description added",
                     onTap:
                         () => context.pushNamed(AppRoutes.changeDescriptipon),
-                    hasWarning: true,
+                    hasWarning: user.description?.isEmpty == true,
                   ),
                   8.verticalSpace,
 
@@ -496,35 +484,37 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
       builder: (context, state) {
         return Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CustomText(
-                  text: "Upload New Portfolio",
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-                IconButton(
-                  onPressed: () {
-                    MediaPickerService().imageGalleryBottomSheet(
-                      onMediaChanged: (v) {
-                        if (v != null) {
-                          final files = UploadFileRequest([File(v)]);
-
-                          _portfolioBloc.add(
-                            UpdatePortfolioEvent(params: files),
-                          );
-                        }
-                      },
-                      context: context,
-                    );
-                  },
-                  icon: Icon(
-                    Icons.add_a_photo_outlined,
-                    color: AppPalette.primaryColor,
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomText(
+                    text: "Upload New Portfolio",
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
                   ),
-                ),
-              ],
+                  IconButton(
+                    onPressed: () {
+                      MediaPickerService().imageGalleryBottomSheet(
+                        onMediaChanged: (v) {
+                          if (v != null) {
+                            final files = UploadFileRequest([File(v)]);
+
+                            _portfolioBloc.add(
+                              UpdatePortfolioEvent(params: files),
+                            );
+                          }
+                        },
+                        context: context,
+                      );
+                    },
+                    icon: Icon(
+                      Icons.add_a_photo_outlined,
+                      color: AppPalette.primaryColor,
+                    ),
+                  ),
+                ],
+              ),
             ),
             10.verticalSpace,
             SizedBox(
@@ -540,7 +530,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                 ),
                 itemBuilder: (context, index) {
                   final url = user?.media![index];
-                  final tag = 'job_image_hero_' + index.toString();
+                  final tag = 'job_image_hero_$index';
 
                   return GestureDetector(
                     onTap: () {
@@ -576,18 +566,31 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     );
   }
 
-  Widget _buildSignOutButton(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: CustomButton(
-        text: "Sign out",
-        textColor: Colors.white,
-        color: AppPalette.primaryColor,
-        onPressed: () async {
-          context.goNamed(AppRoutes.roleSelection, extra: true);
-          _loginBloc.add(const LogoutUser());
-        },
-      ),
-    );
-  }
+  // Widget _buildSignOutButton(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(horizontal: 16.w),
+  //     child: CustomButton(
+  //       text: "Sign out",
+  //       textColor: Colors.white,
+  //       color: AppPalette.primaryColor,
+  //       onPressed: () async {
+  //         context.goNamed(AppRoutes.roleSelection, extra: true);
+  //         _loginBloc.add(const LogoutUser());
+  //       },
+  //     ),
+  //   );
+  // }
+
+  // Padding _buildSettingButton(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(horizontal: 16.w),
+  //     child: CustomButton(
+  //       text: AppTexts.settings,
+  //       onPressed: () {
+  //         context.pushNamed(AppRoutes.settings);
+  //       },
+  //       color: context.primaryColor,
+  //     ),
+  //   );
+  // }
 }

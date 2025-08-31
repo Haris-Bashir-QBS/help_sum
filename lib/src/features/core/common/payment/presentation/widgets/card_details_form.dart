@@ -53,7 +53,7 @@ class _CardDetailsFormState extends State<CardDetailsForm> {
               fontWeight: FontWeight.w500,
             ),
             SizedBox(height: 8.h),
-            CustomTextFormField.card(
+            CustomTextFormField(
               controller: widget.cardNumberController,
               hint: AppTexts.cardNumberHint,
               keyboardType: TextInputType.number,
@@ -78,7 +78,7 @@ class _CardDetailsFormState extends State<CardDetailsForm> {
                         fontWeight: FontWeight.w500,
                       ),
                       SizedBox(height: 8.h),
-                      CustomTextFormField.card(
+                      CustomTextFormField(
                         controller: widget.expiryDateController,
                         hint: AppTexts.expiryDateHint,
                         readOnly: true,
@@ -99,7 +99,7 @@ class _CardDetailsFormState extends State<CardDetailsForm> {
                         fontWeight: FontWeight.w500,
                       ),
                       SizedBox(height: 8.h),
-                      CustomTextFormField.card(
+                      CustomTextFormField(
                         controller: widget.cvvController,
                         hint: AppTexts.cvvHint,
                         keyboardType: TextInputType.number,
@@ -122,7 +122,7 @@ class _CardDetailsFormState extends State<CardDetailsForm> {
                 fontWeight: FontWeight.w500,
               ),
               SizedBox(height: 8.h),
-              CustomTextFormField.card(
+              CustomTextFormField(
                 controller: widget.tipController,
                 hint: AppTexts.tipHint,
                 keyboardType: TextInputType.number,
@@ -135,7 +135,7 @@ class _CardDetailsFormState extends State<CardDetailsForm> {
                 fontWeight: FontWeight.w500,
               ),
               SizedBox(height: 8.h),
-              CustomTextFormField.card(
+              CustomTextFormField(
                 controller: widget.emailController,
                 hint: AppTexts.emailHint,
                 keyboardType: TextInputType.emailAddress,

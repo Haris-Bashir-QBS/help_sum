@@ -7,13 +7,13 @@ import 'package:help_sum/src/features/auth/domain/entities/merchant_setup_respos
 import 'package:help_sum/src/features/auth/domain/repositories/auth_repository.dart';
 
 class FetchMerchantSetupDetails
-    extends UseCase<MerchantSetupResposeEntitiy, NoParams> {
+    extends UseCase<MerchantSetupResponseEntitiy, NoParams> {
   final AuthRepository repository;
 
   FetchMerchantSetupDetails(this.repository);
 
   @override
-  Future<Either<Failure, MerchantSetupResposeEntitiy>> call(
+  Future<Either<Failure, MerchantSetupResponseEntitiy>> call(
     NoParams params,
   ) async {
     return await repository.getMerchantSetupDetails();

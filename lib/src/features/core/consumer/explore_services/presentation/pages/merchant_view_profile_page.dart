@@ -122,6 +122,7 @@ class _MerchantViewProfilePageState
                         text: AppTexts.next,
                         color: AppPalette.primaryColor,
                         textColor: Colors.white,
+                        radius: 12,
                         iconColor: Colors.white,
                         onPressed: () {
                           context.pushNamed(

@@ -303,10 +303,23 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
           // Job started successfully
           Navigator.pop(context);
         } else if (current.action == 'complete') {
+          CustomToast.successToast(context: context, message: "Job Completed");
           // Job completed successfully
           showJobReceiptDialog(context);
         } else if (current.action == 'cancel') {
+          CustomToast.successToast(context: context, message: "Job Cancelled");
           // Job cancelled successfully
+          Navigator.pop(context);
+        } else if (current.action == 'accept') {
+          CustomToast.successToast(context: context, message: "Job Approved");
+          // Job accepted successfully
+          Navigator.pop(context);
+        } else if (current.action == 'reject') {
+          // Job rejected successfully
+          CustomToast.successToast(context: context, message: "Job Rejected");
+          Navigator.pop(context);
+        } else if (current.action == 'change') {
+          // Job changed successfully
           Navigator.pop(context);
         }
       }

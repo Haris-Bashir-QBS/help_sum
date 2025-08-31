@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'login_bloc.dart';
 
 sealed class LoginEvent {
@@ -27,4 +26,14 @@ class LogoutUser extends LoginEvent {
 class FetchMerchantAccount extends LoginEvent {
   final BuildContext context;
   const FetchMerchantAccount({required this.context});
+}
+
+class UpdateHourlyRateEvent extends LoginEvent {
+  final String newRate;
+  const UpdateHourlyRateEvent(this.newRate);
+}
+
+class UpdateDescriptionEvent extends LoginEvent {
+  final String newDescription;
+  const UpdateDescriptionEvent(this.newDescription);
 }

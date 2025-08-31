@@ -197,6 +197,7 @@ class UserInfo {
   final String? description;
   final JobLocation? location;
   final String? averageRating;
+  //final String? reviews;
 
   UserInfo({
     required this.id,

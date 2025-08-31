@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
+import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/controller/user_state_provider.dart';
@@ -13,7 +15,10 @@ import 'package:help_sum/src/widgets/app_background.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/custom_text_formfield.dart';
+import 'package:help_sum/src/widgets/custom_toast.dart';
 import 'package:help_sum/src/widgets/modal_progress_hud.dart';
+
+import '../../../../../core/dependency_injection/di_barrel.dart';
 
 class ChangeRatePage extends ConsumerStatefulWidget {
   const ChangeRatePage({super.key});
@@ -27,16 +32,22 @@ class _ChangeRatePageState extends ConsumerState<ChangeRatePage> {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  LoginBloc? loginBloc;
   @override
   void initState() {
-    controller.text =
-        ref.read(currentUserProvider).user?.hourlyRate.toString() ?? '';
+    loginBloc = sl<LoginBloc>();
+    controller.text = loginBloc?.state.userEntity?.hourlyRate?.toString() ?? '';
     super.initState();
   }
 
   void _listener() {
     ref.listen<AuthState>(authNotifierProvider, (prev, next) {
       if (next is RatesSuccess) {
+        loginBloc!.add(UpdateHourlyRateEvent(controller.text));
+        CustomToast.successToast(
+          context: context,
+          message: 'Hourly rate updated successfully',
+        );
         context.pop();
       }
     });
@@ -47,66 +58,69 @@ class _ChangeRatePageState extends ConsumerState<ChangeRatePage> {
     _listener();
     final state = ref.watch(authNotifierProvider);
     final loading = state is RatesLoading;
-    return ModalProgressHUD(
-      inAsyncCall: loading,
-      child: AppBackground(
-        onTap: () {
-          Navigator.pop(context);
-        },
-        title: 'Rates/hr',
-        body: GestureDetector(
+    return BlocProvider.value(
+      value: loginBloc!,
+      child: ModalProgressHUD(
+        inAsyncCall: loading,
+        child: AppBackground(
           onTap: () {
-            FocusScope.of(context).unfocus();
+            Navigator.pop(context);
           },
-          child: Form(
-            key: formKey,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.paddingAllSides,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  30.verticalSpace,
-                  CustomText(
-                    maxLines: 3,
-                    fontSize: 16.sp,
+          title: 'Rates/hr',
+          body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: Form(
+              key: formKey,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.paddingAllSides,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    30.verticalSpace,
+                    CustomText(
+                      maxLines: 3,
+                      fontSize: 16.sp,
 
-                    fontWeight: FontWeight.bold,
-                    text: 'Enter rates/hr',
-                  ),
-                  20.verticalSpace,
-                  CustomTextFormField(
-                    controller: controller,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(5),
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    prefixIcon: Icons.monetization_on_outlined,
-                    borderColor: AppPalette.greyColor,
-                    maxLines: 1,
-                  ),
+                      fontWeight: FontWeight.bold,
+                      text: 'Enter rates/hr',
+                    ),
+                    20.verticalSpace,
+                    CustomTextFormField(
+                      controller: controller,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(5),
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      prefixIcon: Icons.monetization_on_outlined,
+                      borderColor: AppPalette.greyColor,
+                      maxLines: 1,
+                    ),
 
-                  Spacer(),
+                    Spacer(),
 
-                  CustomButton(
-                    text: 'Save Changes',
-                    color: AppPalette.primaryColor,
-                    textColor: AppPalette.fillColor,
-                    onPressed: () {
-                      ref
-                          .read(authNotifierProvider.notifier)
-                          .updateRate(
-                            context,
-                            UpdateProfileRequest(
-                              hourlyRate: int.tryParse(controller.text) ?? 0,
-                            ),
-                          ); // Navigator.pop(context);
-                    },
-                  ),
-                  40.verticalSpace,
-                ],
+                    CustomButton(
+                      text: 'Save Changes',
+                      color: AppPalette.primaryColor,
+                      textColor: AppPalette.fillColor,
+                      onPressed: () {
+                        ref
+                            .read(authNotifierProvider.notifier)
+                            .updateRate(
+                              context,
+                              UpdateProfileRequest(
+                                hourlyRate: int.tryParse(controller.text) ?? 0,
+                              ),
+                            ); // Navigator.pop(context);
+                      },
+                    ),
+                    40.verticalSpace,
+                  ],
+                ),
               ),
             ),
           ),

@@ -26,7 +26,7 @@ class CustomTabbar extends StatelessWidget {
     return FadeScaleTransitionWidget(
       duration: Duration(milliseconds: 300),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10.h),
+        padding: EdgeInsets.symmetric(vertical: 4.h),
         decoration: BoxDecoration(
           ///Border only top and bottom
           border: Border(
@@ -39,39 +39,46 @@ class CustomTabbar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: List.generate(tabs.length, (index) {
             bool isActive = index == selectedIndex;
-            return InkWell(
+            return GestureDetector(
               onTap: () {
                 if (onTapChanged != null) {
                   onTapChanged!(index);
                 }
               },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        tabs[index].icon,
-                        color: isActive ? AppPalette.primaryColor : Colors.grey,
-                      ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 10.h),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          tabs[index].icon,
+                          color:
+                              isActive ? AppPalette.primaryColor : Colors.grey,
+                        ),
 
-                      12.horizontalSpace,
+                        12.horizontalSpace,
 
-                      CustomText(
-                        text: tabs[index].label,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ],
-                  ),
-                  if (isActive)
+                        CustomText(
+                          text: tabs[index].label,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ],
+                    ),
+                    // if (isActive)
                     AnimatedContainer(
                       duration: Duration(milliseconds: 300),
                       margin: EdgeInsets.only(top: 6),
                       height: 2,
                       width: 100,
-                      color: AppPalette.primaryColor,
+                      color:
+                          isActive
+                              ? AppPalette.primaryColor
+                              : Colors.transparent,
                     ),
-                ],
+                  ],
+                ),
               ),
             );
           }),

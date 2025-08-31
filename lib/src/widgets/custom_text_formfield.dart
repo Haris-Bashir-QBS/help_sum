@@ -12,6 +12,7 @@ class CustomTextFormField extends StatefulWidget {
   final String? initialValue;
   final bool isOutlinedBorder;
   final bool enabled;
+  final InputDecoration? decoration;
   final BorderRadius? borderRadius;
   final Widget? rightActionWidget;
   final Function(String)? onChanged;
@@ -42,6 +43,7 @@ class CustomTextFormField extends StatefulWidget {
     this.isOutlinedBorder = false,
     this.initialValue,
     this.fillColor,
+    this.decoration,
     this.focusNode,
     this.onChanged,
     this.readOnly,
@@ -67,6 +69,7 @@ class CustomTextFormField extends StatefulWidget {
     this.prefixIconColor,
     this.customHintStyle,
     required this.hint,
+    this.decoration,
     this.isPassword = false,
     this.isOutlinedBorder = false,
     this.initialValue,
@@ -144,7 +147,7 @@ class CustomTextFormFieldState extends State<CustomTextFormField> {
                 keyboardType: widget.keyboardType,
                 onChanged: (widget.onChanged),
                 readOnly: widget.readOnly ?? false,
-                decoration: buildInputDecoration(context),
+                decoration: widget.decoration ?? buildInputDecoration(context),
                 validator: widget.validator,
                 inputFormatters: widget.inputFormatters,
                 autofocus: false,

@@ -31,7 +31,7 @@ class BookingDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("job status is ${job.status}");
+    debugPrint("job status is ${job.status}");
     return Scaffold(
       appBar: CustomAppBar(
         title: AppTexts.bookingDetail,
@@ -132,7 +132,7 @@ class BookingDetailPage extends StatelessWidget {
                   if ((job.paymentStatus == PaymentStatus.escrowed.name ||
                           job.paymentStatus == PaymentStatus.paid.name) &&
                       (job.status == JobStatus.waitingPayment.name ||
-                          job.status == JobStatus.completed.name ||
+                          //  job.status == JobStatus.completed.name ||
                           job.status == JobStatus.in_progress.name ||
                           job.status == JobStatus.accepted.name)) ...[
                     10.verticalSpace,
@@ -145,6 +145,7 @@ class BookingDetailPage extends StatelessWidget {
                             job.paymentStatus == PaymentStatus.escrowed.name
                                 ? "Pay now"
                                 : "Paid",
+                        radius: 12,
                         onPressed: () {
                           if (job.paymentStatus ==
                               PaymentStatus.escrowed.name) {
@@ -177,6 +178,7 @@ class BookingDetailPage extends StatelessWidget {
                       child: CustomButton(
                         text: AppTexts.rate,
                         color: context.primaryColor,
+                        radius: 12,
                         onPressed: () {
                           context.pushNamed(AppRoutes.rateScreen, extra: job);
                         },
@@ -248,7 +250,7 @@ class BookingDetailPage extends StatelessWidget {
     );
   }
 
-  Padding _otherOptionsButton(BuildContext context) {
+  Widget _otherOptionsButton(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: CustomButton.bordered(

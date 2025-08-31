@@ -11,6 +11,7 @@ class AppTabBar extends StatelessWidget {
     this.selectedIndex = 0,
     this.tabs = const [],
   });
+
   final Function(int index) onTapChanged;
   final int selectedIndex;
   final List<String> tabs;
@@ -24,50 +25,57 @@ class AppTabBar extends StatelessWidget {
           ).r,
       child: SizedBox(
         width: 1.sw,
-        height: 40.h,
+        height: 45.h,
         child: Row(
           children: [
             Expanded(
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
+                  final isSelected = selectedIndex == index;
                   return GestureDetector(
-                    onTap: () {
-                      onTapChanged(index);
-                    },
+                    onTap: () => onTapChanged(index),
                     child: AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
+                      duration: const Duration(milliseconds: 300),
                       padding: EdgeInsets.symmetric(
-                        horizontal: index == 0 ? 30.w : 14.w,
+                        horizontal: 20.w,
+                        vertical: 8.h,
                       ),
-                      // width: ,
                       decoration: BoxDecoration(
-                        border:
-                            selectedIndex == index
-                                ? Border(
-                                  bottom: BorderSide(
-                                    color: AppPalette.primaryColor,
-                                    width: 2,
+                        color:
+                            isSelected
+                                ? AppPalette.primaryColor
+                                : AppPalette.lightGreyColor.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(12.r),
+                        boxShadow:
+                            isSelected
+                                ? [
+                                  BoxShadow(
+                                    color: AppPalette.primaryColor.withOpacity(
+                                      0.3,
+                                    ),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 3),
                                   ),
-                                )
-                                : null,
+                                ]
+                                : [],
                       ),
                       child: Center(
                         child: CustomText(
-                          textAlign: TextAlign.start,
                           text: tabs[index],
-                          fontSize: selectedIndex == index ? 16.sp : 14.sp,
+                          fontSize: isSelected ? 15.sp : 14.sp,
                           color:
-                              selectedIndex == index
-                                  ? AppPalette.primaryColor
+                              isSelected
+                                  ? Colors.white
                                   : AppPalette.secondayColor,
-                          fontWeight: FontWeight.bold,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.w500,
                         ),
                       ),
                     ),
                   );
                 },
-                separatorBuilder: (ctx, index) => SizedBox(width: 20.w),
+                separatorBuilder: (ctx, index) => SizedBox(width: 12.w),
                 itemCount: tabs.length,
               ),
             ),

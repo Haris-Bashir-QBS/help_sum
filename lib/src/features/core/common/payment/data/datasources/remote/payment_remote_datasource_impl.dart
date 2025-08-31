@@ -58,20 +58,20 @@ class PaymentRemoteDataSourceImplementation implements PaymentRemoteDataSource {
 
   @override
   Future<CardActionResponseModel> deleteCard({required String cardId}) async {
-    return await ApiErrorHandler.executeGuarded(() async {
-      final response = await _client.delete(
-        endpoint: "${ApiEndpoints.deleteCard.value}/$cardId",
+    //  return await ApiErrorHandler.executeGuarded(() async {
+    final response = await _client.delete(
+      endpoint: "${ApiEndpoints.deleteCard.value}/$cardId",
+    );
+    log("Delete Card Response: ${response.data}");
+    if (response.isOk) {
+      return CardActionResponseModel.fromJson(response.data);
+    } else {
+      throw ServerException(
+        statusCode: response.statusCode,
+        message: response.data['message'] ?? AppErrors.somethingWentWrong,
       );
-      log("Delete Card Response: ${response.data}");
-      if (response.isOk) {
-        return CardActionResponseModel.fromJson(response.data);
-      } else {
-        throw ServerException(
-          statusCode: response.statusCode,
-          message: response.data['message'] ?? AppErrors.somethingWentWrong,
-        );
-      }
-    });
+    }
+    //  });
   }
 
   @override
@@ -100,21 +100,21 @@ class PaymentRemoteDataSourceImplementation implements PaymentRemoteDataSource {
     required String paymentToken,
     required int amount,
   }) async {
-    //  return await ApiErrorHandler.executeGuarded(() async {
-    final response = await _client.post(
-      endpoint: "${ApiEndpoints.jobPayment.value}/$jobId/payment",
-      data: {"paymentToken": paymentToken, "amount": amount},
-    );
-    log("Pay For Job Response: ${response.data}");
-    if (response.isOk || response.isCreated) {
-      return CardActionResponseModel.fromJson(response.data);
-    } else {
-      throw ServerException(
-        statusCode: response.statusCode,
-        message: response.data['message'] ?? AppErrors.somethingWentWrong,
+    return await ApiErrorHandler.executeGuarded(() async {
+      final response = await _client.post(
+        endpoint: "${ApiEndpoints.jobPayment.value}/$jobId/payment",
+        data: {"paymentToken": paymentToken, "amount": amount},
       );
-    }
-    //   });
+      log("Pay For Job Response: ${response.data}");
+      if (response.isOk || response.isCreated) {
+        return CardActionResponseModel.fromJson(response.data);
+      } else {
+        throw ServerException(
+          statusCode: response.statusCode,
+          message: response.data['message'] ?? AppErrors.somethingWentWrong,
+        );
+      }
+    });
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:help_sum/src/features/auth/data/models/request/resend_otp_reques
 import 'package:help_sum/src/features/auth/data/models/request/signup_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/response/merchant_setup_response_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/services_groupped_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/upload_file_response.dart';
 import 'package:help_sum/src/features/auth/domain/entities/merchant_setup_respose_entitiy.dart';
@@ -106,11 +107,17 @@ class AuthRepositoryImplementation implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, MerchantSetupResposeEntitiy>>
+  Future<Either<Failure, MerchantSetupResponseEntitiy>>
   getMerchantSetupDetails() async {
     try {
-      final categories = await remoteDataSource.getMerchantSetupDetails();
-      return right(categories);
+      final MerchantSetupResponseModel merchantDetails =
+          await remoteDataSource.getMerchantSetupDetails();
+      return right(
+        MerchantSetupResponseEntitiy(
+          url: merchantDetails.data,
+          message: merchantDetails.message,
+        ),
+      );
     } on Failure catch (e) {
       return left(Failure(message: e.message));
     }

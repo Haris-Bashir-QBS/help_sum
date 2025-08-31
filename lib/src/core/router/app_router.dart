@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/enums/content_type.dart';
 import 'package:help_sum/src/core/observers/navigator_observer.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/services/session_service.dart';
@@ -11,6 +12,7 @@ import 'package:help_sum/src/features/auth/presentation/screens/signup_page.dart
 import 'package:help_sum/src/features/core/common/intro/spash/pages/splash_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/otp_verification_page.dart';
 import 'package:help_sum/src/features/core/common/intro/onboarding/pages/onboarding_page.dart';
+import 'package:help_sum/src/features/core/common/main_navigation/pages/content_page.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/pages/main_navigation_page.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/portfolio_screen.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/settings_page.dart';
@@ -87,6 +89,7 @@ final GoRouter appRouter = GoRouter(
     _servicesPerCategory(),
     _jobDetail(),
     _manageJob(),
+    _content(),
   ],
 );
 
@@ -311,7 +314,7 @@ GoRoute _createSchdule() {
     name: AppRoutes.createSchedule,
     builder: (context, state) {
       final isEdit = state.extra as bool?;
-      return SelectScheduleScreen(isEdit: isEdit ?? false);
+      return SchedulePage(isEdit: isEdit ?? false);
     },
   );
 }
@@ -503,6 +506,17 @@ GoRoute _servicesPerCategory() {
         categoryId: params.categoryId,
         categoryName: params.categoryName,
       );
+    },
+  );
+}
+
+GoRoute _content() {
+  return GoRoute(
+    name: AppRoutes.content,
+    path: '/content',
+    builder: (context, state) {
+      final contentType = state.extra as ContentType;
+      return ContentScreen(contentType: contentType);
     },
   );
 }

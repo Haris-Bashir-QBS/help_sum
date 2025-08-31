@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -89,7 +90,7 @@ class _SignupPageState extends State<SignupPage> {
                           child: _buildIllustration(),
                         ),
 
-                        40.verticalSpace,
+                        // 40.verticalSpace,
                         AnimatedSlideFade(
                           delayMilliseconds: 100,
                           child: _buildCreateAccountTitle(),
@@ -144,7 +145,7 @@ class _SignupPageState extends State<SignupPage> {
   Widget _buildIllustration() {
     return GestureDetector(
       onTap: _fillMockDetails,
-      child: Image.asset(AppAssets.appLogo, height: 180.h),
+      child: Image.asset(AppAssets.appLogo, height: 160.h),
     );
   }
 
@@ -174,8 +175,9 @@ class _SignupPageState extends State<SignupPage> {
       hint: AppTexts.phoneNumber,
       prefixIcon: Icons.phone,
       keyboardType: TextInputType.phone,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      validator: AppValidators.validatePhoneNumber(),
       // isOutlinedBorder: false,
-      // validator: AppValidators.validatePhoneNumber(),
     );
   }
 

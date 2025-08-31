@@ -223,44 +223,54 @@ class AppStaticData {
     ),
   ];
 
-  static final List<NavigationDestination> consumerDestinations = [
-    NavigationDestination(
-      icon: Image.asset(AppAssets.consumerHistoryUnfocused),
-      selectedIcon: Image.asset(AppAssets.consumerHistoryFocused),
-      label: '',
-    ),
-    NavigationDestination(
-      icon: Image.asset(AppAssets.consumerDashboardUnfocused),
-      selectedIcon: Image.asset(AppAssets.consumerDashboardFocused),
-      label: '',
-    ),
-    NavigationDestination(
-      icon: Image.asset(AppAssets.consumerProfileUnfocused),
-      selectedIcon: Image.asset(AppAssets.consumerProfileFocused),
-      label: '',
-    ),
+  // static final List<AppDestination> consumerDestinations = [
+  //   AppDestination(
+  //     iconPath: AppAssets.consumerHistoryUnfocused,
+  //     label: "History",
+  //   ),
+  //   AppDestination(
+  //     iconPath: AppAssets.consumerDashboardUnfocused,
+  //     label: "Dashboard",
+  //   ),
+  //   AppDestination(
+  //     iconPath: AppAssets.consumerProfileUnfocused,
+  //     label: "Profile",
+  //   ),
+  // ];
+  //
+  // static final List<AppDestination> merchantDestinations = [
+  //   AppDestination(iconPath: AppAssets.merchantJobsUnfocused, label: "Jobs"),
+  //   AppDestination(
+  //     iconPath: AppAssets.merchantDashboardUnfocused,
+  //     label: "Dashboard",
+  //   ),
+  //   AppDestination(
+  //     iconPath: AppAssets.merchantHistoryUnfocused,
+  //     label: "History",
+  //   ),
+  //   AppDestination(
+  //     iconPath: AppAssets.merchantProfileUnfocused,
+  //     label: "Profile",
+  //   ),
+  // ];
+
+  static final List<AppDestination> consumerDestinations = [
+    AppDestination(iconPath: Icons.work, label: "Bookings"),
+    AppDestination(iconPath: Icons.dashboard, label: "Dashboard"),
+    AppDestination(iconPath: Icons.person, label: "Profile"),
   ];
 
-  static final List<NavigationDestination> merchantDestinations = [
-    NavigationDestination(
-      icon: Image.asset(AppAssets.merchantJobsUnfocused),
-      selectedIcon: Image.asset(AppAssets.merchantJobsFocused),
-      label: '',
-    ),
-    NavigationDestination(
-      icon: Image.asset(AppAssets.merchantDashboardUnfocused),
-      selectedIcon: Image.asset(AppAssets.merchantDashboardFocused),
-      label: '',
-    ),
-    NavigationDestination(
-      icon: Image.asset(AppAssets.merchantHistoryUnfocused),
-      selectedIcon: Image.asset(AppAssets.merchantHistoryFocused),
-      label: '',
-    ),
-    NavigationDestination(
-      icon: Image.asset(AppAssets.merchantProfileUnfocused),
-      selectedIcon: Image.asset(AppAssets.merchantProfileFocused),
-      label: '',
-    ),
+  static final List<AppDestination> merchantDestinations = [
+    AppDestination(iconPath: Icons.work, label: "Jobs"),
+    AppDestination(iconPath: Icons.dashboard, label: "Dashboard"),
+    AppDestination(iconPath: Icons.wallet, label: "Wallet"),
+    AppDestination(iconPath: Icons.person, label: "Profile"),
   ];
+}
+
+class AppDestination {
+  final IconData iconPath;
+  final String label;
+
+  const AppDestination({required this.iconPath, required this.label});
 }

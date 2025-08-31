@@ -10,7 +10,7 @@ class LoginState extends Equatable {
   final bool isLoading;
   final String apiErrorMessage;
   final UserEntity? userEntity;
-  final MerchantSetupResposeEntitiy? merchantSetupResposeEntitiy;
+  final MerchantSetupResponseEntitiy? merchantSetupResposeEntitiy;
   @override
   List<Object?> get props => [
     apiErrorMessage,
@@ -24,7 +24,7 @@ class LoginState extends Equatable {
     String? apiErrorMessage,
     UserEntity? userEntity,
     bool clearUser = false,
-    MerchantSetupResposeEntitiy? merchantSetupResposeEntitiy,
+    MerchantSetupResponseEntitiy? merchantSetupResposeEntitiy,
   }) {
     return LoginState(
       isLoading: isLoading ?? this.isLoading,

@@ -7,7 +7,7 @@
 
 import 'package:help_sum/src/features/auth/domain/entities/merchant_setup_respose_entitiy.dart';
 
-class MerchantSetupResponseModel extends MerchantSetupResposeEntitiy {
+class MerchantSetupResponseModel extends MerchantSetupResponseEntitiy {
   final bool? status;
   final int? code;
   final String? data;

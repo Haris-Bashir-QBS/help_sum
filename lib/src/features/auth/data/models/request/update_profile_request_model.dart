@@ -62,7 +62,6 @@ extension UserProfileSerializer on UpdateProfileRequest {
     add('services', services);
     add('idCard', idCard);
     add('Media', media);
-
     add('schedule', schedule?.map((s) => s.toJson()).toList());
 
     return data;

@@ -2,11 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/core/services/media_picker_service.dart';
 import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/user_model.dart';
+import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_state.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/controller/user_state_provider.dart';
@@ -35,8 +37,7 @@ class _AvatarWithBadgeState extends ConsumerState<AvatarWithBadge> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(currentUserProvider).user;
-
+    final user = sl<LoginBloc>().state.userEntity;
     ref.listen<AuthState>(authNotifierProvider, (prev, next) async {
       if (_isUploading && _pendingImageUrl != null) {
         if (next is SaveBasicInfoSuccess) {
