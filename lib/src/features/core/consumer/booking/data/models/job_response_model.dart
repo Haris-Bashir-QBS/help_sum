@@ -197,6 +197,7 @@ class UserInfo {
   final String? description;
   final JobLocation? location;
   final String? averageRating;
+  final String? reviewCount;
   //final String? reviews;
 
   UserInfo({
@@ -208,6 +209,7 @@ class UserInfo {
     this.description,
     this.location,
     this.averageRating,
+    this.reviewCount,
   });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
@@ -220,6 +222,7 @@ class UserInfo {
       description: json['description'],
       location: JobLocation.fromJson(json['location'] ?? {}),
       averageRating: json['averageRating']?.toString(),
+      reviewCount: json['ratingCount']?.toString(),
     );
   }
 }

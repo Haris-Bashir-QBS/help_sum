@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:help_sum/src/core/constants/app_errors.dart';
 import 'package:help_sum/src/core/errors/api_exceptions.dart';
 import 'package:help_sum/src/core/extensions/dio_extensions.dart';
@@ -42,26 +43,29 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   Future<ServicesResponseModel> getServicesByCategory(
     GetServicesParams params,
   ) async {
-    return await ApiErrorHandler.executeGuarded(() async {
-      final queryParams = <String, dynamic>{};
-      if (params.page != null) queryParams['page'] = params.page;
-      if (params.limit != null) queryParams['limit'] = params.limit;
+    // return await ApiErrorHandler.executeGuarded(() async {
+    final queryParams = <String, dynamic>{};
+    if (params.page != null) queryParams['page'] = params.page;
+    if (params.limit != null) queryParams['limit'] = params.limit;
 
-      final response = await client.get(
-        endpoint:
-            "${ApiEndpoints.getServicesByCategory.value}/${params.categoryId}",
-        queryParams: queryParams.isNotEmpty ? queryParams : null,
+    final response = await client.get(
+      endpoint:
+          "${ApiEndpoints.getServicesByCategory.value}/${params.categoryId}",
+      queryParams: queryParams.isNotEmpty ? queryParams : null,
+    );
+
+    if (response.isOk) {
+      ServicesResponseModel responseModel = ServicesResponseModel.fromJson(
+        response.data,
       );
-
-      if (response.isOk) {
-        return ServicesResponseModel.fromJson(response.data);
-      } else {
-        throw ServerException(
-          statusCode: response.statusCode,
-          message: response.data['message'] ?? AppErrors.somethingWentWrong,
-        );
-      }
-    });
+      return responseModel;
+    } else {
+      throw ServerException(
+        statusCode: response.statusCode,
+        message: response.data['message'] ?? AppErrors.somethingWentWrong,
+      );
+    }
+    //  });
   }
 
   @override

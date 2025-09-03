@@ -7,6 +7,7 @@ import 'package:help_sum/src/widgets/custom_text.dart';
 class ServiceCard extends StatelessWidget {
   final String title;
   final String? photo;
+  final IconData? icon;
   final VoidCallback onTap;
   final bool glassmorphic;
 
@@ -14,6 +15,7 @@ class ServiceCard extends StatelessWidget {
     super.key,
     required this.title,
     this.photo,
+    this.icon,
     required this.onTap,
     this.glassmorphic = false,
   });
@@ -22,11 +24,13 @@ class ServiceCard extends StatelessWidget {
   factory ServiceCard.glassmorphic({
     required String title,
     String? photo,
+    IconData? icon,
     required VoidCallback onTap,
   }) {
     return ServiceCard(
       title: title,
       photo: photo,
+      icon: icon,
       onTap: onTap,
       glassmorphic: true,
     );
@@ -40,6 +44,32 @@ class ServiceCard extends StatelessWidget {
     );
   }
 
+  Widget _buildIconOrPhoto({required Color color}) {
+    print("Here it is inside icon section$icon");
+    try {
+      if (photo != null && photo!.isNotEmpty) {
+        print("Here it is inside phot section $photo");
+        return Image.network(
+          photo!,
+          width: 40,
+          height: 40,
+          color: color == Colors.white ? Colors.white : null,
+          errorBuilder: (context, error, stackTrace) {
+            return Icon(Icons.photo, size: 40.sp, color: color);
+          },
+        );
+      } else if (icon != null) {
+        print("Here it is inside icon section$icon");
+        return Icon(icon, size: 40.sp, color: color);
+      } else {
+        print("Here it is inside default icon section");
+        return Icon(Icons.photo, size: 40.sp, color: color);
+      }
+    } catch (e) {
+      return Icon(Icons.photo, size: 40.sp, color: color);
+    }
+  }
+
   /// 🌟 Normal White Card
   Widget _buildNormalCard() {
     return Card(
@@ -51,17 +81,7 @@ class ServiceCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (photo != null && photo!.isNotEmpty)
-            Image.network(
-              photo!,
-              width: 40,
-              height: 40,
-              errorBuilder: (context, error, stackTrace) {
-                return Icon(Icons.photo, size: 40.sp, color: Colors.grey[600]);
-              },
-            )
-          else
-            Icon(Icons.photo, size: 40.sp, color: Colors.grey[600]),
+          _buildIconOrPhoto(color: Colors.grey[600]!),
           SizedBox(height: 5.0.h),
           CustomText(
             text: title,
@@ -90,18 +110,7 @@ class ServiceCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (photo != null && photo!.isNotEmpty)
-                Image.network(
-                  photo!,
-                  width: 40,
-                  height: 40,
-                  color: Colors.white, // ✅ white tint for visibility
-                  errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.photo, size: 40.sp, color: Colors.white);
-                  },
-                )
-              else
-                Icon(Icons.photo, size: 40.sp, color: Colors.white),
+              _buildIconOrPhoto(color: Colors.white),
               SizedBox(height: 5.0.h),
               CustomText(
                 text: title,
@@ -109,7 +118,7 @@ class ServiceCard extends StatelessWidget {
                 fontSize: 15.sp,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
-                maxLines: 2, // ✅ white text for contrast
+                maxLines: 2,
               ),
             ],
           ),

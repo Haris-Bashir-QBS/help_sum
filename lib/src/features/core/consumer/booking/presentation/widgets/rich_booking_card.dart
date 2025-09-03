@@ -133,6 +133,10 @@ class RichBookingCard extends StatelessWidget {
                   isMerchant == true
                       ? job.consumerId.averageRating
                       : job.merchantId.averageRating,
+              reviewCount:
+                  isMerchant == true
+                      ? job.consumerId.reviewCount
+                      : job.merchantId.reviewCount,
             ),
 
             if (showStatus) ...[
@@ -226,7 +230,8 @@ class ProfileAvatarWithName extends StatelessWidget {
   final String? imageUrl;
   final String firstName;
   final String lastName;
-  final String? rating; // 👈 optional rating value (null if not available)
+  final String? rating;
+  final String? reviewCount;
 
   const ProfileAvatarWithName({
     Key? key,
@@ -235,6 +240,7 @@ class ProfileAvatarWithName extends StatelessWidget {
     required this.lastName,
     this.imageUrl,
     this.rating,
+    this.reviewCount,
   }) : super(key: key);
 
   @override
@@ -275,6 +281,11 @@ class ProfileAvatarWithName extends StatelessWidget {
                     4.horizontalSpace,
                     CustomText(
                       text: rating ?? "",
+                      fontSize: 12.sp,
+                      color: Colors.grey,
+                    ),
+                    CustomText(
+                      text: " (${reviewCount ?? "0"})",
                       fontSize: 12.sp,
                       color: Colors.grey,
                     ),

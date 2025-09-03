@@ -144,6 +144,7 @@ class _ServicesPerCategoryPageState
             return ServiceCard.glassmorphic(
               title: service.name,
               photo: service.photo,
+              icon: service.icon?.toIconData(),
               onTap: () {
                 context.pushNamed(
                   AppRoutes.findMerchant,
