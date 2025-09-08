@@ -6,11 +6,15 @@ import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/core/use_cases/use_case.dart';
 import 'package:help_sum/src/features/auth/data/models/request/login_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
+import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/response/user_model.dart';
 import 'package:help_sum/src/features/auth/domain/entities/merchant_setup_respose_entitiy.dart';
 import 'package:help_sum/src/features/auth/domain/entities/user_entity.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/fetch_merchant_setup_details.dart';
 import 'package:help_sum/src/features/auth/domain/usecases/login_usecase.dart';
+import 'package:help_sum/src/features/auth/domain/usecases/update_user_usecase.dart';
+import 'package:help_sum/src/features/auth/domain/usecases/upload_file_usecase.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/custom_overlay_loader.dart';
 import 'package:help_sum/src/widgets/custom_toast.dart';
 
@@ -21,6 +25,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   late final LoginUseCase _loginUseCase = sl();
   final LocalStorageService _localStorageService = LocalStorageService();
   late final FetchMerchantSetupDetails _fetchMerchantSetupDetails = sl();
+  late final UploadFileUseCase _uploadFileUseCase = sl();
+  late final UpdateUserProfileUsecase _profileUsecase = sl();
 
   LoginBloc() : super(LoginState()) {
     on<LoginUser>(_onLoginUSer);
@@ -31,6 +37,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     //New
     on<UpdateHourlyRateEvent>(_onHourlyRateChanged);
     on<UpdateDescriptionEvent>(_onDescriptionChanged);
+    on<UpdateProfileImageEvent>(_updateProfileImage);
+    on<UpdateCurrentUserEvent>(_updateCurrentUser);
   }
 
   FutureOr<void> _onUpdatePortfolioEvent(event, emit) async {
@@ -133,5 +141,56 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       LocalStorageService().saveUser(UserModel.fromEntity(updatedUser));
       emit(state.copyWith(userEntity: updatedUser));
     }
+  }
+
+  FutureOr<void> _updateProfileImage(
+    UpdateProfileImageEvent event,
+    emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    final result = await _uploadFileUseCase(event.file);
+    result.match(
+      (failure) {
+        emit(
+          state.copyWith(apiErrorMessage: failure.message, isLoading: false),
+        );
+      },
+      (files) {
+        // emit(
+        //   state.copyWith(
+        //     isLoading: false,
+        //   ),
+        // );
+        add(
+          UpdateCurrentUserEvent(
+            entity: UpdateProfileRequest(image: files.map((e) => e.url).first),
+          ),
+        );
+      },
+    );
+  }
+
+  FutureOr<void> _updateCurrentUser(UpdateCurrentUserEvent event, emit) async {
+    emit(state.copyWith(isLoading: true));
+
+    final result = await _profileUsecase(event.entity);
+    await result.match(
+      (failure) {
+        emit(
+          state.copyWith(isLoading: false, apiErrorMessage: failure.message),
+        );
+      },
+      (user) async {
+        final currentUser = user;
+        await LocalStorageService().saveUser(UserModel.fromEntity(currentUser));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            apiErrorMessage: '',
+            userEntity: user,
+          ),
+        );
+      },
+    );
   }
 }

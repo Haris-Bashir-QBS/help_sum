@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=C:\Users\DELL\.shorebird\bin\cache\flutter\8c1a3ee6d9319bd5c202f73972a6d03bba335402"
-export "FLUTTER_APPLICATION_PATH=C:\projects\help_sum"
+export "FLUTTER_ROOT=/Users/ara12/Documents/Development/Sdks/flutter"
+export "FLUTTER_APPLICATION_PATH=/Users/ara12/Documents/GitHub/help_sum"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"

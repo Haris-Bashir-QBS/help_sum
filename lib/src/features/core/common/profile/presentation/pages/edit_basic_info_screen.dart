@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -39,6 +40,7 @@ class _EditBasicInfoScreenState extends ConsumerState<EditBasicInfoScreen> {
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
   final _formKey = GlobalKey<FormState>();
+  late final LoginBloc _loginBloc;
 
   Widget _buildAvatarWithBadge() {
     return Stack(
@@ -82,9 +84,16 @@ class _EditBasicInfoScreenState extends ConsumerState<EditBasicInfoScreen> {
         ),
         child: Row(
           children: [
-            FadeScaleTransitionWidget(
-              duration: const Duration(milliseconds: 900),
-              child: AvatarWithBadge(),
+            BlocBuilder<LoginBloc, LoginState>(
+              builder: (context, state) {
+                return FadeScaleTransitionWidget(
+                  duration: const Duration(milliseconds: 900),
+                  child: AvatarWithBadge(
+                    loginBloc: _loginBloc,
+                    imageUrl: state.userEntity?.image,
+                  ),
+                );
+              },
             ),
             SizedBox(width: 16.w),
             Expanded(
@@ -117,7 +126,7 @@ class _EditBasicInfoScreenState extends ConsumerState<EditBasicInfoScreen> {
   @override
   void initState() {
     super.initState();
-
+    _loginBloc = sl<LoginBloc>();
     _firstNameController = TextEditingController(text: widget.user.firstName);
     _lastNameController = TextEditingController(text: widget.user.lastName);
     _emailController = TextEditingController(text: widget.user.email);

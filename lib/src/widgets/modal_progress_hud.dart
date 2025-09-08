@@ -1,7 +1,9 @@
 import "dart:ui";
 
 import "package:flutter/material.dart";
+import "package:help_sum/src/core/constants/app_palette.dart";
 import "package:help_sum/src/widgets/custom_circular_progress_indicator.dart";
+import "package:help_sum/src/widgets/custom_loading_widget.dart";
 
 class ModalProgressHUD extends StatelessWidget {
   final bool inAsyncCall;
@@ -22,7 +24,7 @@ class ModalProgressHUD extends StatelessWidget {
     this.offset,
     this.dismissible = false,
     required this.child,
-    this.blur = 0.0,
+    this.blur = 2.0,
   });
 
   @override
@@ -49,7 +51,17 @@ class ModalProgressHUD extends StatelessWidget {
               child: ModalBarrier(dismissible: dismissible, color: color),
             ),
           ),
-          layOutProgressIndicator,
+
+          Align(
+            alignment: Alignment.center,
+            child: CustomDotsLoader(
+              dot1Color: AppPalette.starColor,
+              dot2Color: AppPalette.infoColor,
+              size: 60,
+            ),
+          ),
+
+          // layOutProgressIndicator,
         ],
       ],
     );

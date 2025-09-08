@@ -260,7 +260,10 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
               child: Center(
                 child: FadeScaleTransitionWidget(
                   duration: const Duration(milliseconds: 800),
-                  child: AvatarWithBadge(),
+                  child: AvatarWithBadge(
+                    imageUrl: user.image,
+                    loginBloc: _loginBloc,
+                  ),
                 ),
               ),
             ),

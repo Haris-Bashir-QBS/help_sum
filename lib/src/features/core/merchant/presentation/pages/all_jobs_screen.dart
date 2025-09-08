@@ -16,6 +16,7 @@ import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_states.dart';
 import 'package:help_sum/src/widgets/app_tab_bar.dart';
+import 'package:help_sum/src/widgets/custom_loading_widget.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
@@ -67,11 +68,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
 
   Widget _jobListView(MerchantJobsState state) {
     if (state is MerchantJobsLoading || state is MerchantJobsInitial) {
-      return const Expanded(
-        child: Center(
-          child: CircularProgressIndicator(color: AppPalette.primaryColor),
-        ),
-      );
+      return const Expanded(child: Center(child: CustomDotsLoader()));
     } else if (state is MerchantJobsError) {
       return Expanded(child: Center(child: CustomText(text: state.message)));
     } else if (state is MerchantJobsLoaded) {

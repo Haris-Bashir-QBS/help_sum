@@ -9,6 +9,7 @@ import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/rich_booking_card.dart';
 import 'package:help_sum/src/widgets/app_tab_bar.dart';
+import 'package:help_sum/src/widgets/custom_loading_widget.dart';
 import 'package:help_sum/src/widgets/custom_refresh_indicator.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
@@ -97,11 +98,7 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
                       // Show loading indicator for pagination
                       return Padding(
                         padding: EdgeInsets.all(16.w),
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            color: AppPalette.primaryColor,
-                          ),
-                        ),
+                        child: Center(child: CustomDotsLoader(size: 40)),
                       );
                     }
 
@@ -119,12 +116,7 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
                 ),
               );
             },
-            loading:
-                () => Center(
-                  child: CircularProgressIndicator(
-                    color: AppPalette.primaryColor,
-                  ),
-                ),
+            loading: () => Center(child: CustomDotsLoader()),
             error:
                 (e, st) => Center(
                   child: CustomText(

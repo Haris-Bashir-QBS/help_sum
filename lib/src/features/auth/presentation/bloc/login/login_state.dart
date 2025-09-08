@@ -8,6 +8,7 @@ class LoginState extends Equatable {
     this.merchantSetupResposeEntitiy,
   });
   final bool isLoading;
+
   final String apiErrorMessage;
   final UserEntity? userEntity;
   final MerchantSetupResponseEntitiy? merchantSetupResposeEntitiy;

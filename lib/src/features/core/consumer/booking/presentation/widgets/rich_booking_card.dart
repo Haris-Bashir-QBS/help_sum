@@ -245,23 +245,22 @@ class ProfileAvatarWithName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Image URL: $imageUrl");
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start, // 👈 keep text top aligned
       children: [
         CircleAvatar(
           radius: 18.r,
           backgroundColor: AppPalette.lightGreyColor,
+
           backgroundImage:
-              (imageUrl != null && imageUrl!.isNotEmpty)
-                  ? NetworkImage(imageUrl!)
-                  : null,
+              (imageUrl?.isNotEmpty == true) ? NetworkImage(imageUrl!) : null,
+
           child:
               (imageUrl == null || imageUrl!.isEmpty)
                   ? Icon(Icons.person, size: 18.sp, color: Colors.white)
                   : null,
-          onBackgroundImageError: (_, __) {
-            // fallback handled by child already
-          },
         ),
         10.horizontalSpace,
         Expanded(

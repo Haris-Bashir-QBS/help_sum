@@ -55,7 +55,13 @@ class PortfolioBloc extends Bloc<PortfolioEvent, PortfolioState> {
     final result = await _uploadFileUseCase(event.params);
     result.match(
       (failure) {
-        emit(state.copyWith(apiErrorMessage: failure.message));
+        emit(
+          state.copyWith(
+            apiErrorMessage: failure.message,
+            fileUploaded: false,
+            isLoading: false,
+          ),
+        );
       },
       (files) {
         emit(

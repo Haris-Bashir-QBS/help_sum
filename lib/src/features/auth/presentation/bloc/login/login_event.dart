@@ -37,3 +37,13 @@ class UpdateDescriptionEvent extends LoginEvent {
   final String newDescription;
   const UpdateDescriptionEvent(this.newDescription);
 }
+
+class UpdateCurrentUserEvent extends LoginEvent {
+  final UpdateProfileRequest entity;
+  const UpdateCurrentUserEvent({required this.entity});
+}
+
+class UpdateProfileImageEvent extends LoginEvent {
+  final UploadFileRequest file;
+  const UpdateProfileImageEvent({required this.file});
+}
