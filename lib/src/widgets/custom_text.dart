@@ -9,6 +9,7 @@ class CustomText extends StatelessWidget {
   final TextAlign textAlign;
   final TextDecoration? decoration;
   final Color? decorationColor;
+  final double? letterSpacing;
 
   const CustomText({
     super.key,
@@ -20,6 +21,7 @@ class CustomText extends StatelessWidget {
     this.textAlign = TextAlign.start,
     this.decoration,
     this.decorationColor,
+    this.letterSpacing,
   });
 
   @override
@@ -31,6 +33,7 @@ class CustomText extends StatelessWidget {
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color ?? Colors.black,
+        letterSpacing: letterSpacing,
         height: 1.2,
       ),
       maxLines: maxLines ?? 1,

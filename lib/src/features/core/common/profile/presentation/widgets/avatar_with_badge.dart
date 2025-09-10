@@ -3,10 +3,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/services/media_picker_service.dart';
 import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
 import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
+import 'package:help_sum/src/widgets/comman_imageview.dart';
 
 class AvatarWithBadge extends StatefulWidget {
   const AvatarWithBadge({super.key, this.imageUrl, required this.loginBloc});
@@ -43,26 +45,46 @@ class _AvatarWithBadgeState extends State<AvatarWithBadge> {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          CircleAvatar(
-            radius: 70.r,
-            backgroundColor: Colors.grey.shade300,
-            backgroundImage:
-                widget.imageUrl != null && widget.imageUrl!.isEmpty
-                    ? NetworkImage(widget.imageUrl!)
-                    : null,
-            child:
-                widget.imageUrl == null || widget.imageUrl!.isEmpty
-                    ? Icon(
-                      Icons.account_circle_outlined,
-                      size: 32.sp,
-                      color: Colors.grey.shade800,
-                    )
-                    : null,
+          // CircleAvatar(
+          //   radius: 70.r,
+          //   backgroundColor: Colors.grey.shade300,
+          //   backgroundImage:
+          //       widget.imageUrl != null && widget.imageUrl!.isEmpty
+          //           ?
+          //           : null,
+          //   child:
+          //       widget.imageUrl == null || widget.imageUrl!.isEmpty
+          //           ? Icon(
+          //             Icons.account_circle_outlined,
+          //             size: 32.sp,
+          //             color: Colors.grey.shade800,
+          //           )
+          //           : null,
+          // ),
+          Container(
+            height: 120.w,
+            width: 120.w,
+            padding: EdgeInsets.all(2),
+            decoration: BoxDecoration(shape: BoxShape.circle),
+            child: ClipOval(
+              child: CustomImageView(
+                imagePath:
+                    widget.imageUrl != null &&
+                            widget.imageUrl?.isNotEmpty == true
+                        ? widget.imageUrl
+                        : AppAssets.appLogo,
+                imageType:
+                    widget.imageUrl != null &&
+                            widget.imageUrl?.isNotEmpty == true
+                        ? ImageType.network
+                        : ImageType.asset,
+              ),
+            ),
           ),
           if (widget.imageUrl == null || widget.imageUrl!.isEmpty)
             Positioned(
-              top: -2,
-              right: -2,
+              top: 2,
+              right: 10,
               child: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: const BoxDecoration(

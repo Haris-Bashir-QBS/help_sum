@@ -26,6 +26,7 @@ final class AppAssets {
 
   static const String noData = '$_iconPath/no-data.png';
   static const String appLogo = '$_iconPath/ic_app_logo.png';
+  static const String cardBackgroundImage = '$_imagePath/card_background.png';
 
   /// Dashboard
   static const String dashboardIcon1 = '$_iconPath/d1.png';

@@ -9,6 +9,7 @@ import 'package:help_sum/src/features/auth/presentation/screens/select_skill_pag
 import 'package:help_sum/src/features/auth/presentation/screens/login_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/role_selection_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/signup_page.dart';
+import 'package:help_sum/src/features/core/common/general/presentation/view/inbox_and_notifications_view.dart';
 import 'package:help_sum/src/features/core/common/intro/spash/pages/splash_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/otp_verification_page.dart';
 import 'package:help_sum/src/features/core/common/intro/onboarding/pages/onboarding_page.dart';
@@ -90,6 +91,7 @@ final GoRouter appRouter = GoRouter(
     _jobDetail(),
     _manageJob(),
     _content(),
+    _inboxAndNotifcations(),
   ],
 );
 
@@ -517,6 +519,16 @@ GoRoute _content() {
     builder: (context, state) {
       final contentType = state.extra as ContentType;
       return ContentScreen(contentType: contentType);
+    },
+  );
+}
+
+GoRoute _inboxAndNotifcations() {
+  return GoRoute(
+    name: AppRoutes.inboxAndNotifcations,
+    path: '/inboxAndNotifications',
+    builder: (context, state) {
+      return InboxAndNotificationsView();
     },
   );
 }

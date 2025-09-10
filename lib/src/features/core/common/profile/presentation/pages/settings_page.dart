@@ -29,18 +29,18 @@ class SettingsPage extends ConsumerWidget {
           spacing: 10.h,
           children: [
             20.verticalSpace,
-            if (currentUser?.role == AppRole.consumer.name)
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: CustomButton(
-                  text: AppTexts.managePaymentMethods,
-                  radius: radius,
-                  onPressed: () {
-                    context.pushNamed(AppRoutes.addCard);
-                  },
-                  color: context.primaryColor,
-                ),
-              ),
+            // if (currentUser?.role == AppRole.consumer.name)
+            //   Padding(
+            //     padding: EdgeInsets.symmetric(horizontal: 16.w),
+            //     child: CustomButton(
+            //       text: AppTexts.managePaymentMethods,
+            //       radius: radius,
+            //       onPressed: () {
+            //         context.pushNamed(AppRoutes.addCard);
+            //       },
+            //       color: context.primaryColor,
+            //     ),
+            //   ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: CustomButton(

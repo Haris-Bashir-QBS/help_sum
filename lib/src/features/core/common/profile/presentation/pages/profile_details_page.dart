@@ -143,27 +143,76 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                                         "No description added",
                                   ),
 
-                                  20.verticalSpace,
-                                  ElevatedButton.icon(
-                                    icon: const Icon(Icons.edit, size: 18),
-                                    onPressed: () {
+                                  30.verticalSpace,
+
+                                  _buildMerchantInfoTile(
+                                    context,
+                                    icon: Icons.person,
+                                    title: 'Basic Info',
+                                    subtitle: 'Update name,contact',
+                                    onTap: () {
                                       context.pushNamed(
                                         AppRoutes.editBasicInfo,
                                         extra: user,
                                       );
+                                      // _loginBloc.add(
+                                      //   FetchMerchantAccount(context: context),
+                                      // );
                                     },
-                                    label: CustomText(
-                                      text: AppTexts.edit,
-                                      color:
-                                          context.theme.colorScheme.onPrimary,
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w500,
-                                    ),
                                   ),
-                                  20.verticalSpace,
-                                  _buildBasicInfoCard(context, user),
-                                  26.verticalSpace,
-                                  _buildContactInfoCard(context, user),
+                                  10.verticalSpace,
+
+                                  _buildMerchantInfoTile(
+                                    context,
+                                    icon: Icons.description_outlined,
+                                    title: 'Description',
+                                    subtitle:
+                                        user.description ??
+                                        "No description added",
+                                    onTap:
+                                        () => context.pushNamed(
+                                          AppRoutes.changeDescriptipon,
+                                        ),
+                                    hasWarning:
+                                        user.description?.isEmpty == true,
+                                  ),
+
+                                  10.verticalSpace,
+
+                                  _buildMerchantInfoTile(
+                                    context,
+                                    icon: Icons.payment,
+                                    title: AppTexts.managePaymentMethods,
+                                    subtitle: AppTexts.managePaymentMethodsDesc,
+                                    onTap: () {
+                                      context.pushNamed(AppRoutes.addCard);
+                                      // _loginBloc.add(
+                                      //   FetchMerchantAccount(context: context),
+                                      // );
+                                    },
+                                  ),
+
+                                  // 20.verticalSpace,
+                                  // ElevatedButton.icon(
+                                  //   icon: const Icon(Icons.edit, size: 18),
+                                  //   onPressed: () {
+                                  //     context.pushNamed(
+                                  //       AppRoutes.editBasicInfo,
+                                  //       extra: user,
+                                  //     );
+                                  //   },
+                                  //   label: CustomText(
+                                  //     text: AppTexts.edit,
+                                  //     color:
+                                  //         context.theme.colorScheme.onPrimary,
+                                  //     fontSize: 18.sp,
+                                  //     fontWeight: FontWeight.w500,
+                                  //   ),
+                                  // ),
+                                  // 20.verticalSpace,
+                                  // _buildBasicInfoCard(context, user),
+                                  // 26.verticalSpace,
+                                  // _buildContactInfoCard(context, user),
                                 ]
                                 : [
                                   _buildMerchantProfileHeader(context, user),

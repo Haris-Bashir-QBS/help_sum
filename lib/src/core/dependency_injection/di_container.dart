@@ -57,6 +57,7 @@ void _registerAuthBloc() {
   sl.registerFactory<ScheduleBloc>(() => ScheduleBloc());
   sl.registerFactory<PortfolioBloc>(() => PortfolioBloc());
   sl.registerFactory<ProfileBloc>(() => ProfileBloc());
+  sl.registerFactory<ActivityBloc>(() => ActivityBloc());
 }
 
 void _registerAuthUsecases() {
