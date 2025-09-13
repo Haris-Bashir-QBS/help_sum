@@ -723,7 +723,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
           CustomOverlayLoader.show(
             context,
             message: "Please wait image upload is in progress...",
-          );
+          );  
         } else {
           CustomOverlayLoader.hide();
         }

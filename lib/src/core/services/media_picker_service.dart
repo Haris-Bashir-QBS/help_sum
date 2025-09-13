@@ -210,8 +210,8 @@ class MediaPickerService {
       if (result != null) {
         PlatformFile file = result.files.first;
         onMediaChanged(file.path);
-        if (!context!.mounted) return;
-        context.pop();
+        // if (!context!.mounted) return;
+        // context.pop();
       }
     } on PlatformException catch (e) {
       debugPrint("Error $e");
@@ -332,9 +332,9 @@ class MediaPickerService {
       } else {
         Fluttertoast.showToast(msg: "No video selected");
       }
-      if (context.mounted) {
-        Navigator.pop(context);
-      }
+      // if (context.mounted) {
+      //   Navigator.pop(context);
+      // }
     } catch (e) {
       Fluttertoast.showToast(msg: "Failed to pick video");
     }

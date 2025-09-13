@@ -22,14 +22,14 @@ class UploadFileRequest {
   }
 }
 
-class MediaType {
-  static MediaType parse(String mimeType) {
+class MediaTypeDio {
+  static MediaTypeDio parse(String mimeType) {
     final parts = mimeType.split('/');
-    return MediaType(parts[0], parts.length > 1 ? parts[1] : '');
+    return MediaTypeDio(parts[0], parts.length > 1 ? parts[1] : '');
   }
 
   final String type;
   final String subtype;
 
-  MediaType(this.type, this.subtype);
+  MediaTypeDio(this.type, this.subtype);
 }

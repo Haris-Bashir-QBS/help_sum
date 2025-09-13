@@ -22,6 +22,7 @@ import 'package:help_sum/src/features/core/common/profile/domain/usecases/get_me
 import 'package:help_sum/src/features/core/common/profile/domain/usecases/delete_account_usecase.dart';
 import 'package:help_sum/src/features/core/common/general/presentation/bloc/activity_bloc.dart';
 import 'package:help_sum/src/features/core/consumer/booking/domain/usecases/fetch_jobs_by_type_usecase.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/bloc/create_job_bloc.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/datasources/remote/merchant_view_profile_remote_datasource.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/datasources/remote/merchant_view_profile_remote_datasource_impl.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/repositories/merchant_view_profile_repository_impl.dart';

@@ -7,10 +7,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
+import 'package:help_sum/src/core/enums/media_type.dart';
 import 'package:help_sum/src/core/enums/permission_status.dart';
 import 'package:help_sum/src/core/services/permission_manager.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/auth/data/models/request/schdule_request_model.dart';
+import 'package:help_sum/src/features/core/consumer/booking/data/models/media_file.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/create_request_screen.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 import 'package:intl/intl.dart';
@@ -336,5 +339,51 @@ class AppUtils {
     } catch (_) {
       return time;
     }
+  }
+}
+
+// utils/media_utils.dart
+
+class MediaUtils {
+  /// Detects the Media type based on file extension or mime type
+  static Media detectMedia(String pathOrMime) {
+    final lower = pathOrMime.toLowerCase();
+
+    if (lower.endsWith(".jpg") ||
+        lower.endsWith(".jpeg") ||
+        lower.endsWith(".png") ||
+        lower.endsWith(".gif") ||
+        lower.endsWith(".bmp") ||
+        lower.endsWith(".webp") ||
+        lower.contains("image/")) {
+      return Media.photo;
+    }
+
+    if (lower.endsWith(".mp4") ||
+        lower.endsWith(".mov") ||
+        lower.endsWith(".avi") ||
+        lower.endsWith(".mkv") ||
+        lower.contains("video/")) {
+      return Media.video;
+    }
+
+    // everything else is considered generic file
+    return Media.file;
+  }
+
+  /// Detects if media is local file or from network
+  static MediaType detectMediaType(String path) {
+    if (path.startsWith("http://") || path.startsWith("https://")) {
+      return MediaType.network;
+    }
+    return MediaType.file;
+  }
+
+  /// Factory helper to create a MediaFile
+  static MediaFile fromPath(String path, {String? mimeType}) {
+    final media = detectMedia(mimeType ?? path);
+    final mediaType = detectMediaType(path);
+
+    return MediaFile(media: media, mediaType: mediaType, path: path);
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/widgets/comman_imageview.dart';
+import 'package:help_sum/src/widgets/custom_loading_widget.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class CustomOverlayLoader {
@@ -19,53 +20,26 @@ class CustomOverlayLoader {
               children: [
                 // Dark semi-transparent background
                 Positioned.fill(
-                  child: AnimatedOpacity(
-                    opacity: 1,
-                    duration: const Duration(milliseconds: 300),
-                    child: Container(color: Colors.black54),
-                  ),
+                  child: Container(color: Colors.black.withValues(alpha: .7)),
                 ),
                 // Loader container
                 Center(
-                  child: AnimatedScale(
-                    scale: 1.0,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOutBack,
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      margin: const EdgeInsets.symmetric(horizontal: 40),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 10,
-                            spreadRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          10.verticalSpace,
-                          CircleAvatar(
-                            radius: 50.r,
-                            child: CustomImageView(
-                              imageType: ImageType.asset,
-                              imagePath: AppAssets.appLogo,
-                            ),
-                          ),
-                          20.verticalSpace,
-                          const CircularProgressIndicator(strokeWidth: 3),
-                          const SizedBox(height: 20),
-                          CustomText(
-                            text: message,
-                            textAlign: TextAlign.center,
-                            maxLines: 10,
-                          ),
-                        ],
-                      ),
+                  child: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        10.verticalSpace,
+                        Center(child: CustomDotsLoader()),
+                        20.verticalSpace,
+                        // const CircularProgressIndicator(strokeWidth: 3),
+                        // const SizedBox(height: 20),
+                        CustomText(
+                          text: message,
+                          textAlign: TextAlign.center,
+                          maxLines: 10,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                   ),
                 ),
