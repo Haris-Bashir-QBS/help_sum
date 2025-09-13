@@ -22,4 +22,14 @@ class ProfileRepositoryImplementation implements ProfileRepository {
       return left(Failure(message: e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> deleteAccount() async {
+    try {
+      await remoteDataSource.deleteAccount();
+      return right(null);
+    } on Failure catch (e) {
+      return left(Failure(message: e.message));
+    }
+  }
 }

@@ -22,3 +22,7 @@ class FetchMerchantRatings extends ProfileBlocEvent {
   @override
   List<Object> get props => [merchantId];
 }
+
+class DeleteAccount extends ProfileBlocEvent {
+  const DeleteAccount();
+}

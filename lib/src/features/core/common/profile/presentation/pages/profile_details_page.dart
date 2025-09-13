@@ -595,45 +595,75 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          title: CustomText(
-            text: 'Delete Account',
-            fontWeight: FontWeight.bold,
-            fontSize: 18.sp,
-          ),
-          content: CustomText(
-            text:
-                'Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.',
-            fontSize: 14.sp,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: CustomText(
-                text: 'Cancel',
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w500,
+        return BlocConsumer<ProfileBloc, ProfileBlocState>(
+          listener: (context, state) {
+            if (state.accountDeleted) {
+              Navigator.of(context).pop(); // Close dialog
+              // Clear user data and navigate to login/role selection
+              _loginBloc.add(const LogoutUser());
+              context.goNamed(AppRoutes.roleSelection, extra: true);
+              CustomToast.successToast(
+                context: context,
+                message: 'Account deleted successfully',
+              );
+            }
+            if (state.apiErrorMessage.isNotEmpty) {
+              CustomToast.errorToast(
+                context: context,
+                message: state.apiErrorMessage,
+              );
+            }
+          },
+          builder: (context, state) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
               ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                // Implement delete account logic here
-                CustomToast.infoToast(
-                  context: context,
-                  message: 'Delete account functionality coming soon',
-                );
-              },
-              child: CustomText(
-                text: 'Delete',
-                color: Colors.red,
+              title: CustomText(
+                text: 'Delete Account',
                 fontWeight: FontWeight.bold,
+                fontSize: 18.sp,
               ),
-            ),
-          ],
+              content: CustomText(
+                text:
+                    'Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.',
+                fontSize: 14.sp,
+              ),
+              actions: [
+                TextButton(
+                  onPressed: state.isDeletingAccount
+                      ? null
+                      : () => Navigator.of(context).pop(),
+                  child: CustomText(
+                    text: 'Cancel',
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                TextButton(
+                  onPressed: state.isDeletingAccount
+                      ? null
+                      : () {
+                          _profileBloc.add(const DeleteAccount());
+                        },
+                  child: state.isDeletingAccount
+                      ? SizedBox(
+                          width: 20.w,
+                          height: 20.h,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.red,
+                          ),
+                        )
+                      : CustomText(
+                          text: 'Delete',
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                ),
+              ],
+            );
+          },
         );
       },
     );

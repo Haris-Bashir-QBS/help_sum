@@ -193,10 +193,16 @@ void _registerProfileUsecases() {
   sl.registerLazySingleton<GetMerchantRatingsUseCase>(
     () => GetMerchantRatingsUseCase(profileRepository: sl()),
   );
+  sl.registerLazySingleton<DeleteAccountUseCase>(
+    () => DeleteAccountUseCase(profileRepository: sl()),
+  );
 }
 
 void _registerProfileBloc() {
   sl.registerLazySingleton<ProfileBloc>(
-    () => ProfileBloc(getMerchantRatingsUseCase: sl()),
+    () => ProfileBloc(
+      getMerchantRatingsUseCase: sl(),
+      deleteAccountUseCase: sl(),
+    ),
   );
 }

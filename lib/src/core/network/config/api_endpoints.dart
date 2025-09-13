@@ -9,6 +9,7 @@ enum ApiEndpoints {
   logout,
   uploadFile,
   serviceGrouped,
+  deleteAccount,
 
   /// ================= Categories =======================
   categories,
@@ -28,7 +29,10 @@ enum ApiEndpoints {
   getServicesByCategory,
   merchantsNearby,
   createJob,
-  fetchJobs;
+  fetchJobs,
+
+  /// ================= Profile =======================
+  merchantRatings;
 
   String get value {
     switch (this) {
@@ -46,6 +50,9 @@ enum ApiEndpoints {
 
       case ApiEndpoints.updateProfile:
         return "/$_auth/update-user";
+
+      case ApiEndpoints.deleteAccount:
+        return "/$_auth/delete";
 
       case ApiEndpoints.uploadFile:
         return "/upload/";
@@ -83,6 +90,10 @@ enum ApiEndpoints {
         return "/job"; // Will be appended with /:id/payment
       case ApiEndpoints.rateJob:
         return "/rating"; // Will be appended with /:id/rate
+
+      /// ================= Profile =======================
+      case ApiEndpoints.merchantRatings:
+        return "/rating/merchant"; // Will be appended with /:merchantId
     }
   }
 }

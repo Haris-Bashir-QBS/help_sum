@@ -2,4 +2,5 @@ import 'package:help_sum/src/features/core/common/profile/domain/entities/rating
 
 abstract interface class ProfileRemoteDataSource {
   Future<RatingResponseEntity> getMerchantRatings({required String merchantId});
+  Future<void> deleteAccount();
 }
