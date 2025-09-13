@@ -96,9 +96,12 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
                   loginBloc.add(const LogoutUser());
                   context.goNamed(AppRoutes.roleSelection);
                 },
+              ),
+            ),
           ],
         ],
       ),
+
       body: _pages[_selectedIndex],
       bottomNavigationBar: AppBottomNavigationBar(
         selectedIndex: _selectedIndex,
