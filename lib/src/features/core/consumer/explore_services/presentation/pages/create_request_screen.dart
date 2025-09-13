@@ -700,6 +700,8 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
         )
         : SizedBox.shrink();
   }
+
+
 }
 
 class AttachmentCard extends StatelessWidget {

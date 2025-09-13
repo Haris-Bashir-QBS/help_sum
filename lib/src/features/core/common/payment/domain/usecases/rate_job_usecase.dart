@@ -5,14 +5,17 @@ import 'package:help_sum/src/features/core/common/payment/data/models/request/ra
 import 'package:help_sum/src/features/core/common/payment/data/models/response/card_action_response_model.dart';
 import 'package:help_sum/src/features/core/common/payment/domain/repositories/payment_repository.dart';
 
-class RateJobUseCase implements UseCase<CardActionResponseModel, RateJobRequestModel> {
+class RateJobUseCase
+    implements UseCase<CardActionResponseModel, RateJobRequestModel> {
   final PaymentRepository _repository;
 
   RateJobUseCase({required PaymentRepository repository})
-      : _repository = repository;
+    : _repository = repository;
 
   @override
-  Future<Either<Failure, CardActionResponseModel>> call(RateJobRequestModel params) {
+  Future<Either<Failure, CardActionResponseModel>> call(
+    RateJobRequestModel params,
+  ) {
     return _repository.rateJob(params: params);
   }
 }

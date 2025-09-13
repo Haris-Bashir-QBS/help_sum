@@ -54,6 +54,9 @@ class PortfolioBloc extends Bloc<PortfolioEvent, PortfolioState> {
 
   FutureOr<void> _onUpdatePortfolio(event, emit) async {
     emit(state.copyWith(fileUploaded: false, isLoading: true));
+
+    log("Media Lentg${state.userEntity?.media?.length ?? 0}");
+
     final result = await _uploadFileUseCase(event.params);
     result.match(
       (failure) {
@@ -66,7 +69,8 @@ class PortfolioBloc extends Bloc<PortfolioEvent, PortfolioState> {
         );
       },
       (files) {
-        log("Files ---- ${files.first.url}");
+        final media = state.userEntity?.media ?? <String>[];
+        log("updatedUrls $media");
         final urls = files.map((e) => e.url).toList();
         final currentUrls = state.userEntity?.media ?? <String>[];
 

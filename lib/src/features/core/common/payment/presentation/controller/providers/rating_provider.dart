@@ -5,13 +5,12 @@ import 'package:help_sum/src/features/core/common/payment/data/datasources/remot
 import 'package:help_sum/src/features/core/common/payment/data/repositories/payment_repository_impl.dart';
 import 'package:help_sum/src/features/core/common/payment/domain/repositories/payment_repository.dart';
 import 'package:help_sum/src/features/core/common/payment/domain/usecases/rate_job_usecase.dart';
+import 'package:help_sum/src/features/core/common/payment/presentation/bloc/rating_state.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/controller/notifiers/rating_notifier.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/controller/notifiers/rating_state.dart';
 
 // DioClient Provider
-final dioClientProvider = Provider<DioClient>(
-  (ref) => DioClient(),
-);
+final dioClientProvider = Provider<DioClient>((ref) => DioClient());
 
 // DataSource Provider
 final paymentRemoteDataSourceProvider = Provider<PaymentRemoteDataSource>(
@@ -29,14 +28,11 @@ final paymentRepositoryProvider = Provider<PaymentRepository>(
 
 // UseCase Provider
 final rateJobUseCaseProvider = Provider<RateJobUseCase>(
-  (ref) => RateJobUseCase(
-    repository: ref.watch(paymentRepositoryProvider),
-  ),
+  (ref) => RateJobUseCase(repository: ref.watch(paymentRepositoryProvider)),
 );
 
-// State Notifier Provider
-final ratingNotifierProvider = StateNotifierProvider<RatingNotifier, RatingState>(
-  (ref) => RatingNotifier(
-    ref.watch(rateJobUseCaseProvider),
-  ),
-);
+// // State Notifier Provider
+// final ratingNotifierProvider =
+//     StateNotifierProvider<RatingNotifier, RatingState>(
+//       (ref) => RatingNotifier(ref.watch(rateJobUseCaseProvider)),
+//     );

@@ -60,6 +60,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
       final user = _loginBloc.state.userEntity;
       if (user != null && user.id != null) {
         _profileBloc.add(FetchMerchantRatings(merchantId: user.id!));
+        _portfolioBloc.add(UpdateUserEvent(userEntity: user!));
       }
     });
 
@@ -723,7 +724,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
           CustomOverlayLoader.show(
             context,
             message: "Please wait image upload is in progress...",
-          );  
+          );
         } else {
           CustomOverlayLoader.hide();
         }
