@@ -14,3 +14,11 @@ class ProfileTabChanged extends ProfileBlocEvent {
   @override
   List<Object> get props => [selectedIndex];
 }
+
+class FetchMerchantRatings extends ProfileBlocEvent {
+  final String merchantId;
+  const FetchMerchantRatings({required this.merchantId});
+
+  @override
+  List<Object> get props => [merchantId];
+}

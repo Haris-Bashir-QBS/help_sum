@@ -48,7 +48,7 @@ class SettingsPage extends ConsumerWidget {
                 onPressed: () {
                   context.pushNamed(
                     AppRoutes.content,
-                    extra: ContentType.termsAndConditions,
+                    extra: AppContentType.termsAndConditions,
                   );
                 },
                 radius: radius,
@@ -62,7 +62,7 @@ class SettingsPage extends ConsumerWidget {
                 onPressed: () {
                   context.pushNamed(
                     AppRoutes.content,
-                    extra: ContentType.privacyPolicy,
+                    extra: AppContentType.privacyPolicy,
                   );
                 },
                 radius: radius,

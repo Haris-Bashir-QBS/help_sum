@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 import '../../../../../core/enums/content_type.dart';
 
 class ContentScreen extends StatelessWidget {
-  final ContentType contentType;
+  final AppContentType contentType;
 
   const ContentScreen({super.key, required this.contentType});
 
   String _getTitle() {
     switch (contentType) {
-      case ContentType.termsAndConditions:
+      case AppContentType.termsAndConditions:
         return "Terms & Conditions";
-      case ContentType.privacyPolicy:
+      case AppContentType.privacyPolicy:
         return "Privacy Policy";
     }
   }
 
   String _getBody() {
     switch (contentType) {
-      case ContentType.termsAndConditions:
+      case AppContentType.termsAndConditions:
         return """
 Dummy Terms & Conditions:
 
@@ -27,7 +27,7 @@ Dummy Terms & Conditions:
 3. Users must follow all applicable local laws.
 4. The app may change or update at any time without notice.
 """;
-      case ContentType.privacyPolicy:
+      case AppContentType.privacyPolicy:
         return """
 Dummy Privacy Policy:
 

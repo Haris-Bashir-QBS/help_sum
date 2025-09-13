@@ -19,11 +19,11 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  await Firebase.initializeApp();
+  //await Firebase.initializeApp();
   await initializeDI();
 
-  final token = await FirebaseMessaging.instance.getToken();
-  print("Firebase Device Token: $token");
+ // final token = await FirebaseMessaging.instance.getToken();
+//  print("Firebase Device Token: $token");
 
   runApp(ProviderScope(child: const MyApp()));
 }

@@ -7,6 +7,7 @@ import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/services/media_picker_service.dart';
 import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
 import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AvatarWithBadge extends StatefulWidget {
   const AvatarWithBadge({super.key, this.imageUrl, required this.loginBloc});
@@ -38,6 +39,7 @@ class _AvatarWithBadgeState extends State<AvatarWithBadge> {
 
   @override
   Widget build(BuildContext context) {
+    print("widget.imageUrl ${widget.imageUrl}");
     return GestureDetector(
       onTap: () => _pickAndUploadImage(context),
       child: Stack(
@@ -45,11 +47,7 @@ class _AvatarWithBadgeState extends State<AvatarWithBadge> {
         children: [
           CircleAvatar(
             radius: 70.r,
-            backgroundColor: Colors.grey.shade300,
-            backgroundImage:
-                widget.imageUrl != null && widget.imageUrl!.isEmpty
-                    ? NetworkImage(widget.imageUrl!)
-                    : null,
+            backgroundColor: Colors.grey.shade200,
             child:
                 widget.imageUrl == null || widget.imageUrl!.isEmpty
                     ? Icon(
@@ -57,8 +55,38 @@ class _AvatarWithBadgeState extends State<AvatarWithBadge> {
                       size: 32.sp,
                       color: Colors.grey.shade800,
                     )
-                    : null,
+                    : ClipOval(
+                      child: Image.network(
+                        widget.imageUrl!,
+                        width: 140.r, // diameter = 2 * radius
+                        height: 140.r,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              width: 140.r,
+                              height: 140.r,
+                              color: Colors.grey.shade300,
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Center(
+                            child: Icon(
+                              Icons.broken_image,
+                              size: 50,
+                              color: Colors.grey,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
           ),
+
           if (widget.imageUrl == null || widget.imageUrl!.isEmpty)
             Positioned(
               top: -2,

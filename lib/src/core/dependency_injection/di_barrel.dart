@@ -13,7 +13,12 @@ import 'package:help_sum/src/features/auth/presentation/bloc/schedule/schedule_b
 import 'package:help_sum/src/features/auth/presentation/bloc/signup/signup_bloc.dart';
 import 'package:help_sum/src/features/auth/presentation/bloc/skill/skill_bloc.dart';
 import 'package:help_sum/src/features/auth/presentation/bloc/verify_otp/verify_otp_bloc.dart';
-import 'package:help_sum/src/features/core/common/profile/bloc/bloc/profile_bloc.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/bloc/bloc/profile_bloc.dart';
+import 'package:help_sum/src/features/core/common/profile/data/datasources/remote/profile_remote_datasource.dart';
+import 'package:help_sum/src/features/core/common/profile/data/datasources/remote/profile_remote_datasource_impl.dart';
+import 'package:help_sum/src/features/core/common/profile/data/repositories/profile_repository_impl.dart';
+import 'package:help_sum/src/features/core/common/profile/domain/repositories/profile_repository.dart';
+import 'package:help_sum/src/features/core/common/profile/domain/usecases/get_merchant_ratings_usecase.dart';
 import 'package:help_sum/src/features/core/consumer/booking/domain/usecases/fetch_jobs_by_type_usecase.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/datasources/remote/merchant_view_profile_remote_datasource.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/datasources/remote/merchant_view_profile_remote_datasource_impl.dart';

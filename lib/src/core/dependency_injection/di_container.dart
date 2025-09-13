@@ -10,6 +10,7 @@ Future<void> initializeDI() async {
   await _initPaymentDependencies();
   await _initBookingDependencies();
   await _initMerchantViewProfileDependencies();
+  await _initProfileDependencies();
 }
 
 /// ------------------------
@@ -56,7 +57,6 @@ void _registerAuthBloc() {
   sl.registerFactory<SkillBloc>(() => SkillBloc());
   sl.registerFactory<ScheduleBloc>(() => ScheduleBloc());
   sl.registerFactory<PortfolioBloc>(() => PortfolioBloc());
-  sl.registerFactory<ProfileBloc>(() => ProfileBloc());
 }
 
 void _registerAuthUsecases() {
@@ -166,4 +166,39 @@ Future<void> _initMerchantViewProfileDependencies() async {
     () => MerchantViewProfileRepositoryImpl(sl()),
   );
   sl.registerLazySingleton(() => GetMerchantViewProfileUseCase(sl()));
+}
+
+/// ------------------------
+/// PROFILE DEPENDENCIES
+/// ------------------------
+
+Future<void> _initProfileDependencies() async {
+  _registerProfileRemoteDatasources();
+  _registerProfileRepositories();
+  _registerProfileUsecases();
+  _registerProfileBloc();
+}
+
+void _registerProfileRemoteDatasources() {
+  sl.registerLazySingleton<ProfileRemoteDataSource>(
+    () => ProfileRemoteDataSourceImplementation(client: sl()),
+  );
+}
+
+void _registerProfileRepositories() {
+  sl.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepositoryImplementation(remoteDataSource: sl()),
+  );
+}
+
+void _registerProfileUsecases() {
+  sl.registerLazySingleton<GetMerchantRatingsUseCase>(
+    () => GetMerchantRatingsUseCase(profileRepository: sl()),
+  );
+}
+
+void _registerProfileBloc() {
+  sl.registerLazySingleton<ProfileBloc>(
+    () => ProfileBloc(getMerchantRatingsUseCase: sl()),
+  );
 }

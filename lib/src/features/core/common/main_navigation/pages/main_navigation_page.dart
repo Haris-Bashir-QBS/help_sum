@@ -75,15 +75,6 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
           if ((_selectedIndex == 2 && userRole == AppRole.consumer.name) ||
               (_selectedIndex == 3 && userRole == AppRole.merchant.name)) ...[
             Padding(
-              padding: const EdgeInsets.only(right: 0.0),
-              child: IconButton(
-                icon: const Icon(Icons.settings),
-                onPressed: () {
-                  context.pushNamed(AppRoutes.settings);
-                },
-              ),
-            ),
-            Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: IconButton(
                 icon: Icon(

@@ -1,1 +1,1 @@
-enum ContentType { termsAndConditions, privacyPolicy }
+enum AppContentType { termsAndConditions, privacyPolicy }

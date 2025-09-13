@@ -515,7 +515,7 @@ GoRoute _content() {
     name: AppRoutes.content,
     path: '/content',
     builder: (context, state) {
-      final contentType = state.extra as ContentType;
+      final contentType = state.extra as AppContentType;
       return ContentScreen(contentType: contentType);
     },
   );
