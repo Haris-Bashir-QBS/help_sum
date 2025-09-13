@@ -10,9 +10,9 @@ abstract class MerchantJobsRepository {
   );
 
   Future<Either<Failure, JobData>> updateJob(UpdateJobParams params);
-  
+
   Future<Either<Failure, JobData>> startJob(String jobId);
-  
+
   Future<Either<Failure, JobData>> completeJob(String jobId);
 
   ///Change Job Status

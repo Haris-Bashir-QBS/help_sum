@@ -48,15 +48,13 @@ void _registerAuthRepositories() {
 }
 
 void _registerAuthBloc() {
-  //Singleton for LoginBloc as it might be used across multiple screens
   sl.registerLazySingleton<LoginBloc>(() => LoginBloc());
-
-  //Factory for SignupBloc as it is likely to be used in a single screen
   sl.registerFactory<SignupBloc>(() => SignupBloc());
   sl.registerFactory<VerifyOtpBloc>(() => VerifyOtpBloc());
   sl.registerFactory<SkillBloc>(() => SkillBloc());
   sl.registerFactory<ScheduleBloc>(() => ScheduleBloc());
   sl.registerFactory<PortfolioBloc>(() => PortfolioBloc());
+  sl.registerFactory<ActivityBloc>(() => ActivityBloc());
 }
 
 void _registerAuthUsecases() {

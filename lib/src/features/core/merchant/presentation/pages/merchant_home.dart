@@ -146,7 +146,7 @@ class _MerchantMapScreenState extends ConsumerState<MerchantMapScreen> {
             top: 80,
             left: 10,
             child: Container(
-              width: 0.42.sw,
+              width: 0.5.sw,
               height: 60,
               decoration: BoxDecoration(
                 color: AppPalette.primaryColor,

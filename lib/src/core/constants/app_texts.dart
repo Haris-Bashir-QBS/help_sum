@@ -25,6 +25,8 @@ class AppTexts {
   static const String roleSelectionHeading =
       'Need Services\nor Job at Your\nFingertips?.';
   static const String managePaymentMethods = 'Manage Payment Methods ';
+  static const String managePaymentMethodsDesc =
+      'Manage update payment methods ';
   static const String termsAndConditions = 'Terms & Conditions';
   static const String privacyPolicy = 'Privacy Policy';
   static const String aboutUs = 'About Us';
@@ -319,4 +321,7 @@ class AppTexts {
   static const String edit = 'Edit';
   static const String noReviewsYet = 'No reviews yet';
   static const String noRecommendedMerchants = 'No merchants found.';
+  static const String notification = 'Notification';
+  static const String messages = 'Messages';
+  static const String activity = 'Activity';
 }

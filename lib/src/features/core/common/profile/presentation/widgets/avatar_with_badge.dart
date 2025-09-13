@@ -3,11 +3,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/services/media_picker_service.dart';
 import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
 import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:help_sum/src/widgets/comman_imageview.dart';
+
 
 class AvatarWithBadge extends StatefulWidget {
   const AvatarWithBadge({super.key, this.imageUrl, required this.loginBloc});
@@ -89,8 +92,8 @@ class _AvatarWithBadgeState extends State<AvatarWithBadge> {
 
           if (widget.imageUrl == null || widget.imageUrl!.isEmpty)
             Positioned(
-              top: -2,
-              right: -2,
+              top: 2,
+              right: 10,
               child: Container(
                 padding: const EdgeInsets.all(2),
                 decoration: const BoxDecoration(

@@ -179,87 +179,90 @@ class _EditBasicInfoScreenState extends ConsumerState<EditBasicInfoScreen> {
   Widget build(BuildContext context) {
     _listener();
     final isLoading = ref.watch(authNotifierProvider) is SaveBasicInfoLoading;
-    return ModalProgressHUD(
-      inAsyncCall: isLoading,
-      child: Scaffold(
-        appBar: CustomAppBar(title: AppTexts.account),
-        body: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(16.w),
-              child: Column(
-                children: [
-                  //   if (appRole == AppRole.merchant) ...[
-                  _buildMerchantProfileHeader(context),
-                  30.verticalSpace,
-                  //  ],
-                  InfoCard(
-                    title:
-                        appRole == AppRole.merchant
-                            ? AppTexts.personalDetails
-                            : AppTexts.basicInformation,
-                    children: [
-                      InfoRow(
-                        label: AppTexts.firstName,
-                        value: widget.user.firstName ?? "",
-                        isEditable: true,
-                        controller: _firstNameController,
-                        validator: AppValidators.validateFullName(),
-                        onChanged: (value) {
-                          _formKey.currentState?.validate();
-                        },
-                      ),
-                      InfoRow(
-                        label: AppTexts.lastName,
-                        value: widget.user.lastName ?? "",
-                        isEditable: true,
-                        controller: _lastNameController,
-                        validator: AppValidators.validateFullName(),
-                        onChanged: (value) {
-                          _formKey.currentState?.validate();
-                        },
-                      ),
-
-                      if (appRole == AppRole.merchant) ...[
+    return BlocProvider.value(
+      value: _loginBloc,
+      child: ModalProgressHUD(
+        inAsyncCall: isLoading,
+        child: Scaffold(
+          appBar: CustomAppBar(title: AppTexts.account),
+          body: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Column(
+                  children: [
+                    //   if (appRole == AppRole.merchant) ...[
+                    _buildMerchantProfileHeader(context),
+                    30.verticalSpace,
+                    //  ],
+                    InfoCard(
+                      title:
+                          appRole == AppRole.merchant
+                              ? AppTexts.personalDetails
+                              : AppTexts.basicInformation,
+                      children: [
                         InfoRow(
-                          label: AppTexts.emailAddress,
-                          value: widget.user.email ?? "",
+                          label: AppTexts.firstName,
+                          value: widget.user.firstName ?? "",
                           isEditable: true,
-                          controller: _emailController,
-                          validator: AppValidators.validateEmail(),
+                          controller: _firstNameController,
+                          validator: AppValidators.validateFullName(),
                           onChanged: (value) {
                             _formKey.currentState?.validate();
                           },
                         ),
-
                         InfoRow(
-                          label: AppTexts.phoneNumber,
-                          value: widget.user.phone ?? "",
-                          isEditable: false,
-                          controller: _phoneController,
-                          validator: AppValidators.validatePhoneNumber(),
+                          label: AppTexts.lastName,
+                          value: widget.user.lastName ?? "",
+                          isEditable: true,
+                          controller: _lastNameController,
+                          validator: AppValidators.validateFullName(),
                           onChanged: (value) {
                             _formKey.currentState?.validate();
                           },
                         ),
-                      ],
-                    ],
-                    onPressed: () {},
-                  ),
 
-                  // const Spacer(),
-                  30.verticalSpace,
-                  FadeScaleTransitionWidget(
-                    duration: const Duration(milliseconds: 900),
-                    child: CustomButton(
-                      text: AppTexts.saveChanges,
-                      textColor: Colors.white,
-                      color: AppPalette.primaryColor,
-                      onPressed: _saveChanges,
+                        if (appRole == AppRole.merchant) ...[
+                          InfoRow(
+                            label: AppTexts.emailAddress,
+                            value: widget.user.email ?? "",
+                            isEditable: true,
+                            controller: _emailController,
+                            validator: AppValidators.validateEmail(),
+                            onChanged: (value) {
+                              _formKey.currentState?.validate();
+                            },
+                          ),
+
+                          InfoRow(
+                            label: AppTexts.phoneNumber,
+                            value: widget.user.phone ?? "",
+                            isEditable: false,
+                            controller: _phoneController,
+                            validator: AppValidators.validatePhoneNumber(),
+                            onChanged: (value) {
+                              _formKey.currentState?.validate();
+                            },
+                          ),
+                        ],
+                      ],
+                      onPressed: () {},
                     ),
-                  ),
-                ],
+
+                    // const Spacer(),
+                    30.verticalSpace,
+                    FadeScaleTransitionWidget(
+                      duration: const Duration(milliseconds: 900),
+                      child: CustomButton(
+                        text: AppTexts.saveChanges,
+                        textColor: Colors.white,
+                        color: AppPalette.primaryColor,
+                        onPressed: _saveChanges,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

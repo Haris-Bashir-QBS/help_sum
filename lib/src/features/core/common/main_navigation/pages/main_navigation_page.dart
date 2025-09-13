@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -65,13 +66,23 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        centerTitle: true,
+        centerTitle:
+            (_selectedIndex != 2 && userRole == AppRole.consumer.name) ||
+            (_selectedIndex != 3 && userRole == AppRole.merchant.name),
+        // ? true
+        // : false,
         showLeading: false,
         title:
             userRole == AppRole.consumer.name
                 ? AppStaticData.consumerAppbarTitles[_selectedIndex]
                 : AppStaticData.merchantAppBarTitles[_selectedIndex],
         actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_on_rounded),
+            onPressed: () {
+              context.pushNamed(AppRoutes.inboxAndNotifcations);
+            },
+          ),
           if ((_selectedIndex == 2 && userRole == AppRole.consumer.name) ||
               (_selectedIndex == 3 && userRole == AppRole.merchant.name)) ...[
             Padding(
@@ -85,8 +96,6 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
                   loginBloc.add(const LogoutUser());
                   context.goNamed(AppRoutes.roleSelection);
                 },
-              ),
-            ),
           ],
         ],
       ),

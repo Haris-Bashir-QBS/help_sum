@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
@@ -64,20 +66,23 @@ class PortfolioBloc extends Bloc<PortfolioEvent, PortfolioState> {
         );
       },
       (files) {
+        log("Files ---- ${files.first.url}");
+        final urls = files.map((e) => e.url).toList();
+        final currentUrls = state.userEntity?.media ?? <String>[];
+
+        final List<String> updatedUrls = [...urls, ...currentUrls];
+
+        log("updatedUrls $currentUrls");
         emit(
           state.copyWith(
             fileUploaded: true,
             isLoading: false,
-            userEntity: state.userEntity?.copyWith(
-              media: files.map((e) => e.url).toList(),
-            ),
+            userEntity: state.userEntity?.copyWith(media: updatedUrls),
           ),
         );
         add(
           UpdateUserProfile(
-            updateProfileRequest: UpdateProfileRequest(
-              media: files.map((e) => e.url).toList(),
-            ),
+            updateProfileRequest: UpdateProfileRequest(media: updatedUrls),
           ),
         );
       },
