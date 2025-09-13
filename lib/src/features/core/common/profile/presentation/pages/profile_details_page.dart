@@ -137,6 +137,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                           children: [
                             _buildMerchantProfileHeader(context, user),
                             SizedBox(height: 24.h),
+
                             CustomText(
                               text: "${user.firstName} ${user.lastName}",
                               fontSize: 20.sp,
@@ -146,27 +147,28 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                             CustomText(
                               text: user.description ?? "No description added",
                             ),
+                            50.verticalSpace,
 
-                            20.verticalSpace,
-                            ElevatedButton.icon(
-                              icon: const Icon(Icons.edit, size: 18),
-                              onPressed: () {
-                                context.pushNamed(
-                                  AppRoutes.editBasicInfo,
-                                  extra: user,
-                                );
-                              },
-                              label: CustomText(
-                                text: AppTexts.edit,
-                                color: context.theme.colorScheme.onPrimary,
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            20.verticalSpace,
+                            // ElevatedButton.icon(
+                            //   icon: const Icon(Icons.edit, size: 18),
+                            //   onPressed: () {
+                            //     context.pushNamed(
+                            //       AppRoutes.editBasicInfo,
+                            //       extra: user,
+                            //     );
+                            //   },
+                            //   label: CustomText(
+                            //     text: AppTexts.edit,
+                            //     color: context.theme.colorScheme.onPrimary,
+                            //     fontSize: 18.sp,
+                            //     fontWeight: FontWeight.w500,
+                            //   ),
+                            // ),
+                            // 20.verticalSpace,
                             _buildBasicInfoCard(context, user),
-                            26.verticalSpace,
-                            _buildContactInfoCard(context, user),
+                            // 20.verticalSpace,
+                            _buildSettingsExpansionTile(context),
+                            // _buildContactInfoCard(context, user),
                           ],
                         ),
                       )
@@ -185,35 +187,67 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
   }
 
   Widget _buildBasicInfoCard(BuildContext context, UserEntity user) {
-    return InfoCard(
-      title: AppTexts.basicInformation,
+    return Column(
       children: [
-        InfoRow(label: AppTexts.firstName, value: user.firstName ?? ""),
-        InfoRow(label: AppTexts.lastName, value: user.lastName ?? ""),
+        _buildMerchantInfoTile(
+          context,
+          icon: Icons.person,
+          title: 'Update Profile',
+          subtitle: 'Update name,email,phone',
+          onTap: () => context.pushNamed(AppRoutes.editBasicInfo, extra: user),
+        ),
+        10.verticalSpace,
+
+        _buildMerchantInfoTile(
+          context,
+          icon: Icons.description,
+          title: 'Update Description',
+          subtitle: 'Update profile description',
+          onTap:
+              () =>
+                  context.pushNamed(AppRoutes.changeDescriptipon, extra: user),
+        ),
+        10.verticalSpace,
+
+        // _buildMerchantInfoTile(
+        //   context,
+        //   icon: Icons.list,
+        //   title: 'Contact Information',
+        //   subtitle: 'Update phone,email',
+        //   onTap:
+        //       () => context.pushNamed(AppRoutes.editContactInfo, extra: user),
+        // ),
       ],
-      onPressed: () {
-        // context.pushNamed(AppRoutes.editBasicInfo, extra: user);
-      },
     );
+    // return InfoCard(
+    //   title: AppTexts.basicInformation,
+    //   children: [
+    //     InfoRow(label: AppTexts.firstName, value: user.firstName ?? ""),
+    //     InfoRow(label: AppTexts.lastName, value: user.lastName ?? ""),
+    //   ],
+    //   onPressed: () {
+    //     // context.pushNamed(AppRoutes.editBasicInfo, extra: user);
+    //   },
+    // );
   }
 
-  Widget _buildContactInfoCard(BuildContext context, UserEntity user) {
-    return InfoCard(
-      title: AppTexts.contactInformation,
-      children: [
-        VerificationStatusIndicator(isVerified: user.isVerified == true),
-        InfoRow(
-          label: AppTexts.emailAddress,
-          value: user.email ?? "",
-          visible: (user.email ?? "").isNotEmpty,
-        ),
-        InfoRow(label: AppTexts.phoneNumber, value: user.phone ?? ""),
-      ],
-      onPressed: () {
-        // context.pushNamed(AppRoutes.editBasicInfo, extra: user);
-      },
-    );
-  }
+  // Widget _buildContactInfoCard(BuildContext context, UserEntity user) {
+  //   return InfoCard(
+  //     title: AppTexts.contactInformation,
+  //     children: [
+  //       VerificationStatusIndicator(isVerified: user.isVerified == true),
+  //       InfoRow(
+  //         label: AppTexts.emailAddress,
+  //         value: user.email ?? "",
+  //         visible: (user.email ?? "").isNotEmpty,
+  //       ),
+  //       InfoRow(label: AppTexts.phoneNumber, value: user.phone ?? ""),
+  //     ],
+  //     onPressed: () {
+  //       // context.pushNamed(AppRoutes.editBasicInfo, extra: user);
+  //     },
+  //   );
+  // }
 
   Widget _buildMerchantProfileHeader(BuildContext context, UserEntity user) {
     return InkWell(
@@ -224,26 +258,23 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
           clipBehavior: Clip.none,
           // fit: StackFit.passthrough,
           children: [
-            FadeScaleTransitionWidget(
-              duration: const Duration(milliseconds: 400),
-              child: Container(
-                height: .20.sh,
-                padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color.fromARGB(255, 120, 128, 145),
-                      Color(0xFFEFF0F2),
-                      Color.fromARGB(255, 132, 139, 152),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.r),
-                    topRight: Radius.circular(30.r),
-                  ),
+            Container(
+              height: .20.sh,
+              padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromARGB(255, 120, 128, 145),
+                    Color(0xFFEFF0F2),
+                    Color.fromARGB(255, 132, 139, 152),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
+                // borderRadius: BorderRadius.only(
+                //   topLeft: Radius.circular(30.r),
+                //   topRight: Radius.circular(30.r),
+                // ),
               ),
             ),
 

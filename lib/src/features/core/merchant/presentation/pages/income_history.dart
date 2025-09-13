@@ -84,7 +84,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                 price: 3044,
               ),
               20.verticalSpace,
-              TransactionHistoryItemShimmer(),
+              // TransactionHistoryItemShimmer(),
             ],
           ),
         ),

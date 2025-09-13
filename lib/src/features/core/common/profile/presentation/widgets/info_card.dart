@@ -22,28 +22,28 @@ class InfoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           CustomText(
-                    text: title,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  8.verticalSpace,
+          CustomText(text: title, fontSize: 18.sp, fontWeight: FontWeight.bold),
+          8.verticalSpace,
           Container(
             width: 1.sw,
-            padding: EdgeInsets.only(left: 22.w,top: 22.h,bottom: 22.h,right: 22.w),
+            padding: EdgeInsets.only(
+              left: 22.w,
+              top: 22.h,
+              bottom: 22.h,
+              right: 22.w,
+            ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: AppPalette.lightGreyColor,
-              border: Border.all(color: AppPalette.greyColor)
+              border: Border.all(color: AppPalette.greyColor),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children:  children,
-              
+              children: children,
             ),
           ),
         ],
       ),
     );
   }
-} 
+}
