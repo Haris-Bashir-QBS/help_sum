@@ -6,4 +6,5 @@ abstract interface class ProfileRepository {
   Future<Either<Failure, RatingResponseEntity>> getMerchantRatings({
     required String merchantId,
   });
+  Future<Either<Failure, void>> deleteAccount();
 }

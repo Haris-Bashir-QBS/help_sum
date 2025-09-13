@@ -19,6 +19,7 @@ import 'package:help_sum/src/features/core/common/profile/data/datasources/remot
 import 'package:help_sum/src/features/core/common/profile/data/repositories/profile_repository_impl.dart';
 import 'package:help_sum/src/features/core/common/profile/domain/repositories/profile_repository.dart';
 import 'package:help_sum/src/features/core/common/profile/domain/usecases/get_merchant_ratings_usecase.dart';
+import 'package:help_sum/src/features/core/common/profile/domain/usecases/delete_account_usecase.dart';
 import 'package:help_sum/src/features/core/common/general/presentation/bloc/activity_bloc.dart';
 import 'package:help_sum/src/features/core/consumer/booking/domain/usecases/fetch_jobs_by_type_usecase.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/datasources/remote/merchant_view_profile_remote_datasource.dart';
