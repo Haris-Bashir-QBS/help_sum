@@ -33,6 +33,8 @@ class CustomSearchField extends StatelessWidget {
       ).copyWith(top: 10.h),
       child: CustomTextFormField(
         controller: controller,
+        isOutlinedBorder: true,
+        borderRadius: BorderRadius.circular(8),
         hint: hintText ?? AppTexts.searchHint,
         customHintStyle: TextStyle(
           fontSize: 16.sp,

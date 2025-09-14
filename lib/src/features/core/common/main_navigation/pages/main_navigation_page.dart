@@ -57,7 +57,6 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
       _pages.addAll([
         const AllJobsScreen(),
         MerchantMapScreen(),
-        IncomeScreen(),
         InboxAndNotificationsView(),
         ProfileDetailsPage(),
       ]);
@@ -87,7 +86,7 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
           //   },
           // ),
           if ((_selectedIndex == 3 && userRole == AppRole.consumer.name) ||
-              (_selectedIndex == 4 && userRole == AppRole.merchant.name)) ...[
+              (_selectedIndex == 3 && userRole == AppRole.merchant.name)) ...[
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: IconButton(

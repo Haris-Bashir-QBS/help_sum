@@ -17,9 +17,9 @@ class AppStaticData {
   static List<String> merchantAppBarTitles = [
     AppTexts.jobs,
     "",
-    "History",
     AppTexts.activity,
     "Account",
+    
   ];
 
   static const List<String> jobStatusTabs = [
@@ -266,7 +266,6 @@ class AppStaticData {
   static final List<AppDestination> merchantDestinations = [
     AppDestination(iconPath: Icons.work, label: "Jobs"),
     AppDestination(iconPath: Icons.dashboard, label: "Dashboard"),
-    AppDestination(iconPath: Icons.wallet, label: "Wallet"),
     AppDestination(iconPath: Icons.messenger, label: "Activity"),
     AppDestination(iconPath: Icons.person, label: "Profile"),
   ];

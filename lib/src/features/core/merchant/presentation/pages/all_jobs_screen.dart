@@ -15,17 +15,13 @@ import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
-import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_card.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/rich_booking_card.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_states.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/wallet_card.dart';
-import 'package:help_sum/src/widgets/app_tab_bar.dart';
 import 'package:help_sum/src/widgets/custom_loading_widget.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
-
-import '../../../../../widgets/custom_refresh_indicator.dart';
 
 class AllJobsScreen extends ConsumerStatefulWidget {
   const AllJobsScreen({super.key});
@@ -39,6 +35,31 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   int selectedIndex = 0;
   List<JobModel> jobs = [];
   late final LoginBloc _loginBloc;
+  final TextEditingController searchController = TextEditingController();
+
+  // Add filter state
+  String selectedFilter = AppTexts.all; // Default filter
+  final List<String> filters = [
+    AppTexts.all,
+    AppTexts.onGoing,
+    AppTexts.waitingConfirmation,
+    AppTexts.waitingPayment,
+    AppTexts.completed,
+    AppTexts.cancelled,
+  ];
+
+  // Add search state
+  String searchQuery = '';
+
+  // API mapping for filter values - using merchant-specific statuses
+  final Map<String, String> filterApiMap = {
+    AppTexts.all: 'all',
+    AppTexts.onGoing: 'in_progress',
+    AppTexts.waitingConfirmation: 'waiting_confirmation',
+    AppTexts.waitingPayment: 'waiting_payment',
+    AppTexts.completed: 'completed',
+    AppTexts.cancelled: 'cancelled',
+  };
 
   @override
   void initState() {
@@ -51,84 +72,115 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   }
 
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final state = ref.watch(merchantJobsNotifierProvider);
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: BlocProvider.value(
-        value: _loginBloc,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // CustomSearchField(),
-            CustomText(
-              text: AppTexts.yourProgress,
-              fontSize: 22.sp,
-              fontWeight: FontWeight.bold,
+    return BlocProvider.value(
+      value: _loginBloc,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          final apiType = filterApiMap[selectedFilter] ?? 'all';
+          ref
+              .read(merchantJobsNotifierProvider.notifier)
+              .getAllJobsByType(jobType: apiType, refresh: true);
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: BlocBuilder<LoginBloc, LoginState>(
+                  builder: (context, state) {
+                    return FadeScaleTransitionWidget(
+                      child: WalletCard(
+                        userName:
+                            "${state.userEntity?.firstName ?? ""} ${state.userEntity?.lastName ?? ""}",
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
-            10.verticalSpace,
-            BlocBuilder<LoginBloc, LoginState>(
-              builder: (context, state) {
-                return FadeScaleTransitionWidget(
-                  child: WalletCard(
-                    userName:
-                        "${state.userEntity?.firstName ?? ""} ${state.userEntity?.lastName ?? ""}",
+
+            SliverPersistentHeader(
+              pinned: true, // 👈 makes it stick
+              delegate: _StickyHeaderDelegate(
+                minHeight: 140.h, // height when collapsed
+                maxHeight: 160.h, // height when expanded
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      _searchField(),
+                      10.verticalSpace,
+                      _buildFilterButton(context),
+                    ],
                   ),
-                );
-              },
+                ),
+              ),
             ),
-            20.verticalSpace,
-            _buildJobsTabBar(),
-            20.verticalSpace,
-            _jobListView(state),
+
+            // Job list section
+            _jobListSliver(state),
           ],
         ),
       ),
     );
   }
 
-  Widget _jobListView(MerchantJobsState state) {
+  Widget _jobListSliver(MerchantJobsState state) {
     if (state is MerchantJobsLoading || state is MerchantJobsInitial) {
-      return const Expanded(child: Center(child: CustomDotsLoader()));
+      return SliverFillRemaining(child: Center(child: CustomDotsLoader()));
     } else if (state is MerchantJobsError) {
-      return Expanded(child: Center(child: CustomText(text: state.message)));
+      return SliverFillRemaining(
+        child: Center(child: CustomText(text: state.message)),
+      );
     } else if (state is MerchantJobsLoaded) {
-      final jobs = state.response.data;
+      final allJobs = state.response.data;
 
-      if (jobs.data.isEmpty == true) {
-        return const Expanded(
-          child: Center(child: CustomText(text: "No Jobs Found")),
+      // Filter jobs based on search query
+      final jobs = _filterJobs(allJobs.data, searchQuery);
+
+      if (jobs.isEmpty) {
+        return SliverFillRemaining(
+          child: Center(
+            child: CustomText(
+              text:
+                  searchQuery.isNotEmpty
+                      ? AppTexts.noServicesFound
+                      : "No Jobs Found",
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         );
       }
 
-      return Expanded(
-        child: CustomRefreshIndicator(
-          onRefresh: () async {
-            ref
-                .read(merchantJobsNotifierProvider.notifier)
-                .getAllJobsByType(
-                  jobType: AppStaticData.jobStatusTabs[selectedIndex],
-                  refresh: true,
-                );
-          },
-          child: ListView.separated(
-            separatorBuilder: (context, index) => 10.verticalSpace,
-            itemCount: jobs.data.length,
-            itemBuilder: (c, i) {
-              final job = jobs.data[i];
-              return RichBookingCard(
+      return SliverPadding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            final job = jobs[index];
+            return Padding(
+              padding: EdgeInsets.only(bottom: 10.h),
+              child: RichBookingCard(
                 job: job,
                 isMerchant: true,
                 showStatus: selectedIndex == 0,
                 onTap: () => _navigateToJobDetailScreen(job),
-              );
-            },
-          ),
+              ),
+            );
+          }, childCount: jobs.length),
         ),
       );
     }
 
-    return const Expanded(child: SizedBox());
+    return const SliverToBoxAdapter(child: SizedBox());
   }
 
   void _navigateToJobDetailScreen(JobData? job) async {
@@ -141,7 +193,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
     );
 
     // bool? isRefresh = await context.pushNamed(AppRoutes.rateScreen, extra: job);
-    if (isRefresh == true) {
+    if (isRefresh == true && mounted) {
       _fetchJobs();
     }
   }
@@ -193,27 +245,173 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
     }
   }
 
-  _buildJobsTabBar() {
-    return AppTabBar(
-      selectedIndex: selectedIndex,
-      tabs: AppStaticData.jobStatusTabs,
-      onTapChanged: (index) {
-        setState(() {
-          selectedIndex = index;
-        });
-        _fetchJobs();
+  Widget _searchField() {
+    return CustomSearchField(
+      horizontalPadding: 0,
+      controller: searchController,
+      onChanged: (value) {
+        // Implement search logic here
+        _performSearch(value);
+      },
+      onSearch: () {
+        // Implement search on search button tap
+        _performSearch(searchController.text);
       },
     );
   }
 
+  void _performSearch(String query) {
+    if (!mounted) return;
+
+    setState(() {
+      searchQuery = query.toLowerCase().trim();
+    });
+  }
+
+  Widget _buildFilterButton(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 0),
+        child: Row(
+          children: [
+            Expanded(
+              child: CustomText(
+                text: "Filter Jobs",
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            GestureDetector(
+              onTap: () async {
+                final result = await showModalBottomSheet<String>(
+                  context: context,
+                  builder: (ctx) => _buildFilterSheet(ctx),
+                );
+                if (result != null && result != selectedFilter) {
+                  setState(() {
+                    selectedFilter = result;
+                    selectedIndex = filters.indexOf(result);
+                  });
+                  _fetchJobs();
+                }
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomText(
+                    text: selectedFilter,
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppPalette.primaryColor,
+                  ),
+                  Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: AppPalette.primaryColor,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterSheet(BuildContext context) {
+    return SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children:
+            filters.map((filter) {
+              return ListTile(
+                title: CustomText(
+                  text: filter,
+                  fontSize: 16.sp,
+                  color:
+                      filter == selectedFilter
+                          ? AppPalette.primaryColor
+                          : Colors.black,
+                  fontWeight:
+                      filter == selectedFilter
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                ),
+                onTap: () => Navigator.pop(context, filter),
+                selected: filter == selectedFilter,
+              );
+            }).toList(),
+      ),
+    );
+  }
+
+  List<JobData> _filterJobs(List<JobData> jobs, String query) {
+    if (query.isEmpty) return jobs;
+
+    return jobs.where((job) {
+      final title = job.title.toLowerCase();
+      final description = job.description.toLowerCase();
+      final serviceName = job.serviceId.name.toLowerCase();
+      final merchantName =
+          '${job.merchantId.firstName} ${job.merchantId.lastName}'
+              .toLowerCase();
+      final consumerName =
+          '${job.consumerId.firstName} ${job.consumerId.lastName}'
+              .toLowerCase();
+
+      return title.contains(query) ||
+          description.contains(query) ||
+          serviceName.contains(query) ||
+          merchantName.contains(query) ||
+          consumerName.contains(query);
+    }).toList();
+  }
+
   void _fetchJobs() {
+    if (!mounted) return;
+
     Future.microtask(() {
+      if (!mounted) return;
+      final apiType = filterApiMap[selectedFilter] ?? 'all';
       ref
           .read(merchantJobsNotifierProvider.notifier)
-          .getAllJobsByType(
-            jobType: AppStaticData.jobStatusTabs[selectedIndex],
-            refresh: true,
-          );
+          .getAllJobsByType(jobType: apiType, refresh: true);
     });
+  }
+}
+
+class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+  final double minHeight;
+  final double maxHeight;
+
+  _StickyHeaderDelegate({
+    required this.child,
+    required this.minHeight,
+    required this.maxHeight,
+  });
+
+  @override
+  double get minExtent => minHeight;
+
+  @override
+  double get maxExtent => maxHeight;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: Colors.white, // keep sticky background
+      child: child,
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _StickyHeaderDelegate oldDelegate) {
+    return child != oldDelegate.child ||
+        minHeight != oldDelegate.minHeight ||
+        maxHeight != oldDelegate.maxHeight;
   }
 }
