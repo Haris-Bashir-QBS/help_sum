@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
@@ -10,7 +11,6 @@ import 'package:help_sum/src/features/auth/data/models/request/upload_file_reque
 import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:help_sum/src/widgets/comman_imageview.dart';
-
 
 class AvatarWithBadge extends StatefulWidget {
   const AvatarWithBadge({super.key, this.imageUrl, required this.loginBloc});
@@ -59,33 +59,61 @@ class _AvatarWithBadgeState extends State<AvatarWithBadge> {
                       color: Colors.grey.shade800,
                     )
                     : ClipOval(
-                      child: Image.network(
+                      child: ExtendedImage.network(
                         widget.imageUrl!,
                         width: 140.r, // diameter = 2 * radius
                         height: 140.r,
                         fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
+                        cache: true,
+                        enableLoadState: true,
+                        loadStateChanged: (state) {
+                          if (state.extendedImageLoadState ==
+                              LoadState.loading) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: Container(
+                                width: 140.r,
+                                height: 140.r,
+                                color: Colors.grey.shade300,
+                              ),
+                            );
+                          }
+                          // Failure
+                          if (state.extendedImageLoadState ==
+                              LoadState.failed) {
+                            return const Center(
+                              child: Icon(
+                                Icons.broken_image,
+                                color: Colors.grey,
+                              ),
+                            );
+                          }
+                          return null;
+                        },
 
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey.shade300,
-                            highlightColor: Colors.grey.shade100,
-                            child: Container(
-                              width: 140.r,
-                              height: 140.r,
-                              color: Colors.grey.shade300,
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Center(
-                            child: Icon(
-                              Icons.broken_image,
-                              size: 50,
-                              color: Colors.grey,
-                            ),
-                          );
-                        },
+                        // loadingBuilder: (context, child, loadingProgress) {
+                        //   if (loadingProgress == null) return child;
+
+                        //   return Shimmer.fromColors(
+                        //     baseColor: Colors.grey.shade300,
+                        //     highlightColor: Colors.grey.shade100,
+                        //     child: Container(
+                        //       width: 140.r,
+                        //       height: 140.r,
+                        //       color: Colors.grey.shade300,
+                        //     ),
+                        //   );
+                        // },
+                        // errorBuilder: (context, error, stackTrace) {
+                        //   return const Center(
+                        //     child: Icon(
+                        //       Icons.broken_image,
+                        //       size: 50,
+                        //       color: Colors.grey,
+                        //     ),
+                        //   );
+                        // },
                       ),
                     ),
           ),

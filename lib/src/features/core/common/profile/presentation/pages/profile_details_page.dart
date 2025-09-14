@@ -197,7 +197,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
           subtitle: 'Update name,email,phone',
           onTap: () => context.pushNamed(AppRoutes.editBasicInfo, extra: user),
         ),
-        10.verticalSpace,
+        8.verticalSpace,
 
         _buildMerchantInfoTile(
           context,
@@ -208,7 +208,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
               () =>
                   context.pushNamed(AppRoutes.changeDescriptipon, extra: user),
         ),
-        10.verticalSpace,
+        8.verticalSpace,
 
         // _buildMerchantInfoTile(
         //   context,
@@ -339,6 +339,18 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
               padding: EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 children: [
+                  _buildMerchantInfoTile(
+                    context,
+                    icon: Icons.person,
+                    title: 'Basic Information',
+                    subtitle: 'Update name,email,phone',
+                    onTap:
+                        () => context.pushNamed(
+                          AppRoutes.editBasicInfo,
+                          extra: user,
+                        ),
+                  ),
+                  8.verticalSpace,
                   _buildMerchantInfoTile(
                     context,
                     icon: Icons.monetization_on_outlined,

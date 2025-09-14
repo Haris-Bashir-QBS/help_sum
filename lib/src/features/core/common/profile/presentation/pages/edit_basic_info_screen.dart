@@ -127,16 +127,26 @@ class _EditBasicInfoScreenState extends ConsumerState<EditBasicInfoScreen> {
   void initState() {
     super.initState();
     _loginBloc = sl<LoginBloc>();
-    _firstNameController = TextEditingController(text: widget.user.firstName);
-    _lastNameController = TextEditingController(text: widget.user.lastName);
-    _emailController = TextEditingController(text: widget.user.email);
-    _phoneController = TextEditingController(text: widget.user.phone);
+    _firstNameController = TextEditingController(
+      text: _loginBloc.state.userEntity?.firstName ?? "",
+    );
+    _lastNameController = TextEditingController(
+      text: _loginBloc.state.userEntity?.lastName ?? "",
+    );
+    _emailController = TextEditingController(
+      text: _loginBloc.state.userEntity?.email ?? "",
+    );
+    _phoneController = TextEditingController(
+      text: _loginBloc.state.userEntity?.phone ?? "",
+    );
   }
 
   @override
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -223,29 +233,29 @@ class _EditBasicInfoScreenState extends ConsumerState<EditBasicInfoScreen> {
                           },
                         ),
 
-                        if (appRole == AppRole.merchant) ...[
-                          InfoRow(
-                            label: AppTexts.emailAddress,
-                            value: widget.user.email ?? "",
-                            isEditable: true,
-                            controller: _emailController,
-                            validator: AppValidators.validateEmail(),
-                            onChanged: (value) {
-                              _formKey.currentState?.validate();
-                            },
-                          ),
+                        // if (appRole == AppRole.merchant) ...[
+                        InfoRow(
+                          label: AppTexts.emailAddress,
+                          value: widget.user.email ?? "",
+                          isEditable: true,
+                          controller: _emailController,
+                          validator: AppValidators.validateEmail(),
+                          onChanged: (value) {
+                            _formKey.currentState?.validate();
+                          },
+                        ),
 
-                          InfoRow(
-                            label: AppTexts.phoneNumber,
-                            value: widget.user.phone ?? "",
-                            isEditable: false,
-                            controller: _phoneController,
-                            validator: AppValidators.validatePhoneNumber(),
-                            onChanged: (value) {
-                              _formKey.currentState?.validate();
-                            },
-                          ),
-                        ],
+                        InfoRow(
+                          label: AppTexts.phoneNumber,
+                          value: widget.user.phone ?? "",
+                          isEditable: false,
+                          controller: _phoneController,
+                          validator: AppValidators.validatePhoneNumber(),
+                          onChanged: (value) {
+                            _formKey.currentState?.validate();
+                          },
+                        ),
+                        // ],
                       ],
                       onPressed: () {},
                     ),

@@ -13,6 +13,7 @@ class CustomImageView extends StatelessWidget {
   final BorderRadius? borderRadius;
   final Widget? errorWidget;
   final Border? border;
+  final bool isCircle;
 
   const CustomImageView({
     super.key,
@@ -25,6 +26,7 @@ class CustomImageView extends StatelessWidget {
     this.borderRadius,
     this.errorWidget,
     this.border,
+    this.isCircle = false,
   });
 
   @override
@@ -61,64 +63,72 @@ class CustomImageView extends StatelessWidget {
         );
         break;
       case ImageType.asset:
-        imageWidget = ClipRRect(
-          borderRadius: borderRadius ?? BorderRadius.zero,
-
-          child: ExtendedImage.asset(
-            imagePath ?? '',
-            width: width,
-            height: height,
-            fit: fit,
-            loadStateChanged: (state) {
-              switch (state.extendedImageLoadState) {
-                case LoadState.loading:
-                  return _buildShimmer(width, height, borderRadius);
-                case LoadState.failed:
-                  return errorWidget ??
-                      _buildErrorWidget(width, height, borderRadius);
-                case LoadState.completed:
-                  return ExtendedRawImage(
-                    image: state.extendedImageInfo?.image,
-                    width: width,
-                    height: height,
-                    fit: fit,
-                  );
-              }
-            },
-          ),
+        imageWidget = ExtendedImage.asset(
+          imagePath ?? '',
+          width: width,
+          height: height,
+          fit: fit,
+          loadStateChanged: (state) {
+            switch (state.extendedImageLoadState) {
+              case LoadState.loading:
+                return _buildShimmer(width, height, borderRadius);
+              case LoadState.failed:
+                return errorWidget ??
+                    _buildErrorWidget(width, height, borderRadius);
+              case LoadState.completed:
+                return ExtendedRawImage(
+                  image: state.extendedImageInfo?.image,
+                  width: width,
+                  height: height,
+                  fit: fit,
+                );
+            }
+          },
         );
+        if (!isCircle) {
+          imageWidget = ClipRRect(
+            borderRadius: borderRadius ?? BorderRadius.zero,
+            child: imageWidget,
+          );
+        }
         break;
       case ImageType.file:
-        imageWidget = ClipRRect(
-          borderRadius: borderRadius ?? BorderRadius.zero,
-          child:
-              file != null
-                  ? ExtendedImage.file(
-                    file!,
-                    width: width,
-                    height: height,
-                    fit: fit,
-                    loadStateChanged: (state) {
-                      switch (state.extendedImageLoadState) {
-                        case LoadState.loading:
-                          return _buildShimmer(width, height, borderRadius);
-                        case LoadState.failed:
-                          return errorWidget ??
-                              _buildErrorWidget(width, height, borderRadius);
-                        case LoadState.completed:
-                          return ExtendedRawImage(
-                            image: state.extendedImageInfo?.image,
-                            width: width,
-                            height: height,
-                            fit: fit,
-                          );
-                      }
-                    },
-                  )
-                  : errorWidget ??
-                      _buildErrorWidget(width, height, borderRadius),
-        );
+        imageWidget =
+            file != null
+                ? ExtendedImage.file(
+                  file!,
+                  width: width,
+                  height: height,
+                  fit: fit,
+                  loadStateChanged: (state) {
+                    switch (state.extendedImageLoadState) {
+                      case LoadState.loading:
+                        return _buildShimmer(width, height, borderRadius);
+                      case LoadState.failed:
+                        return errorWidget ??
+                            _buildErrorWidget(width, height, borderRadius);
+                      case LoadState.completed:
+                        return ExtendedRawImage(
+                          image: state.extendedImageInfo?.image,
+                          width: width,
+                          height: height,
+                          fit: fit,
+                        );
+                    }
+                  },
+                )
+                : errorWidget ?? _buildErrorWidget(width, height, borderRadius);
+        if (!isCircle) {
+          imageWidget = ClipRRect(
+            borderRadius: borderRadius ?? BorderRadius.zero,
+            child: imageWidget,
+          );
+        }
         break;
+    }
+
+    if (isCircle) {
+      imageWidget = ClipOval(child: imageWidget);
     }
 
     return imageWidget;
