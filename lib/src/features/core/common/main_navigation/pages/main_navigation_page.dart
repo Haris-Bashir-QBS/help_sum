@@ -10,6 +10,7 @@ import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:help_sum/src/features/auth/presentation/controller/notifiers/auth_notifier.dart';
+import 'package:help_sum/src/features/core/common/general/presentation/view/inbox_and_notifications_view.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/custom_bottom_navigation_bar.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/profile_details_page.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/all_booking_screen.dart';
@@ -48,6 +49,7 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
       _pages.addAll([
         AllBookingsPage(),
         HomeCategoriesPage(),
+        InboxAndNotificationsView(),
         ProfileDetailsPage(),
       ]);
     } else if (userRole == AppRole.merchant.name) {
@@ -56,6 +58,7 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
         const AllJobsScreen(),
         MerchantMapScreen(),
         IncomeScreen(),
+        InboxAndNotificationsView(),
         ProfileDetailsPage(),
       ]);
     }
@@ -66,9 +69,9 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        centerTitle:
-            (_selectedIndex != 2 && userRole == AppRole.consumer.name) ||
-            (_selectedIndex != 3 && userRole == AppRole.merchant.name),
+        centerTitle: true,
+        // (_selectedIndex != 2 && userRole == AppRole.consumer.name) ||
+        // (_selectedIndex != 3 && userRole == AppRole.merchant.name),
         // ? true
         // : false,
         showLeading: false,
@@ -77,14 +80,14 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
                 ? AppStaticData.consumerAppbarTitles[_selectedIndex]
                 : AppStaticData.merchantAppBarTitles[_selectedIndex],
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_on_rounded),
-            onPressed: () {
-              context.pushNamed(AppRoutes.inboxAndNotifcations);
-            },
-          ),
-          if ((_selectedIndex == 2 && userRole == AppRole.consumer.name) ||
-              (_selectedIndex == 3 && userRole == AppRole.merchant.name)) ...[
+          // IconButton(
+          //   icon: const Icon(Icons.notifications_on_rounded),
+          //   onPressed: () {
+          //     context.pushNamed(AppRoutes.inboxAndNotifcations);
+          //   },
+          // ),
+          if ((_selectedIndex == 3 && userRole == AppRole.consumer.name) ||
+              (_selectedIndex == 4 && userRole == AppRole.merchant.name)) ...[
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: IconButton(

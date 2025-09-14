@@ -13,7 +13,7 @@ class WalletCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 1.sw,
-      height: .32.sh,
+      height: .33.sh,
       child: Stack(
         children: [
           CustomImageView(

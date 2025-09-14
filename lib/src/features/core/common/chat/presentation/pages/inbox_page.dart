@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/core/utils/time_utils.dart';
+import 'package:help_sum/src/features/core/common/chat/domain/entities/inbox_chat_entity.dart';
 import 'package:help_sum/src/features/core/common/chat/presentation/bloc/chat_bloc.dart';
 import 'package:help_sum/src/features/core/common/chat/presentation/widgets/inbox_shimmer.dart';
 import 'package:help_sum/src/widgets/custom_refresh_indicator.dart';
@@ -126,7 +127,7 @@ class _InboxPageState extends State<InboxPage> {
     );
   }
 
-  Widget _buildChatItem(dynamic chat) {
+  Widget _buildChatItem(InboxChatEntity chat) {
     final lastMessage = chat.lastMessage;
     final time = lastMessage?.createdAt ?? DateTime.now();
 
@@ -147,7 +148,7 @@ class _InboxPageState extends State<InboxPage> {
             CircleAvatar(
               radius: 25.r,
               backgroundImage:
-                  chat.image != null ? NetworkImage(chat.image) : null,
+                  chat.image != null ? NetworkImage(chat.image!) : null,
               child:
                   chat.image == null
                       ? Icon(

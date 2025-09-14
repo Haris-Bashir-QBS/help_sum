@@ -16,6 +16,15 @@ class ConnectSocket extends ChatEvent {
   List<Object?> get props => [token];
 }
 
+class ReconnectSocket extends ChatEvent {
+  final String token;
+
+  const ReconnectSocket({required this.token});
+
+  @override
+  List<Object?> get props => [token];
+}
+
 class DisconnectSocket extends ChatEvent {
   const DisconnectSocket();
 }

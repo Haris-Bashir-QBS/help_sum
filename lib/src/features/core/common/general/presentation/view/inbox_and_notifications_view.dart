@@ -32,33 +32,27 @@ class _InboxAndNotificationsViewState extends State<InboxAndNotificationsView> {
 
   @override
   Widget build(BuildContext context) {
-    return AppBackground(
-      onTap: () {
-        context.pop();
-      },
-      title: AppTexts.activity,
-      body: BlocProvider.value(
-        value: _activityBloc,
-        child: Padding(
-          padding: const EdgeInsets.all(AppDimensions.paddingAllSides),
-          child: Column(
-            children: [
-              BlocBuilder<ActivityBloc, ActivityState>(
-                builder: (context, state) {
-                  return FilledTabbar(
-                    selectedIndex: state.selectedTab,
-                    tabs: tabs,
-                    onTabSelected: (value) {
-                      _activityBloc.add(TabChanged(index: value));
-                    },
-                  );
-                },
-              ),
-              10.verticalSpace,
+    return BlocProvider.value(
+      value: _activityBloc,
+      child: Padding(
+        padding: const EdgeInsets.all(AppDimensions.paddingAllSides),
+        child: Column(
+          children: [
+            BlocBuilder<ActivityBloc, ActivityState>(
+              builder: (context, state) {
+                return FilledTabbar(
+                  selectedIndex: state.selectedTab,
+                  tabs: tabs,
+                  onTabSelected: (value) {
+                    _activityBloc.add(TabChanged(index: value));
+                  },
+                );
+              },
+            ),
+            10.verticalSpace,
 
-              _buildTabView(context),
-            ],
-          ),
+            _buildTabView(context),
+          ],
         ),
       ),
     );

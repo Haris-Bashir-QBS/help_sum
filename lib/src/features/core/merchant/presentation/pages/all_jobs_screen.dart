@@ -1,20 +1,25 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/animation/fade_and_scale.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
+import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_card.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/rich_booking_card.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_states.dart';
+import 'package:help_sum/src/features/core/merchant/presentation/widgets/wallet_card.dart';
 import 'package:help_sum/src/widgets/app_tab_bar.dart';
 import 'package:help_sum/src/widgets/custom_loading_widget.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
@@ -33,9 +38,11 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   final ScrollController scrollController = ScrollController();
   int selectedIndex = 0;
   List<JobModel> jobs = [];
+  late final LoginBloc _loginBloc;
 
   @override
   void initState() {
+    _loginBloc = sl();
     jobs = AppStaticData.dummyJobs;
     ref
         .read(merchantJobsNotifierProvider.notifier)
@@ -48,20 +55,34 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
     final state = ref.watch(merchantJobsNotifierProvider);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // CustomSearchField(),
-          CustomText(
-            text: AppTexts.yourProgress,
-            fontSize: 22.sp,
-            fontWeight: FontWeight.bold,
-          ),
-          20.verticalSpace,
-          _buildJobsTabBar(),
-          20.verticalSpace,
-          _jobListView(state),
-        ],
+      child: BlocProvider.value(
+        value: _loginBloc,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // CustomSearchField(),
+            CustomText(
+              text: AppTexts.yourProgress,
+              fontSize: 22.sp,
+              fontWeight: FontWeight.bold,
+            ),
+            10.verticalSpace,
+            BlocBuilder<LoginBloc, LoginState>(
+              builder: (context, state) {
+                return FadeScaleTransitionWidget(
+                  child: WalletCard(
+                    userName:
+                        "${state.userEntity?.firstName ?? ""} ${state.userEntity?.lastName ?? ""}",
+                  ),
+                );
+              },
+            ),
+            20.verticalSpace,
+            _buildJobsTabBar(),
+            20.verticalSpace,
+            _jobListView(state),
+          ],
+        ),
       ),
     );
   }

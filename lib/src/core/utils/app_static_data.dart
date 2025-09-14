@@ -11,12 +11,14 @@ class AppStaticData {
   static List<String> consumerAppbarTitles = [
     AppTexts.bookings,
     AppTexts.categories,
+    AppTexts.activity,
     AppTexts.profile,
   ];
   static List<String> merchantAppBarTitles = [
     AppTexts.jobs,
     "",
     "History",
+    AppTexts.activity,
     "Account",
   ];
 
@@ -257,6 +259,7 @@ class AppStaticData {
   static final List<AppDestination> consumerDestinations = [
     AppDestination(iconPath: Icons.work, label: "Bookings"),
     AppDestination(iconPath: Icons.dashboard, label: "Dashboard"),
+    AppDestination(iconPath: Icons.messenger, label: "Activity"),
     AppDestination(iconPath: Icons.person, label: "Profile"),
   ];
 
@@ -264,6 +267,7 @@ class AppStaticData {
     AppDestination(iconPath: Icons.work, label: "Jobs"),
     AppDestination(iconPath: Icons.dashboard, label: "Dashboard"),
     AppDestination(iconPath: Icons.wallet, label: "Wallet"),
+    AppDestination(iconPath: Icons.messenger, label: "Activity"),
     AppDestination(iconPath: Icons.person, label: "Profile"),
   ];
 }

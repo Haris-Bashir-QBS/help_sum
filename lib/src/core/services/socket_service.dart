@@ -10,13 +10,13 @@ class SocketService {
   SocketService._internal();
 
   IO.Socket? _socket;
-  final StreamController<ChatMessageEntity> _messageController =
+  StreamController<ChatMessageEntity> _messageController =
       StreamController<ChatMessageEntity>.broadcast();
-  final StreamController<List<ChatMessageEntity>> _chatHistoryController =
+  StreamController<List<ChatMessageEntity>> _chatHistoryController =
       StreamController<List<ChatMessageEntity>>.broadcast();
-  final StreamController<String> _errorController =
+  StreamController<String> _errorController =
       StreamController<String>.broadcast();
-  final StreamController<ChatMessageEntity> _messageSentController =
+  StreamController<ChatMessageEntity> _messageSentController =
       StreamController<ChatMessageEntity>.broadcast();
 
   // Getters for streams
@@ -40,6 +40,7 @@ class SocketService {
         ApiBase.baseUrl,
         IO.OptionBuilder()
             .setTransports(['websocket'])
+            .enableForceNew()
             .setExtraHeaders({'token': token})
             .enableAutoConnect()
             .setTimeout(10000) // 10 second timeout
@@ -67,6 +68,19 @@ class SocketService {
     if (_socket?.connected != true) {
       _errorController.add('Connection timeout');
     }
+  }
+
+  void logout() {
+    dispose(); // close everything
+    _initControllers(); // make fresh controllers for next login
+  }
+
+  void _initControllers() {
+    _messageController = StreamController<ChatMessageEntity>.broadcast();
+    _chatHistoryController =
+        StreamController<List<ChatMessageEntity>>.broadcast();
+    _errorController = StreamController<String>.broadcast();
+    _messageSentController = StreamController<ChatMessageEntity>.broadcast();
   }
 
   void _setupEventListeners() {

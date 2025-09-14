@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/services/local_storage_service.dart';
+import 'package:help_sum/src/core/services/socket_service.dart';
 import 'package:help_sum/src/core/use_cases/use_case.dart';
 import 'package:help_sum/src/features/auth/data/models/request/login_request_model.dart';
 import 'package:help_sum/src/features/auth/data/models/request/update_profile_request_model.dart';
@@ -71,6 +73,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   FutureOr<void> _onLogoutUser(event, emit) async {
+    SocketService().logout();
     await _localStorageService.clearAll();
     emit(state.copyWith(userEntity: null, clearUser: true));
   }
