@@ -7,6 +7,7 @@ import 'package:help_sum/src/core/enums/payment_status.dart';
 import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/core/extensions/string_extensions.dart';
 import 'package:help_sum/src/core/utils/app_utils.dart';
+import 'package:help_sum/src/features/core/common/chat/domain/entities/inbox_chat_entity.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/widgets/service_provider_card.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_status_header.dart';
@@ -123,7 +124,15 @@ class BookingDetailPage extends StatelessWidget {
                     showMapIcon: false,
                     onTap: () {},
                     onTapChat: () {
-                      context.pushNamed(AppRoutes.chatScreen);
+                      context.pushNamed(
+                        AppRoutes.chatScreen,
+                        extra: InboxChatEntity(
+                          userId: job.merchantId.id ?? "",
+                          firstName: job.merchantId.firstName,
+                          lastName: job.merchantId.lastName,
+                          image: job.merchantId.image,
+                        ),
+                      );
                     },
                     onTapMap: () {
                       context.pushNamed(AppRoutes.mapTracking);

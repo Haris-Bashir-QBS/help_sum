@@ -7,6 +7,7 @@ import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/enums/job_status.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_utils.dart';
+import 'package:help_sum/src/features/core/common/chat/domain/entities/inbox_chat_entity.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/appointment_date_time_widget.dart';
 import 'package:help_sum/src/features/core/merchant/domain/entities/merchant_job_request_resposne_entity.dart';
@@ -196,7 +197,17 @@ class JobCardMerchant extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => context.pushNamed(AppRoutes.chatScreen),
+                    onTap: () {
+                      context.pushNamed(
+                        AppRoutes.chatScreen,
+                        extra: InboxChatEntity(
+                          userId: job.merchantId.id ?? "",
+                          firstName: job.merchantId.firstName,
+                          lastName: job.merchantId.lastName,
+                          image: job.merchantId.image,
+                        ),
+                      );
+                    },
                     child: CircleAvatar(
                       radius: 20.r,
                       backgroundColor: AppPalette.primaryGreyColor,

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
+import 'package:help_sum/src/core/extensions/context_extensions.dart';
 
 class ChatInputField extends StatelessWidget {
   final TextEditingController controller;
@@ -22,23 +23,24 @@ class ChatInputField extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           hintText: 'Write a message',
-          prefixIcon: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
-            child: Transform.scale(
-              scale: 0.7,
-              child: Image.asset(
-                AppAssets.icGallery,
-                width: 20.w,
-                height: 20.w,
-              ),
-            ),
-          ),
+          // prefixIcon: Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 8.w),
+          //   child: Transform.scale(
+          //     scale: 0.7,
+          //     child: Image.asset(
+          //       AppAssets.icGallery,
+          //       width: 20.w,
+          //       height: 20.w,
+          //     ),
+          //   ),
+          // ),
           suffixIcon: GestureDetector(
             onTap: onSend,
             child: Transform.scale(
               scale: 0.7,
               child: Image.asset(
                 AppAssets.icPlane,
+                color: AppPalette.primaryColor,
                 width: 20.w,
                 height: 20.w,
                 // color: Colors.white,

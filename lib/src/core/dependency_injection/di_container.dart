@@ -11,6 +11,7 @@ Future<void> initializeDI() async {
   await _initBookingDependencies();
   await _initMerchantViewProfileDependencies();
   await _initProfileDependencies();
+  await _initChatDependencies();
 }
 
 /// ------------------------
@@ -205,4 +206,53 @@ void _registerProfileBloc() {
       deleteAccountUseCase: sl(),
     ),
   );
+}
+
+// ================= Chat =================
+void _registerChatServices() {
+  sl.registerLazySingleton<SocketService>(() => SocketService());
+}
+
+void _registerChatRemoteDatasources() {
+  sl.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatRemoteDataSourceImpl(
+      client: sl(),
+      socketService: sl(),
+    ),
+  );
+}
+
+void _registerChatRepositories() {
+  sl.registerLazySingleton<ChatRepository>(
+    () => ChatRepositoryImpl(
+      remoteDataSource: sl(),
+    ),
+  );
+}
+
+void _registerChatUsecases() {
+  sl.registerLazySingleton<GetInboxChatsUseCase>(
+    () => GetInboxChatsUseCase(chatRepository: sl()),
+  );
+  sl.registerLazySingleton<SendMessageUseCase>(
+    () => SendMessageUseCase(chatRepository: sl()),
+  );
+}
+
+void _registerChatBloc() {
+  sl.registerLazySingleton<ChatBloc>(
+    () => ChatBloc(
+      chatRepository: sl(),
+      getInboxChatsUseCase: sl(),
+      sendMessageUseCase: sl(),
+    ),
+  );
+}
+
+Future<void> _initChatDependencies() async {
+  _registerChatServices();
+  _registerChatRemoteDatasources();
+  _registerChatRepositories();
+  _registerChatUsecases();
+  _registerChatBloc();
 }

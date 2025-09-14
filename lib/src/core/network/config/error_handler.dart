@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:help_sum/src/core/errors/api_exceptions.dart';
@@ -10,6 +11,8 @@ class ApiErrorHandler {
       return await call();
     } on DioException catch (e) {
       throw DioExceptionMapper.mapDioExceptionToFailure(e);
+    } on SocketException catch (e) {
+      throw NetworkException();
     } on FormatException catch (e) {
       throw ParsingException(message: 'Invalid JSON: ${e.message}');
     } catch (e) {

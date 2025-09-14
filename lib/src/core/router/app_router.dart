@@ -9,6 +9,7 @@ import 'package:help_sum/src/features/auth/presentation/screens/select_skill_pag
 import 'package:help_sum/src/features/auth/presentation/screens/login_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/role_selection_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/signup_page.dart';
+import 'package:help_sum/src/features/core/common/chat/domain/entities/inbox_chat_entity.dart';
 import 'package:help_sum/src/features/core/common/general/presentation/view/inbox_and_notifications_view.dart';
 import 'package:help_sum/src/features/core/common/intro/spash/pages/splash_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/otp_verification_page.dart';
@@ -40,7 +41,7 @@ import 'package:help_sum/src/features/core/merchant/presentation/pages/manage_jo
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/merchant_view_profile_page.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/booking_detail_page.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/other_options_page.dart';
-import 'package:help_sum/src/features/core/common/chat/pages/chat_screen.dart';
+import 'package:help_sum/src/features/core/common/chat/presentation/pages/chat_page.dart';
 import 'package:help_sum/src/features/core/common/map_tracking/pages/map_tracking_page.dart';
 
 import '../../features/auth/presentation/screens/create_schdule_page.dart';
@@ -484,7 +485,10 @@ GoRoute _chatScreen() {
   return GoRoute(
     path: '/chat-screen',
     name: AppRoutes.chatScreen,
-    builder: (context, state) => const ChatScreen(),
+    builder: (context, state) {
+      final InboxChatEntity user = state.extra as InboxChatEntity;
+      return ChatScreen(user: user);
+    },
   );
 }
 
