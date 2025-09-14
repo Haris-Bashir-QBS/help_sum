@@ -108,6 +108,9 @@ class AppTexts {
   static const String serviceList = 'Service List';
   static const String sendMessage = 'Send Message';
   static const String bookNow = 'Book Now';
+  static const String pleaseWaitWeAreUploadingYourFile =
+      'Please wait we are\n uploading your file';
+  static const String fileUploadedSuccessfully = 'File uploaded successfully';
 
   static const String loremIpsumShort =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
@@ -324,4 +327,6 @@ class AppTexts {
   static const String notification = 'Notification';
   static const String messages = 'Messages';
   static const String activity = 'Activity';
+  static const String careToShareMore = 'Care to share more?';
+  static const String uploadImages = 'Upload images';
 }

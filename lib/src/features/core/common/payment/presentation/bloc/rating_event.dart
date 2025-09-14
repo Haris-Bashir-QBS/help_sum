@@ -7,7 +7,10 @@ sealed class RatingEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class UploadImage extends RatingEvent {}
+class UploadImage extends RatingEvent {
+  final UploadFileRequest file;
+  const UploadImage({required this.file});
+}
 
 class PostRating extends RatingEvent {
   final RateJobRequestModel rateJobRequestModel;

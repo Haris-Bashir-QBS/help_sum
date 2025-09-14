@@ -111,15 +111,15 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   }
 
   void _navigateToJobDetailScreen(JobData? job) async {
-    // bool? isRefresh = await context.pushNamed(
-    //   AppRoutes.jobDetail,
-    //   extra: {
-    //     'job': job,
-    //     'tabName': AppStaticData.jobStatusTabs[selectedIndex],
-    //   },
-    // );
+    bool? isRefresh = await context.pushNamed(
+      AppRoutes.jobDetail,
+      extra: {
+        'job': job,
+        'tabName': AppStaticData.jobStatusTabs[selectedIndex],
+      },
+    );
 
-    bool? isRefresh = await context.pushNamed(AppRoutes.rateScreen, extra: job);
+    // bool? isRefresh = await context.pushNamed(AppRoutes.rateScreen, extra: job);
     if (isRefresh == true) {
       _fetchJobs();
     }

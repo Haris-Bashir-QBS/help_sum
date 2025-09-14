@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,11 +10,12 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/enums/media_type.dart';
 import 'package:help_sum/src/core/services/media_picker_service.dart';
+import 'package:help_sum/src/core/utils/app_utils.dart';
+import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
 import 'package:help_sum/src/features/core/common/payment/data/models/request/rate_job_request_model.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/bloc/rating_bloc.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/bloc/rating_state.dart';
-import 'package:help_sum/src/features/core/common/payment/presentation/controller/notifiers/rating_state.dart';
-import 'package:help_sum/src/features/core/common/payment/presentation/controller/providers/rating_provider.dart';
+import 'package:help_sum/src/features/core/common/profile/presentation/widgets/custom_overlay_loader.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/media_file.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/create_request_screen.dart';
@@ -107,6 +110,35 @@ class _RateJobScreenState extends ConsumerState<RateJobScreen> {
                 context: context,
                 message: current.message,
               );
+            } else if (current is UploadImageLoading) {
+              CustomOverlayLoader.show(
+                context,
+                message: AppTexts.pleaseWaitWeAreUploadingYourFile,
+              );
+            } else if (current is UploadImageError) {
+              CustomOverlayLoader.hide();
+              CustomToast.errorToast(
+                context: context,
+                message: current.message,
+              );
+            } else if (current is UploadImageSuccess) {
+              CustomOverlayLoader.hide();
+              CustomToast.successToast(
+                context: context,
+                message: AppTexts.fileUploadedSuccessfully,
+              );
+              if (current.files.isNotEmpty) {
+                final files = current.files;
+                for (var file in files) {
+                  final mediaFile = MediaFile(
+                    media: MediaUtils.detectMedia(file.mimeType),
+                    mediaType: MediaUtils.detectMediaType(file.url),
+                    path: file.url,
+                  );
+                  mediaFiles.add(mediaFile);
+                }
+                setState(() {});
+              }
             }
           },
           child: SafeArea(
@@ -177,7 +209,7 @@ class _RateJobScreenState extends ConsumerState<RateJobScreen> {
                   // Review field
                   CustomText(
                     fontWeight: FontWeight.w600,
-                    text: "Care to share more?",
+                    text: AppTexts.careToShareMore,
                     fontSize: 16.sp,
                     // style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
                   ),
@@ -195,7 +227,7 @@ class _RateJobScreenState extends ConsumerState<RateJobScreen> {
 
                   // Upload image section (placeholder)
                   CustomText(
-                    text: "Upload images",
+                    text: AppTexts.uploadImages,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
                     // style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
@@ -312,18 +344,22 @@ class _RateJobScreenState extends ConsumerState<RateJobScreen> {
           onMediaChanged: (String? picked) async {
             if (picked == null) return;
 
-            final mediaFile = MediaFile(
-              media: Media.photo,
-              mediaType: MediaType.file,
-              path: picked,
-            );
-            // _createJobBloc.add(
+            // final mediaFile = MediaFile(
+            //   media: Media.photo,
+            //   mediaType: MediaType.file,
+            //   path: picked,
+            // );
+            // // _createJobBloc.add(
             //   UploadNewFile(file: UploadFileRequest([File(picked)])),
             // );
 
-            mediaFiles.add(mediaFile);
+            _ratingBloc.add(
+              UploadImage(file: UploadFileRequest([File(picked)])),
+            );
 
-            setState(() {});
+            // mediaFiles.add(mediaFile);
+
+            // setState(() {});
 
             Logger().log(Level.debug, "pciked file $picked");
             // widget.loginBloc.add(
