@@ -32,7 +32,10 @@ enum ApiEndpoints {
   fetchJobs,
 
   /// ================= Profile =======================
-  merchantRatings;
+  merchantRatings,
+
+  /// ================= Chat =======================
+  inboxChats;
 
   String get value {
     switch (this) {
@@ -94,6 +97,10 @@ enum ApiEndpoints {
       /// ================= Profile =======================
       case ApiEndpoints.merchantRatings:
         return "/rating/merchant"; // Will be appended with /:merchantId
+
+      /// ================= Chat =======================
+      case ApiEndpoints.inboxChats:
+        return "/chat/list";
     }
   }
 }

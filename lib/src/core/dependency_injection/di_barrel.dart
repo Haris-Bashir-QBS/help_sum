@@ -21,6 +21,14 @@ import 'package:help_sum/src/features/core/common/profile/data/repositories/prof
 import 'package:help_sum/src/features/core/common/profile/domain/repositories/profile_repository.dart';
 import 'package:help_sum/src/features/core/common/profile/domain/usecases/get_merchant_ratings_usecase.dart';
 import 'package:help_sum/src/features/core/common/profile/domain/usecases/delete_account_usecase.dart';
+import 'package:help_sum/src/core/services/socket_service.dart';
+import 'package:help_sum/src/features/core/common/chat/data/datasources/remote/chat_remote_datasource.dart';
+import 'package:help_sum/src/features/core/common/chat/data/datasources/remote/chat_remote_datasource_impl.dart';
+import 'package:help_sum/src/features/core/common/chat/data/repositories/chat_repository_impl.dart';
+import 'package:help_sum/src/features/core/common/chat/domain/repositories/chat_repository.dart';
+import 'package:help_sum/src/features/core/common/chat/domain/usecases/get_inbox_chats_usecase.dart';
+import 'package:help_sum/src/features/core/common/chat/domain/usecases/send_message_usecase.dart';
+import 'package:help_sum/src/features/core/common/chat/presentation/bloc/chat_bloc.dart';
 import 'package:help_sum/src/features/core/common/general/presentation/bloc/activity_bloc.dart';
 import 'package:help_sum/src/features/core/consumer/booking/domain/usecases/fetch_jobs_by_type_usecase.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/bloc/create_job_bloc.dart';

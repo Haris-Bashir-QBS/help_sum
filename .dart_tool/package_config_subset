@@ -519,9 +519,9 @@ io
 file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/io-1.0.5/
 file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/io-1.0.5/lib/
 js
-3.7
-file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.7.2/
-file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.7.2/lib/
+2.19
+file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.6.7/
+file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.6.7/lib/
 json_annotation
 3.0
 file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/json_annotation-4.9.0/
@@ -766,6 +766,14 @@ smooth_page_indicator
 2.12
 file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/smooth_page_indicator-1.2.1/
 file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/smooth_page_indicator-1.2.1/lib/
+socket_io_client
+3.0
+file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/socket_io_client-3.1.2/
+file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/socket_io_client-3.1.2/lib/
+socket_io_common
+3.0
+file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/socket_io_common-3.1.1/
+file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/socket_io_common-3.1.1/lib/
 source_gen
 3.6
 file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/source_gen-2.0.0/

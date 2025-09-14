@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
@@ -19,8 +20,10 @@ import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 import 'package:intl/intl.dart';
 
 import '../../features/auth/domain/entities/user_entity.dart';
+import '../../features/auth/presentation/bloc/login/login_bloc.dart';
 
 class AppUtils {
+  AppUtils._();
   static String formatReadableDate(String dateString) {
     final dateTime = DateFormat('M/d/y').parse(dateString); // handles 7/22/2025
     final dayOfWeek = DateFormat('EEEE').format(dateTime);
@@ -339,6 +342,11 @@ class AppUtils {
     } catch (_) {
       return time;
     }
+  }
+
+  static bool isOwnMessage(BuildContext context, String senderId) {
+    final userId = context.read<LoginBloc>().state.userEntity?.id;
+    return senderId == userId;
   }
 }
 

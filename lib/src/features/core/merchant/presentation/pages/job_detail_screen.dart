@@ -32,6 +32,7 @@ import 'package:logger/logger.dart';
 
 import '../../../../../core/constants/app_dimensions.dart';
 import '../../../../../core/enums/payment_status.dart';
+import '../../../common/chat/domain/entities/inbox_chat_entity.dart';
 
 class JobDetailPage extends ConsumerStatefulWidget {
   final JobData job;
@@ -154,7 +155,15 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                     showMapIcon: false,
                     onTap: () {},
                     onTapChat: () {
-                      context.pushNamed(AppRoutes.chatScreen);
+                      context.pushNamed(
+                        AppRoutes.chatScreen,
+                        extra: InboxChatEntity(
+                          userId: widget.job.consumerId.id ?? "",
+                          firstName: widget.job.consumerId.firstName,
+                          lastName: widget.job.consumerId.firstName,
+                          image: widget.job.consumerId.image,
+                        ),
+                      );
                     },
                     onTapMap: () {
                       context.pushNamed(AppRoutes.mapTracking);
@@ -371,7 +380,15 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
               height: 20.h,
             ),
             onPressed: () {
-              context.pushNamed(AppRoutes.chatScreen);
+              context.pushNamed(
+                AppRoutes.chatScreen,
+                extra: InboxChatEntity(
+                  userId: widget.job.consumerId.id ?? "",
+                  firstName: widget.job.consumerId.firstName,
+                  lastName: widget.job.consumerId.firstName,
+                  image: widget.job.consumerId.image,
+                ),
+              );
             },
           ),
         ),
