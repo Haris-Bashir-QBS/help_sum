@@ -36,6 +36,7 @@ class AppRoutes {
   static const String editContactInfo = 'edit-contact-info';
   //============================== Booking ==============================
   static const String bookingDetail = 'booking-detail';
+  static const String bookingTracker = 'booking-tracker';
   static const String otherOptions = 'other-options';
 
   static const String createSchedule = 'create-schedule';

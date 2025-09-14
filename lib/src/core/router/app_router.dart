@@ -19,6 +19,7 @@ import 'package:help_sum/src/features/core/common/main_navigation/pages/main_nav
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/portfolio_screen.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/pages/settings_page.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/pages/booking_tracker_page.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/route/Booking_route_params.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_categories_listing_page.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/all_service_providers_listing_page.dart';
@@ -72,6 +73,7 @@ final GoRouter appRouter = GoRouter(
     _allServiceProvidersListing(),
     _merchantProfile(),
     _bookingDetail(),
+    _bookingTracker(),
     // Payment routes
     _paymentMethod(),
     _cardDetails(),
@@ -384,6 +386,19 @@ GoRoute _bookingDetail() {
       final JobData job = extras['job'];
       final String? tabName = extras['tabName'];
       return BookingDetailPage(job: job, tabName: tabName);
+    },
+  );
+}
+
+GoRoute _bookingTracker() {
+  return GoRoute(
+    path: '/booking-tracker',
+    name: AppRoutes.bookingTracker,
+    builder: (context, state) {
+      final Map<String, dynamic> extras = state.extra as Map<String, dynamic>;
+      final JobData job = extras['job'];
+      final String? tabName = extras['tabName'];
+      return BookingTrackerPage(job: job, tabName: tabName);
     },
   );
 }

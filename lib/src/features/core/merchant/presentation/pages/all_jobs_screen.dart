@@ -185,7 +185,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
 
   void _navigateToJobDetailScreen(JobData? job) async {
     bool? isRefresh = await context.pushNamed(
-      AppRoutes.jobDetail,
+      AppRoutes.bookingTracker,
       extra: {
         'job': job,
         'tabName': AppStaticData.jobStatusTabs[selectedIndex],
