@@ -22,6 +22,10 @@ import 'package:help_sum/src/features/core/consumer/explore_services/presentatio
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/location_typeahead_field.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/merchant_list_shimmer.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/recommended_service_provider_card.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_provider.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/category_state.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/services_provider.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/controller/services_state.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -50,6 +54,10 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
   places_sdk.FlutterGooglePlacesSdk? _places;
   bool _locationPermissionGranted = false;
   bool _isInitializing = true;
+  String? _selectedCategoryId;
+  String? _selectedCategoryName;
+  String? _selectedServiceId;
+  String? _selectedServiceName;
 
   @override
   void initState() {
@@ -61,6 +69,11 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
     _searchController.addListener(_handleSearchInput);
     _places = places_sdk.FlutterGooglePlacesSdk(AppSecrets.googleApiKey);
     _checkLocationPermission();
+
+    _selectedCategoryId = widget.bookingRouteParams?.categoryId;
+    _selectedCategoryName = widget.bookingRouteParams?.categoryName;
+    _selectedServiceId = widget.bookingRouteParams?.serviceId;
+    _selectedServiceName = widget.bookingRouteParams?.serviceName;
 
     // Start loading immediately without waiting for postFrameCallback
     _initializeLocationAndFetchData();
@@ -83,7 +96,7 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
             .fetchNearbyMerchants(
               lat: lat,
               long: long,
-              serviceId: widget.bookingRouteParams?.serviceId,
+              serviceId: _selectedServiceId,
               refresh: true,
             );
 
@@ -199,7 +212,7 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
         showRecommendedMerchants = false; // Hide recommended on list tab
         showBottomButtons = false;
         final state = ref.read(nearbyMerchantsProvider);
-        final serviceId = widget.bookingRouteParams?.serviceId;
+        final serviceId = _selectedServiceId;
 
         // Only fetch if not already loaded and location is available
         if (state is! NearbyMerchantsLoaded && lat != 0.0 && long != 0.0) {
@@ -305,6 +318,11 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                   ),
                 ),
                 10.horizontalSpace,
+                IconButton(
+                  onPressed: _openFilterSheet,
+                  icon: const Icon(Icons.tune_rounded),
+                  color: AppPalette.blackColor,
+                ),
               ],
             ),
             10.verticalSpace,
@@ -377,8 +395,8 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if (widget.bookingRouteParams?.categoryName != null &&
-                      widget.bookingRouteParams!.categoryName?.isNotEmpty ==
+                  if ((_selectedCategoryName ?? widget.bookingRouteParams?.categoryName) != null &&
+                      (_selectedCategoryName ?? widget.bookingRouteParams?.categoryName)?.isNotEmpty ==
                           true)
                     Container(
                       margin: EdgeInsets.only(right: 8.w),
@@ -394,7 +412,7 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                         ),
                       ),
                       child: Text(
-                        widget.bookingRouteParams!.categoryName!,
+                        (_selectedCategoryName ?? widget.bookingRouteParams!.categoryName!),
                         style: TextStyle(
                           color: AppPalette.primaryColor,
                           fontSize: 12.sp,
@@ -402,8 +420,8 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                         ),
                       ),
                     ),
-                  if (widget.bookingRouteParams?.serviceName != null &&
-                      widget.bookingRouteParams!.serviceName?.isNotEmpty ==
+                  if ((_selectedServiceName ?? widget.bookingRouteParams?.serviceName) != null &&
+                      (_selectedServiceName ?? widget.bookingRouteParams?.serviceName)?.isNotEmpty ==
                           true)
                     Container(
                       padding: EdgeInsets.symmetric(
@@ -415,7 +433,7 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
-                        widget.bookingRouteParams!.serviceName!,
+                        (_selectedServiceName ?? widget.bookingRouteParams!.serviceName!),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 12.sp,
@@ -521,8 +539,7 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                                     .loadMore(
                                       lat: lat,
                                       long: long,
-                                      serviceId:
-                                          widget.bookingRouteParams?.serviceId,
+                                      serviceId: _selectedServiceId,
                                     );
                               },
                               onRefresh: () async {
@@ -531,8 +548,7 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                                     .fetchNearbyMerchants(
                                       lat: lat,
                                       long: long,
-                                      serviceId:
-                                          widget.bookingRouteParams?.serviceId,
+                                      serviceId: _selectedServiceId,
                                       refresh: true,
                                     );
                               },
@@ -566,6 +582,66 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
       color: AppPalette.blackColor,
       onPressed: () {
         context.pop();
+      },
+    );
+  }
+
+  void _openFilterSheet() {
+    // Trigger data loads outside widget build to avoid provider modification during build
+    Future.microtask(() {
+      ref.read(categoryNotifierProvider.notifier).fetchCategories(refresh: true);
+      if (_selectedCategoryId != null && _selectedCategoryId!.isNotEmpty) {
+        ref
+            .read(servicesNotifierProvider.notifier)
+            .getServicesByCategory(categoryId: _selectedCategoryId!, refresh: true);
+      }
+    });
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24.r))),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: _FilterContent(
+              selectedCategoryId: _selectedCategoryId,
+              selectedServiceId: _selectedServiceId,
+              onReset: () {
+                setState(() {
+                  _selectedCategoryId = null;
+                  _selectedCategoryName = null;
+                  _selectedServiceId = null;
+                  _selectedServiceName = null;
+                });
+                ref.read(nearbyMerchantsProvider.notifier).fetchNearbyMerchants(
+                      lat: lat,
+                      long: long,
+                      serviceId: null,
+                      refresh: true,
+                    );
+                Navigator.of(context).pop();
+              },
+              onApply: (categoryId, categoryName, serviceId, serviceName) {
+                setState(() {
+                  _selectedCategoryId = categoryId;
+                  _selectedCategoryName = categoryName;
+                  _selectedServiceId = serviceId;
+                  _selectedServiceName = serviceName;
+                });
+                ref.read(nearbyMerchantsProvider.notifier).fetchNearbyMerchants(
+                      lat: lat,
+                      long: long,
+                      serviceId: serviceId,
+                      refresh: true,
+                    );
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        );
       },
     );
   }
@@ -713,5 +789,155 @@ class RecommendedServiceProviderCardShimmer extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _FilterContent extends ConsumerStatefulWidget {
+  final String? selectedCategoryId;
+  final String? selectedServiceId;
+  final void Function() onReset;
+  final void Function(String? categoryId, String? categoryName, String? serviceId, String? serviceName) onApply;
+
+  const _FilterContent({
+    required this.selectedCategoryId,
+    required this.selectedServiceId,
+    required this.onReset,
+    required this.onApply,
+  });
+
+  @override
+  ConsumerState<_FilterContent> createState() => _FilterContentState();
+}
+
+class _FilterContentState extends ConsumerState<_FilterContent> {
+  String? _categoryId;
+  String? _categoryName;
+  String? _serviceId;
+  String? _serviceName;
+
+  @override
+  void initState() {
+    super.initState();
+    _categoryId = widget.selectedCategoryId;
+    _serviceId = widget.selectedServiceId;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final categoriesState = ref.watch(categoryNotifierProvider);
+    final servicesState = ref.watch(servicesNotifierProvider);
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40.w,
+              height: 4.h,
+              margin: EdgeInsets.only(bottom: 12.h),
+              decoration: BoxDecoration(
+                color: Colors.black12,
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+          ),
+          Text(AppTexts.sortAndFilter, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600)),
+          12.verticalSpace,
+          Text(AppTexts.categories, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500)),
+          8.verticalSpace,
+          _buildCategories(categoriesState),
+          12.verticalSpace,
+          Text(AppTexts.services, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500)),
+          8.verticalSpace,
+          _buildServices(servicesState),
+          16.verticalSpace,
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: widget.onReset,
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.grey.shade300, foregroundColor: Colors.black),
+                  child: Text(AppTexts.reset),
+                ),
+              ),
+              12.horizontalSpace,
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => widget.onApply(_categoryId, _categoryName, _serviceId, _serviceName),
+                  style: ElevatedButton.styleFrom(backgroundColor: AppPalette.blackColor, foregroundColor: Colors.white),
+                  child: Text(AppTexts.apply),
+                ),
+              ),
+            ],
+          ),
+          MediaQuery.of(context).viewInsets.bottom > 0 ? SizedBox(height: 12.h) : 8.verticalSpace,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategories(CategoryState state) {
+    if (state is GetCategoriesLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state is GetCategoriesLoaded) {
+      return Wrap(
+        spacing: 8.w,
+        runSpacing: 8.h,
+        children: state.categories
+            .map((c) => ChoiceChip(
+                  label: Text(c.name),
+                  selected: _categoryId == c.id,
+                  onSelected: (_) {
+                    setState(() {
+                      _categoryId = c.id;
+                      _categoryName = c.name;
+                      _serviceId = null;
+                      _serviceName = null;
+                    });
+                    ref.read(servicesNotifierProvider.notifier).getServicesByCategory(categoryId: c.id, refresh: true);
+                  },
+                ))
+            .toList(),
+      );
+    }
+    if (state is GetCategoriesError) {
+      return Text(state.message);
+    }
+    return const SizedBox.shrink();
+  }
+
+  Widget _buildServices(ServicesState state) {
+    if (_categoryId == null) {
+      return Text(AppTexts.selectCategoryFirst);
+    }
+    if (state is GetServicesLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state is GetServicesLoaded) {
+      return Wrap(
+        spacing: 8.w,
+        runSpacing: 8.h,
+        children: state.services
+            .map((s) => ChoiceChip(
+                  label: Text(s.name),
+                  selected: _serviceId == s.id,
+                  onSelected: (_) {
+                    setState(() {
+                      _serviceId = s.id;
+                      _serviceName = s.name;
+                    });
+                  },
+                ))
+            .toList(),
+      );
+    }
+    if (state is GetServicesError) {
+      return Text(state.message);
+    }
+    return const SizedBox.shrink();
   }
 }
