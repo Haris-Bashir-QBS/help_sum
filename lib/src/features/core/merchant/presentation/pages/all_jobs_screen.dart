@@ -56,7 +56,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   // API mapping for filter values - using merchant-specific statuses
   final Map<String, String> filterApiMap = {
     AppTexts.all: 'all',
-    AppTexts.onGoing: 'in_progress',
+    AppTexts.onGoing: 'on going',
     AppTexts.waitingConfirmation: 'waiting_confirmation',
     AppTexts.waitingPayment: 'waiting_payment',
     AppTexts.completed: 'completed',
@@ -130,8 +130,8 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
             SliverPersistentHeader(
               pinned: true, // 👈 makes it stick
               delegate: _StickyHeaderDelegate(
-                minHeight: 140.h, // height when collapsed
-                maxHeight: 160.h, // height when expanded
+                minHeight: .2.sh, // height when collapsed
+                maxHeight: .3.sh, // height when expanded
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(

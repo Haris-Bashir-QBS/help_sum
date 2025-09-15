@@ -15,42 +15,53 @@
 // }
 
 
-import Flutter
 import UIKit
+import Flutter
 import GoogleMaps
+import Firebase
+import FBSDKCoreKit
 import UserNotifications
 
-@main
-@objc class AppDelegate: FlutterAppDelegate, UNUserNotificationCenterDelegate {
+@UIApplicationMain
+@objc class AppDelegate: FlutterAppDelegate, MessagingDelegate {
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    // ✅ Google Maps setup
-    GMSServices.provideAPIKey("AIzaSyC8pfU8SXX_rskiobBDs")
+    FirebaseApp.configure()
+    GMSServices.provideAPIKey("AIzaSyC8pfU8SXX_rskiobBDs-7K1n5O9Xj3A0w")
 
-    // ✅ Request notification permissions
+    // Set Firebase Messaging delegate
+    Messaging.messaging().delegate = self
+
+    // Ask for notification permission
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self
-      let options: UNAuthorizationOptions = [.alert, .sound, .badge]
-      UNUserNotificationCenter.current().requestAuthorization(options: options) { _, _ in }
+      let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+      UNUserNotificationCenter.current().requestAuthorization(
+        options: authOptions,
+        completionHandler: { _, _ in }
+      )
     } else {
       let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
       application.registerUserNotificationSettings(settings)
     }
+
     application.registerForRemoteNotifications()
 
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
-  // ✅ Show push notifications when app is in foreground
-  @available(iOS 10.0, *)
-  func userNotificationCenter(
-    _ center: UNUserNotificationCenter,
-    willPresent notification: UNNotification,
-    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
-  ) {
-    completionHandler([.alert, .badge, .sound]) // Show notifications in foreground
+  // Forward APNs token to Firebase
+  override func application(_ application: UIApplication,
+                            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    Messaging.messaging().apnsToken = deviceToken
+    super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+  }
+
+  // Optional: log FCM token
+  func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+    print("📲 FCM registration token: \(String(describing: fcmToken))")
   }
 }
