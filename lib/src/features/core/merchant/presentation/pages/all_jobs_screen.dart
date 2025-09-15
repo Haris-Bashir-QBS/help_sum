@@ -101,11 +101,9 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
           slivers: [
             SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 2),
                 child: BlocBuilder<LoginBloc, LoginState>(
                   builder: (context, loginState) {
-                    // final name =
-                    //     "//${loginState.userEntity?.firstName ?? ""} ${loginState.userEntity?.lastName ?? ""}";
                     return BlocBuilder<WalletBloc, WalletState>(
                       builder: (context, walletState) {
                         final balance =
@@ -130,8 +128,8 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
             SliverPersistentHeader(
               pinned: true, // 👈 makes it stick
               delegate: _StickyHeaderDelegate(
-                minHeight: .2.sh, // height when collapsed
-                maxHeight: .3.sh, // height when expanded
+                minHeight: .18.sh, // height when collapsed
+                maxHeight: .19.sh, // height when expanded
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(

@@ -19,10 +19,9 @@ import UIKit
 import Flutter
 import GoogleMaps
 import Firebase
-import FBSDKCoreKit
 import UserNotifications
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate, MessagingDelegate {
   override func application(
     _ application: UIApplication,

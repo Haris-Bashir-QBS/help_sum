@@ -236,6 +236,15 @@ class PushNotificationsService {
     final notification = message.notification;
     final android = notification?.android;
 
+    // 🔑 Prevent duplicates:
+    // If notification exists (system shows it automatically) AND there's no data payload → skip
+    if (notification != null && message.data.isEmpty) {
+      if (kDebugMode) {
+        debugPrint('[FCM][LOCAL] Skipping duplicate system notification');
+      }
+      return;
+    }
+
     final String dedupeId = _deriveMessageId(message);
     if (await _hasSeenMessageId(dedupeId)) {
       if (kDebugMode) debugPrint('Duplicate notification ignored: $dedupeId');
@@ -269,8 +278,9 @@ class PushNotificationsService {
       iOS: iosDetails,
     );
 
-    final String title = notification?.title ?? AppTexts.appTitle;
-    final String body = notification?.body ?? '';
+    final String title =
+        notification?.title ?? message.data['title'] ?? AppTexts.appTitle;
+    final String body = notification?.body ?? message.data['body'] ?? '';
 
     if (kDebugMode) {
       debugPrint(

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
+import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/core/services/session_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -46,28 +47,34 @@ class NotificationNavigation {
     final GoRouter router = GoRouter.of(
       SessionManager.navigatorKey.currentContext!,
     );
+    final isLogin = LocalStorageService().getAccessToken();
+    final context = SessionManager.navigatorKey.currentContext;
 
-    switch (type) {
-      case 'chat':
-        // You may need to fetch an InboxChatEntity by id before navigate.
-        // For now navigate to inbox/notifications hub.
-        router.pushNamed(AppRoutes.inboxAndNotifcations);
-        break;
-      case 'booking':
-        // Navigate to booking detail/tracker depending on tabName
-        router.pushNamed(
-          AppRoutes.bookingDetail,
-          extra: {'job': _buildJobDataPlaceholder(id), 'tabName': tabName},
-        );
-        break;
-      case 'job':
-        router.pushNamed(
-          AppRoutes.jobDetail,
-          extra: {'job': _buildJobDataPlaceholder(id), 'tabName': tabName},
-        );
-        break;
-      default:
-        router.pushNamed(AppRoutes.inboxAndNotifcations);
+    if (isLogin != null && isLogin.isNotEmpty) {
+      switch (type) {
+        // case 'chat':
+        //   // You may need to fetch an InboxChatEntity by id before navigate.
+        //   // For now navigate to inbox/notifications hub.
+        //   router.pushNamed(AppRoutes.inboxAndNotifcations);
+        //   break;
+        // case 'booking':
+        //   // Navigate to booking detail/tracker depending on tabName
+        //   router.pushNamed(
+        //     AppRoutes.bookingDetail,
+        //     extra: {'job': _buildJobDataPlaceholder(id), 'tabName': tabName},
+        //   );
+        //   break;
+        // case 'job':
+        //   router.pushNamed(
+        //     AppRoutes.jobDetail,
+        //     extra: {'job': _buildJobDataPlaceholder(id), 'tabName': tabName},
+        //   );
+        //   break;
+        default:
+          context?.goNamed(AppRoutes.mainNavigation);
+      }
+    } else {
+      context?.goNamed(AppRoutes.roleSelection);
     }
   }
 
