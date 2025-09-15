@@ -9,8 +9,8 @@ import 'package:help_sum/src/features/core/common/main_navigation/domain/model/j
 class AppStaticData {
   const AppStaticData._();
   static List<String> consumerAppbarTitles = [
-    AppTexts.bookings,
-    AppTexts.categories,
+    AppTexts.home,
+    AppTexts.jobs,
     AppTexts.activity,
     AppTexts.profile,
   ];
@@ -19,7 +19,6 @@ class AppStaticData {
     "",
     AppTexts.activity,
     "Account",
-    
   ];
 
   static const List<String> jobStatusTabs = [
@@ -257,8 +256,8 @@ class AppStaticData {
   // ];
 
   static final List<AppDestination> consumerDestinations = [
-    AppDestination(iconPath: Icons.work, label: "Bookings"),
-    AppDestination(iconPath: Icons.dashboard, label: "Dashboard"),
+    AppDestination(iconPath: Icons.home, label: AppTexts.home),
+    AppDestination(iconPath: Icons.work, label: AppTexts.jobs),
     AppDestination(iconPath: Icons.messenger, label: "Activity"),
     AppDestination(iconPath: Icons.person, label: "Profile"),
   ];

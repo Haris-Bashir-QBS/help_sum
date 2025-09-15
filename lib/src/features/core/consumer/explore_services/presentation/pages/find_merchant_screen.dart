@@ -276,7 +276,8 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                _backIcon(context),
+                20.horizontalSpace,
+                //  _backIcon(context),
                 Expanded(
                   child: LocationTypeAheadField(
                     googleApiKey: AppSecrets.googleApiKey,
@@ -395,8 +396,12 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if ((_selectedCategoryName ?? widget.bookingRouteParams?.categoryName) != null &&
-                      (_selectedCategoryName ?? widget.bookingRouteParams?.categoryName)?.isNotEmpty ==
+                  if ((_selectedCategoryName ??
+                              widget.bookingRouteParams?.categoryName) !=
+                          null &&
+                      (_selectedCategoryName ??
+                                  widget.bookingRouteParams?.categoryName)
+                              ?.isNotEmpty ==
                           true)
                     Container(
                       margin: EdgeInsets.only(right: 8.w),
@@ -412,7 +417,8 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                         ),
                       ),
                       child: Text(
-                        (_selectedCategoryName ?? widget.bookingRouteParams!.categoryName!),
+                        (_selectedCategoryName ??
+                            widget.bookingRouteParams!.categoryName!),
                         style: TextStyle(
                           color: AppPalette.primaryColor,
                           fontSize: 12.sp,
@@ -420,8 +426,12 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                         ),
                       ),
                     ),
-                  if ((_selectedServiceName ?? widget.bookingRouteParams?.serviceName) != null &&
-                      (_selectedServiceName ?? widget.bookingRouteParams?.serviceName)?.isNotEmpty ==
+                  if ((_selectedServiceName ??
+                              widget.bookingRouteParams?.serviceName) !=
+                          null &&
+                      (_selectedServiceName ??
+                                  widget.bookingRouteParams?.serviceName)
+                              ?.isNotEmpty ==
                           true)
                     Container(
                       padding: EdgeInsets.symmetric(
@@ -433,7 +443,8 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
-                        (_selectedServiceName ?? widget.bookingRouteParams!.serviceName!),
+                        (_selectedServiceName ??
+                            widget.bookingRouteParams!.serviceName!),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 12.sp,
@@ -455,9 +466,15 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                       Builder(
                         builder: (context) {
                           final state = ref.watch(nearbyMerchantsProvider);
+                          print(
+                            "🗺️ Map Tab - State: ${state.runtimeType}, isInitializing: $_isInitializing, lat: $lat, long: $long",
+                          );
 
                           // Show loading only during initialization or when no location
                           if (_isInitializing || (lat == 0.0 && long == 0.0)) {
+                            print(
+                              "🗺️ Showing loading - initialization or no location",
+                            );
                             return const Center(
                               child: CircularProgressIndicator(),
                             );
@@ -487,6 +504,8 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                                   ? state.merchants
                                   : <MerchantModel>[];
 
+                          print("🗺️ Map merchants count: ${merchants.length}");
+
                           return gmaps.GoogleMap(
                             mapType: gmaps.MapType.normal,
                             initialCameraPosition: gmaps.CameraPosition(
@@ -507,25 +526,58 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                       Builder(
                         builder: (context) {
                           final state = ref.watch(nearbyMerchantsProvider);
+                          print("📋 List Tab - State: ${state.runtimeType}");
                           if (state is NearbyMerchantsLoading ||
                               state is NearbyMerchantsInitial) {
+                            print("📋 Showing shimmer");
                             return const MerchantListShimmer();
                           } else if (state is NearbyMerchantsError) {
+                            print("📋 Showing error: ${state.message}");
                             return Center(child: Text(state.message));
                           } else if (state is NearbyMerchantsLoaded) {
+                            print(
+                              "📋 Showing ${state.merchants.length} merchants",
+                            );
                             return MerchantTabView(
                               merchants: state.merchants,
                               scrollController: _listScrollController,
                               hasMore: state.hasMore,
                               onMerchantTap: (merchant) {
+                                // Check if category and service are selected
+                                final categoryId =
+                                    _selectedCategoryId ??
+                                    widget.bookingRouteParams?.categoryId;
+                                final serviceId =
+                                    _selectedServiceId ??
+                                    widget.bookingRouteParams?.serviceId;
+                                final hasCategory =
+                                    categoryId != null && categoryId.isNotEmpty;
+                                final hasService =
+                                    serviceId != null && serviceId.isNotEmpty;
+
+                                if (!hasCategory || !hasService) {
+                                  // Show message to select category and service first
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Please select a category and service first',
+                                      ),
+                                      backgroundColor: AppPalette.primaryColor,
+                                    ),
+                                  );
+                                  return;
+                                }
+
                                 context.pushNamed(
                                   AppRoutes.merchantProfile,
                                   extra: CreateJobRouteModel(
                                     merchantId: merchant.id,
                                     serviceId:
+                                        _selectedServiceId ??
                                         widget.bookingRouteParams?.serviceId ??
                                         '',
                                     categoryId:
+                                        _selectedCategoryId ??
                                         widget.bookingRouteParams?.categoryId ??
                                         '',
                                     lat: lat.toString(),
@@ -566,6 +618,8 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                       currentLat: lat,
                       currentLong: long,
                       bookingRouteParams: widget.bookingRouteParams,
+                      selectedCategoryId: _selectedCategoryId,
+                      selectedServiceId: _selectedServiceId,
                     ),
                 ],
               ),
@@ -589,11 +643,16 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
   void _openFilterSheet() {
     // Trigger data loads outside widget build to avoid provider modification during build
     Future.microtask(() {
-      ref.read(categoryNotifierProvider.notifier).fetchCategories(refresh: true);
+      ref
+          .read(categoryNotifierProvider.notifier)
+          .fetchCategories(refresh: true);
       if (_selectedCategoryId != null && _selectedCategoryId!.isNotEmpty) {
         ref
             .read(servicesNotifierProvider.notifier)
-            .getServicesByCategory(categoryId: _selectedCategoryId!, refresh: true);
+            .getServicesByCategory(
+              categoryId: _selectedCategoryId!,
+              refresh: true,
+            );
       }
     });
 
@@ -601,11 +660,15 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24.r))),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
       builder: (context) {
         return SafeArea(
           child: Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
             child: _FilterContent(
               selectedCategoryId: _selectedCategoryId,
               selectedServiceId: _selectedServiceId,
@@ -615,8 +678,19 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                   _selectedCategoryName = null;
                   _selectedServiceId = null;
                   _selectedServiceName = null;
+                  // Update recommended merchants visibility based on current tab and search
+                  if (_tabController.index == 0 &&
+                      _searchController.text.isEmpty) {
+                    showRecommendedMerchants = true;
+                    print("🔄 Reset - showing recommended merchants");
+                  } else {
+                    showRecommendedMerchants = false;
+                    print("🔄 Reset - hiding recommended merchants");
+                  }
                 });
-                ref.read(nearbyMerchantsProvider.notifier).fetchNearbyMerchants(
+                ref
+                    .read(nearbyMerchantsProvider.notifier)
+                    .fetchNearbyMerchants(
                       lat: lat,
                       long: long,
                       serviceId: null,
@@ -630,8 +704,19 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
                   _selectedCategoryName = categoryName;
                   _selectedServiceId = serviceId;
                   _selectedServiceName = serviceName;
+                  // Update recommended merchants visibility based on current tab and search
+                  if (_tabController.index == 0 &&
+                      _searchController.text.isEmpty) {
+                    showRecommendedMerchants = true;
+                    print("🔄 Apply - showing recommended merchants");
+                  } else {
+                    showRecommendedMerchants = false;
+                    print("🔄 Apply - hiding recommended merchants");
+                  }
                 });
-                ref.read(nearbyMerchantsProvider.notifier).fetchNearbyMerchants(
+                ref
+                    .read(nearbyMerchantsProvider.notifier)
+                    .fetchNearbyMerchants(
                       lat: lat,
                       long: long,
                       serviceId: serviceId,
@@ -658,14 +743,17 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
 class RecommendedMerchantsHorizontalList extends ConsumerWidget {
   final double currentLat;
   final double currentLong;
-  final BookingRouteParams?
-  bookingRouteParams; // Pass this if needed for navigation logic
+  final BookingRouteParams? bookingRouteParams;
+  final String? selectedCategoryId;
+  final String? selectedServiceId;
 
   const RecommendedMerchantsHorizontalList({
     super.key,
     required this.currentLat,
     required this.currentLong,
     this.bookingRouteParams,
+    this.selectedCategoryId,
+    this.selectedServiceId,
   });
 
   @override
@@ -696,19 +784,39 @@ class RecommendedMerchantsHorizontalList extends ConsumerWidget {
                     merchant.image ??
                     (merchant.media.isNotEmpty ? merchant.media.first : ''),
                 onTap: () {
-                  if (bookingRouteParams != null) {
-                    log("Tapped recommended merchant: ${merchant.firstName}");
-                    context.pushNamed(
-                      AppRoutes.merchantProfile,
-                      extra: CreateJobRouteModel(
-                        merchantId: merchant.id,
-                        serviceId: bookingRouteParams!.serviceId,
-                        categoryId: bookingRouteParams!.categoryId,
-                        lat: currentLat.toString(),
-                        long: currentLong.toString(),
+                  // Check if category and service are selected
+                  final categoryId =
+                      selectedCategoryId ?? bookingRouteParams?.categoryId;
+                  final serviceId =
+                      selectedServiceId ?? bookingRouteParams?.serviceId;
+                  final hasCategory =
+                      categoryId != null && categoryId.isNotEmpty;
+                  final hasService = serviceId != null && serviceId.isNotEmpty;
+
+                  if (!hasCategory || !hasService) {
+                    // Show message to select category and service first
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Please select a category and service first',
+                        ),
+                        backgroundColor: AppPalette.primaryColor,
                       ),
                     );
+                    return;
                   }
+
+                  log("Tapped recommended merchant: ${merchant.firstName}");
+                  context.pushNamed(
+                    AppRoutes.merchantProfile,
+                    extra: CreateJobRouteModel(
+                      merchantId: merchant.id,
+                      serviceId: serviceId!,
+                      categoryId: categoryId!,
+                      lat: currentLat.toString(),
+                      long: currentLong.toString(),
+                    ),
+                  );
                 },
               );
             },
@@ -796,7 +904,13 @@ class _FilterContent extends ConsumerStatefulWidget {
   final String? selectedCategoryId;
   final String? selectedServiceId;
   final void Function() onReset;
-  final void Function(String? categoryId, String? categoryName, String? serviceId, String? serviceName) onApply;
+  final void Function(
+    String? categoryId,
+    String? categoryName,
+    String? serviceId,
+    String? serviceName,
+  )
+  onApply;
 
   const _FilterContent({
     required this.selectedCategoryId,
@@ -814,6 +928,7 @@ class _FilterContentState extends ConsumerState<_FilterContent> {
   String? _categoryName;
   String? _serviceId;
   String? _serviceName;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -826,6 +941,21 @@ class _FilterContentState extends ConsumerState<_FilterContent> {
   Widget build(BuildContext context) {
     final categoriesState = ref.watch(categoryNotifierProvider);
     final servicesState = ref.watch(servicesNotifierProvider);
+
+    // Update loading state based on category and service loading states
+    final isLoading =
+        categoriesState is GetCategoriesLoading ||
+        (servicesState is GetServicesLoading && _categoryId != null);
+
+    if (isLoading != _isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {
+            _isLoading = isLoading;
+          });
+        }
+      });
+    }
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
@@ -844,13 +974,24 @@ class _FilterContentState extends ConsumerState<_FilterContent> {
               ),
             ),
           ),
-          Text(AppTexts.sortAndFilter, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600)),
+          Center(
+            child: Text(
+              AppTexts.sortAndFilter,
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600),
+            ),
+          ),
           12.verticalSpace,
-          Text(AppTexts.categories, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500)),
+          Text(
+            AppTexts.categories,
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
+          ),
           8.verticalSpace,
           _buildCategories(categoriesState),
           12.verticalSpace,
-          Text(AppTexts.services, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500)),
+          Text(
+            AppTexts.services,
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
+          ),
           8.verticalSpace,
           _buildServices(servicesState),
           16.verticalSpace,
@@ -858,22 +999,57 @@ class _FilterContentState extends ConsumerState<_FilterContent> {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: widget.onReset,
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.grey.shade300, foregroundColor: Colors.black),
+                  onPressed: _isLoading ? null : widget.onReset,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        _isLoading ? Colors.grey[200] : Colors.grey.shade300,
+                    foregroundColor:
+                        _isLoading ? Colors.grey[400] : Colors.black,
+                  ),
                   child: Text(AppTexts.reset),
                 ),
               ),
               12.horizontalSpace,
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () => widget.onApply(_categoryId, _categoryName, _serviceId, _serviceName),
-                  style: ElevatedButton.styleFrom(backgroundColor: AppPalette.blackColor, foregroundColor: Colors.white),
-                  child: Text(AppTexts.apply),
+                  onPressed:
+                      (_isLoading || _categoryId == null || _serviceId == null)
+                          ? null
+                          : () => widget.onApply(
+                            _categoryId,
+                            _categoryName,
+                            _serviceId,
+                            _serviceName,
+                          ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        (_isLoading ||
+                                _categoryId == null ||
+                                _serviceId == null)
+                            ? Colors.grey[400]
+                            : AppPalette.blackColor,
+                    foregroundColor: Colors.white,
+                  ),
+                  child:
+                      _isLoading
+                          ? SizedBox(
+                            height: 16.h,
+                            width: 16.w,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            ),
+                          )
+                          : Text(AppTexts.apply),
                 ),
               ),
             ],
           ),
-          MediaQuery.of(context).viewInsets.bottom > 0 ? SizedBox(height: 12.h) : 8.verticalSpace,
+          MediaQuery.of(context).viewInsets.bottom > 0
+              ? SizedBox(height: 12.h)
+              : 8.verticalSpace,
         ],
       ),
     );
@@ -881,27 +1057,37 @@ class _FilterContentState extends ConsumerState<_FilterContent> {
 
   Widget _buildCategories(CategoryState state) {
     if (state is GetCategoriesLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return _buildCategoryShimmer();
     }
     if (state is GetCategoriesLoaded) {
       return Wrap(
         spacing: 8.w,
         runSpacing: 8.h,
-        children: state.categories
-            .map((c) => ChoiceChip(
-                  label: Text(c.name),
-                  selected: _categoryId == c.id,
-                  onSelected: (_) {
-                    setState(() {
-                      _categoryId = c.id;
-                      _categoryName = c.name;
-                      _serviceId = null;
-                      _serviceName = null;
-                    });
-                    ref.read(servicesNotifierProvider.notifier).getServicesByCategory(categoryId: c.id, refresh: true);
-                  },
-                ))
-            .toList(),
+        children:
+            state.categories
+                .map(
+                  (c) => ChoiceChip(
+                    label: Text(c.name),
+                    selected: _categoryId == c.id,
+                    onSelected: (_) {
+                      setState(() {
+                        _categoryId = c.id;
+                        _categoryName = c.name;
+                        _serviceId = null;
+                        _serviceName = null;
+                      });
+                      // Clear services state first to avoid showing old services
+                      ref.read(servicesNotifierProvider.notifier).clearServices();
+                      ref
+                          .read(servicesNotifierProvider.notifier)
+                          .getServicesByCategory(
+                            categoryId: c.id,
+                            refresh: true,
+                          );
+                    },
+                  ),
+                )
+                .toList(),
       );
     }
     if (state is GetCategoriesError) {
@@ -910,34 +1096,67 @@ class _FilterContentState extends ConsumerState<_FilterContent> {
     return const SizedBox.shrink();
   }
 
+  Widget _buildCategoryShimmer() {
+    return Wrap(
+      spacing: 8.w,
+      runSpacing: 8.h,
+      children: List.generate(6, (index) => _buildShimmerChip(index)),
+    );
+  }
+
+  Widget _buildShimmerChip(int index) {
+    return Container(
+      height: 32.h,
+      width: 80.w + (index % 3) * 20.w, // Vary width
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+    );
+  }
+
   Widget _buildServices(ServicesState state) {
     if (_categoryId == null) {
       return Text(AppTexts.selectCategoryFirst);
     }
     if (state is GetServicesLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return _buildServiceShimmer();
     }
     if (state is GetServicesLoaded) {
+      if (state.services.isEmpty) {
+        return Text('No services available for this category');
+      }
       return Wrap(
         spacing: 8.w,
         runSpacing: 8.h,
-        children: state.services
-            .map((s) => ChoiceChip(
-                  label: Text(s.name),
-                  selected: _serviceId == s.id,
-                  onSelected: (_) {
-                    setState(() {
-                      _serviceId = s.id;
-                      _serviceName = s.name;
-                    });
-                  },
-                ))
-            .toList(),
+        children:
+            state.services
+                .map(
+                  (s) => ChoiceChip(
+                    label: Text(s.name),
+                    selected: _serviceId == s.id,
+                    onSelected: (_) {
+                      setState(() {
+                        _serviceId = s.id;
+                        _serviceName = s.name;
+                      });
+                    },
+                  ),
+                )
+                .toList(),
       );
     }
     if (state is GetServicesError) {
       return Text(state.message);
     }
     return const SizedBox.shrink();
+  }
+
+  Widget _buildServiceShimmer() {
+    return Wrap(
+      spacing: 8.w,
+      runSpacing: 8.h,
+      children: List.generate(4, (index) => _buildShimmerChip(index)),
+    );
   }
 }

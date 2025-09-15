@@ -43,9 +43,8 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
     userRole = loginBloc.state.userEntity?.role;
     debugPrint("User Role is $userRole");
     if (userRole == AppRole.consumer.name) {
-      _selectedIndex = 1;
+      _selectedIndex = 0;
       _pages.addAll([
-        AllBookingsPage(),
         FindMerchantScreen(
           bookingRouteParams: BookingRouteParams(
             serviceId: '',
@@ -54,6 +53,7 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
             serviceName: '',
           ),
         ),
+        AllBookingsPage(),
         InboxAndNotificationsView(),
         ProfileDetailsPage(),
       ]);

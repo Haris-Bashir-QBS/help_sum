@@ -376,4 +376,5 @@ class AppTexts {
   static const String contactMerchant = "Contact Merchant";
   static const String trackProgress = "Track Progress";
   static const String rateService = "Rate Service";
+  static const String home = "Home";
 }

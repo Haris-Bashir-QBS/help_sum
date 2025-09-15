@@ -73,6 +73,8 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
     BookingRequestModel params,
   ) async {
     //return await ApiErrorHandler.executeGuarded(() async {
+    print("params.serviceId: ${params.serviceId}");
+
     final response = await client.get(
       endpoint: ApiEndpoints.merchantsNearby.value,
       queryParams: {
@@ -80,7 +82,8 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
         "longitude": params.long,
         //  "page": params.page,
         //  "limit": params.limit,
-        "serviceIds": params.serviceId != null ? [params.serviceId] : [],
+        if (params.serviceId != null && params.serviceId?.isNotEmpty == true)
+          "serviceIds": [params.serviceId],
       },
     );
     if (response.isOk) {

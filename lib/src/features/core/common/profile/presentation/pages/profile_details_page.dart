@@ -59,8 +59,10 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final user = _loginBloc.state.userEntity;
       if (user != null && user.id != null) {
-        _profileBloc.add(FetchMerchantRatings(merchantId: user.id!));
-        _portfolioBloc.add(UpdateUserEvent(userEntity: user!));
+        if (user.role == AppRole.merchant.name) {
+          _profileBloc.add(FetchMerchantRatings(merchantId: user.id!));
+        }
+        _portfolioBloc.add(UpdateUserEvent(userEntity: user));
       }
     });
 

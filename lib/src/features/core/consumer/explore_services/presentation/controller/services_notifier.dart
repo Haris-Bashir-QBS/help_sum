@@ -73,4 +73,9 @@ class ServicesNotifier extends StateNotifier<ServicesState> {
     _services.clear();
     _currentCategoryId = null;
   }
+
+  void clearServices() {
+    state = GetServicesInitial();
+    _services.clear();
+  }
 }
