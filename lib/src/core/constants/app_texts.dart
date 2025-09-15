@@ -82,6 +82,11 @@ class AppTexts {
   static const String allCategories = 'All Categories';
   static const String allServiceProviders = 'All Service Providers';
   static const String allRecommended = 'all_recommended';
+  static const String sortAndFilter = 'Sort & Filter';
+  static const String services = 'Services';
+  static const String reset = 'Reset';
+  static const String apply = 'Apply';
+  static const String selectCategoryFirst = 'Select a category first';
 
   // Merchant Profile Page
   static const String james = 'James';
