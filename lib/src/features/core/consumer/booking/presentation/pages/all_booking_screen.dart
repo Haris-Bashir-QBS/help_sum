@@ -164,7 +164,7 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
     int i,
   ) async {
     bool? isRefresh = await context.pushNamed(
-      AppRoutes.bookingDetail,
+      AppRoutes.bookingTracker,
       extra: {'job': jobs[i], 'tabName': jobTypes[selectedIndex]},
     );
     if (isRefresh == true && mounted) {

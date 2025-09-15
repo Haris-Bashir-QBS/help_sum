@@ -329,4 +329,46 @@ class AppTexts {
   static const String activity = 'Activity';
   static const String careToShareMore = 'Care to share more?';
   static const String uploadImages = 'Upload images';
+
+  // --- Tracker Screen ---
+
+  // Job steps
+  static const String jobRequestedTitle = "Job Requested";
+  static const String jobRequestedDesc = "Your request has been submitted.";
+
+  static const String merchantApprovalTitle = "Awaiting Merchant Approval";
+  static const String merchantApprovalDesc =
+      "Merchant is reviewing your request.";
+
+  static const String jobAcceptedTitle = "Job Accepted";
+  static const String jobAcceptedDesc = "Merchant has accepted your request.";
+
+  static const String waitingConfirmationTitle =
+      "Waiting for Your Confirmation";
+  static const String waitingConfirmationDesc = "Please confirm to proceed.";
+
+  static const String inProgressTitle = "In Progress";
+  static const String inProgressDesc = "Your job is currently in progress.";
+
+  static const String completedTitle = "Job Completed";
+  static const String completedDesc =
+      "The job has been successfully completed.";
+
+  static const String paymentProcessingTitle = "Payment Processing";
+  static const String paymentProcessingDesc =
+      "Your payment is being processed.";
+
+  // Cancel / reject
+  static const String jobCancelled = "Job Cancelled";
+  static const String jobCancelledDesc =
+      "This job was cancelled by you or the merchant.";
+
+  static const String jobRejected = "Job Rejected";
+  static const String jobRejectedDesc = "The merchant has rejected this job.";
+
+  // Actions
+  static const String viewDetails = "View Details";
+  static const String contactMerchant = "Contact Merchant";
+  static const String trackProgress = "Track Progress";
+  static const String rateService = "Rate Service";
 }
