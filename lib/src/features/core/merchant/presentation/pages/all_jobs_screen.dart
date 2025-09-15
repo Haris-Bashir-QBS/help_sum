@@ -19,6 +19,7 @@ import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_provider.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_states.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/wallet_card.dart';
+import 'package:help_sum/src/features/core/common/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:help_sum/src/widgets/custom_loading_widget.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
@@ -35,6 +36,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   int selectedIndex = 0;
   List<JobModel> jobs = [];
   late final LoginBloc _loginBloc;
+  late final WalletBloc _walletBloc;
   final TextEditingController searchController = TextEditingController();
 
   // Add filter state
@@ -64,6 +66,9 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   @override
   void initState() {
     _loginBloc = sl();
+    _walletBloc = sl();
+
+    _walletBloc.add(LoadWallet());
     jobs = AppStaticData.dummyJobs;
     ref
         .read(merchantJobsNotifierProvider.notifier)
@@ -80,8 +85,11 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(merchantJobsNotifierProvider);
-    return BlocProvider.value(
-      value: _loginBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: _loginBloc),
+        BlocProvider.value(value: _walletBloc),
+      ],
       child: RefreshIndicator(
         onRefresh: () async {
           final apiType = filterApiMap[selectedFilter] ?? 'all';
@@ -95,12 +103,24 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: BlocBuilder<LoginBloc, LoginState>(
-                  builder: (context, state) {
-                    return FadeScaleTransitionWidget(
-                      child: WalletCard(
-                        userName:
-                            "${state.userEntity?.firstName ?? ""} ${state.userEntity?.lastName ?? ""}",
-                      ),
+                  builder: (context, loginState) {
+                    // final name =
+                    //     "//${loginState.userEntity?.firstName ?? ""} ${loginState.userEntity?.lastName ?? ""}";
+                    return BlocBuilder<WalletBloc, WalletState>(
+                      builder: (context, walletState) {
+                        final balance =
+                            walletState is WalletLoaded
+                                ? walletState.wallet.availableBalance
+                                : 0.0;
+                        final payment =
+                            walletState is WalletLoaded
+                                ? walletState.wallet.recentPayments
+                                : null;
+
+                        return FadeScaleTransitionWidget(
+                          child: WalletCard(balance: balance, payment: payment),
+                        );
+                      },
                     );
                   },
                 ),

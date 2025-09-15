@@ -8,6 +8,7 @@ Future<void> initializeDI() async {
   await _initAuthDependencies();
   await _initCategoryDependencies();
   await _initPaymentDependencies();
+  await _initWalletDependencies();
   await _initBookingDependencies();
   await _initMerchantViewProfileDependencies();
   await _initProfileDependencies();
@@ -116,10 +117,32 @@ Future<void> _initPaymentDependencies() async {
   _registerPaymentUsecases();
 }
 
+Future<void> _initWalletDependencies() async {
+  sl.registerLazySingleton<WalletRemoteDataSource>(
+    () => WalletRemoteDataSourceImpl(sl()),
+  );
+  // Bridge interface to implementation
+  sl.registerLazySingleton<WalletRepository>(
+    () => _WalletRepositoryAdapter(sl()),
+  );
+  sl.registerFactory(() => GetWalletUseCase(sl()));
+  sl.registerFactory(() => WalletBloc(getWalletUseCase: sl()));
+}
+
 void _registerPaymentRemoteDatasources() {
   sl.registerLazySingleton<PaymentRemoteDataSource>(
     () => PaymentRemoteDataSourceImplementation(client: sl()),
   );
+}
+
+class _WalletRepositoryAdapter implements WalletRepository {
+  final WalletRemoteDataSource remote;
+  _WalletRepositoryAdapter(this.remote);
+  @override
+  Future<WalletEntity> getWallet() async {
+    final WalletRepositoryImpl impl = WalletRepositoryImpl(remote);
+    return impl.getWallet();
+  }
 }
 
 void _registerPaymentRepositories() {

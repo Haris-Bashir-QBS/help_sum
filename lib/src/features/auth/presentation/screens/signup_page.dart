@@ -8,6 +8,7 @@ import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/constants/asset_paths.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
+import 'package:help_sum/src/core/services/local_storage_service.dart';
 import 'package:help_sum/src/core/utils/app_validators.dart';
 import 'package:help_sum/src/features/auth/data/models/request/signup_request_model.dart';
 import 'package:help_sum/src/features/auth/presentation/bloc/signup/signup_bloc.dart';
@@ -233,6 +234,7 @@ class _SignupPageState extends State<SignupPage> {
         password: _passwordController.text.trim(),
         isConsumer: appRole == AppRole.consumer,
         isMerchant: appRole == AppRole.merchant,
+        fcmToken: LocalStorageService().getFcmToken(),
       );
 
       _signupBloc.add(SignupButtonPressed(signUpRequestModel: params));

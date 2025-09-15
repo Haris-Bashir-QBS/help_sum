@@ -1,3 +1,5 @@
+import 'dart:io';
+
 class SignUpRequestModel {
   final String firstName;
   final String lastName;
@@ -5,6 +7,7 @@ class SignUpRequestModel {
   final String password;
   final bool isConsumer;
   final bool isMerchant;
+  final String? fcmToken;
 
   SignUpRequestModel({
     required this.firstName,
@@ -13,6 +16,7 @@ class SignUpRequestModel {
     required this.password,
     required this.isConsumer,
     required this.isMerchant,
+    this.fcmToken,
   });
 
   Map<String, dynamic> toJson() {
@@ -23,6 +27,8 @@ class SignUpRequestModel {
       'password': password,
       'isConsumer': isConsumer,
       'isMerchant': isMerchant,
+      'userDeviceToken': fcmToken,
+      'userDeviceType': Platform.operatingSystem,
     };
   }
 }

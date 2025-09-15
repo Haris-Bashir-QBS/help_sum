@@ -99,6 +99,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       LoginRequestModel(
         phoneNumber: event.phoneNumber,
         password: event.password,
+        fcmToken: _localStorageService.getFcmToken(),
       ),
     );
     await result.fold(

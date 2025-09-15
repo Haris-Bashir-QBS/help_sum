@@ -73,5 +73,12 @@ import '../../features/core/consumer/booking/data/datasources/booking_remote_dat
 import '../../features/core/consumer/booking/data/repositories/booking_repository.dart';
 import '../../features/core/consumer/booking/data/repositories/booking_repository_impl.dart';
 import '../../features/core/consumer/booking/domain/usecases/create_job_usecase.dart';
+import 'package:help_sum/src/features/core/common/wallet/data/datasources/wallet_remote_datasource.dart';
+import 'package:help_sum/src/features/core/common/wallet/data/datasources/wallet_remote_datasource_impl.dart';
+import 'package:help_sum/src/features/core/common/wallet/data/repositories/wallet_repository_impl.dart';
+import 'package:help_sum/src/features/core/common/wallet/domain/entities/wallet.dart';
+import 'package:help_sum/src/features/core/common/wallet/domain/repositories/wallet_repository.dart';
+import 'package:help_sum/src/features/core/common/wallet/domain/usecases/get_wallet_usecase.dart';
+import 'package:help_sum/src/features/core/common/wallet/presentation/bloc/wallet_bloc.dart';
 
 part 'di_container.dart';

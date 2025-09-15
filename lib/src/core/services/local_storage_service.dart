@@ -9,6 +9,9 @@ class LocalStorageService {
   static const _userKey = 'current_user';
   static const _accessToken = 'accessToken';
   static const _refreshToken = 'refresh_token';
+  static const _fcmToken = 'fcm_token';
+  static const _seenFcmIds = 'seen_fcm_message_ids';
+  static const _seenFcmIdsMap = 'seen_fcm_message_ids_map';
 
   factory LocalStorageService() => _instance;
 
@@ -77,5 +80,65 @@ class LocalStorageService {
 
   Future<void> clearAll() async {
     await _prefs.clear();
+  }
+
+  /// ======================================= FCM Token ======================================
+  String? getFcmToken() {
+    return _prefs.getString(_fcmToken);
+  }
+
+  Future<void> saveFcmToken(String token) async {
+    await _prefs.setString(_fcmToken, token);
+  }
+
+  Future<void> clearFcmToken() async {
+    await _prefs.remove(_fcmToken);
+  }
+
+  /// ======================================= Notifications (Legacy list) ======================================
+  Future<List<String>> getSeenFcmMessageIds() async {
+    return _prefs.getStringList(_seenFcmIds) ?? <String>[];
+  }
+
+  Future<bool> hasSeenFcmMessageId(String id) async {
+    final list = _prefs.getStringList(_seenFcmIds) ?? <String>[];
+    return list.contains(id);
+  }
+
+  Future<void> addSeenFcmMessageId(String id, {int max = 200}) async {
+    final List<String> list = _prefs.getStringList(_seenFcmIds) ?? <String>[];
+    if (!list.contains(id)) {
+      list.add(id);
+    }
+    if (list.length > max) {
+      list.removeRange(0, list.length - max);
+    }
+    await _prefs.setStringList(_seenFcmIds, list);
+  }
+
+  /// ======================================= Notifications (Timestamped map) ======================================
+  Future<Map<String, int>> getSeenFcmIdsWithTimestamps() async {
+    final String? jsonStr = _prefs.getString(_seenFcmIdsMap);
+    if (jsonStr == null || jsonStr.isEmpty) return <String, int>{};
+    final Map<String, dynamic> raw =
+        json.decode(jsonStr) as Map<String, dynamic>;
+    return raw.map((k, v) => MapEntry(k, (v as num).toInt()));
+  }
+
+  Future<void> saveSeenFcmIdsWithTimestamps(Map<String, int> map) async {
+    await _prefs.setString(_seenFcmIdsMap, json.encode(map));
+  }
+
+  Future<void> migrateLegacySeenIdsToTimestamps() async {
+    final legacy = _prefs.getStringList(_seenFcmIds);
+    if (legacy == null || legacy.isEmpty) return;
+    final nowMs = DateTime.now().millisecondsSinceEpoch;
+    final existing = await getSeenFcmIdsWithTimestamps();
+    for (final id in legacy) {
+      existing[id] = nowMs;
+    }
+    await saveSeenFcmIdsWithTimestamps(existing);
+    // Optionally clear legacy list to avoid duplication
+    // await _prefs.remove(_seenFcmIds);
   }
 }

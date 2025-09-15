@@ -1,5 +1,6 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +12,7 @@ import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/extensions/context_extensions.dart';
 import 'package:help_sum/src/core/router/app_router.dart';
 import 'package:help_sum/src/core/themes/app_theme.dart';
+import 'package:help_sum/src/core/services/notifications/push_notifications_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,11 +21,21 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  //await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    debugPrint('Firebase init failed: $e');
+  }
   await initializeDI();
-
- // final token = await FirebaseMessaging.instance.getToken();
-//  print("Firebase Device Token: $token");
+  try {
+    await PushNotificationsService.instance.init();
+  } catch (e) {
+    debugPrint('PushNotificationsService init failed: $e');
+  }
+  // Optionally fetch token for logging or backend registration
+  // ignore: unused_local_variable
+  final String? token = await PushNotificationsService.instance.getFcmToken();
+  log("FCM $token");
 
   runApp(ProviderScope(child: const MyApp()));
 }
