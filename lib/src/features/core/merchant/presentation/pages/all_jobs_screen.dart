@@ -116,7 +116,14 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
                                 : null;
 
                         return FadeScaleTransitionWidget(
-                          child: WalletCard(balance: balance, payment: payment),
+                          child: WalletCard(
+                            balance: balance,
+                            payment: payment,
+                            isMerchant: true,
+                            name:
+                                "${loginState.userEntity?.firstName ?? ""} ${loginState.userEntity?.lastName ?? ""}",
+                            userId: loginState.userEntity?.id ?? "",
+                          ),
                         );
                       },
                     );
@@ -124,12 +131,12 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
                 ),
               ),
             ),
-
             SliverPersistentHeader(
+              floating: true,
               pinned: true, // 👈 makes it stick
               delegate: _StickyHeaderDelegate(
-                minHeight: .18.sh, // height when collapsed
-                maxHeight: .19.sh, // height when expanded
+                minHeight: 80, // enough for search + filter
+                maxHeight: 140,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
@@ -409,10 +416,10 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
   });
 
   @override
-  double get minExtent => minHeight;
+  double get minExtent => 110;
 
   @override
-  double get maxExtent => maxHeight;
+  double get maxExtent => 120;
 
   @override
   Widget build(

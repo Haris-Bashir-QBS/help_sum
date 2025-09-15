@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/animation/fade_and_scale.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
+import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
+import 'package:help_sum/src/features/auth/presentation/bloc/login/login_bloc.dart';
+import 'package:help_sum/src/features/core/common/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/rich_booking_card.dart';
+import 'package:help_sum/src/features/core/merchant/presentation/widgets/wallet_card.dart';
 import 'package:help_sum/src/widgets/custom_loading_widget.dart';
 import 'package:help_sum/src/widgets/custom_refresh_indicator.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
@@ -27,8 +33,7 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
   int selectedIndex = 0;
   final TextEditingController searchController = TextEditingController();
 
-  // Add filter state
-  String selectedFilter = AppTexts.all; // Default filter
+  String selectedFilter = AppTexts.all;
   final List<String> filters = [
     AppTexts.all,
     AppTexts.completed,
@@ -37,10 +42,8 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
     AppTexts.cancelled,
   ];
 
-  // Add search state
   String searchQuery = '';
 
-  // API mapping for filter values
   final Map<String, String> filterApiMap = {
     AppTexts.all: 'all',
     AppTexts.completed: 'completed',
@@ -50,9 +53,13 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
   };
 
   static const List<String> jobTypes = AppStaticData.jobStatusTabs;
+  late final WalletBloc _walletBloc;
+  late final LoginBloc _loginBloc;
 
   @override
   void initState() {
+    _walletBloc = sl();
+    _loginBloc = sl();
     super.initState();
     scrollController.addListener(_onScroll);
   }
@@ -72,8 +79,7 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
   }
 
   void _loadMore() {
-    if (!mounted) return; // Check if widget is still mounted
-
+    if (!mounted) return;
     final apiType = filterApiMap[selectedFilter] ?? 'all';
     final notifier = ref.read(allBookingsProvider(apiType).notifier);
     if (notifier.hasMore && !notifier.isLoadingMore) {
@@ -85,76 +91,138 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
   Widget build(BuildContext context) {
     final apiType = filterApiMap[selectedFilter] ?? 'all';
     final jobsAsync = ref.watch(allBookingsProvider(apiType));
-    return Column(
-      children: [
-        _searchField(),
-        20.verticalSpace,
-        _buildFilterButton(context), // Replace tab bar with filter button
-        20.verticalSpace,
-        Expanded(
-          child: jobsAsync.when(
-            data: (response) {
-              final allJobs = response.data.data;
-              final notifier = ref.read(allBookingsProvider(apiType).notifier);
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: _walletBloc),
+        BlocProvider.value(value: _loginBloc),
+      ],
+      child: RefreshIndicator(
+        onRefresh: () async {
+          ref.read(allBookingsProvider(apiType).notifier).refresh();
+        },
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: [
+            // Wallet card
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                child: BlocBuilder<LoginBloc, LoginState>(
+                  builder: (context, loginState) {
+                    return BlocBuilder<WalletBloc, WalletState>(
+                      builder: (context, walletState) {
+                        final balance =
+                            walletState is WalletLoaded
+                                ? walletState.wallet.availableBalance
+                                : 0.0;
+                        final payment =
+                            walletState is WalletLoaded
+                                ? walletState.wallet.recentPayments
+                                : null;
 
-              // Filter jobs based on search query
-              final jobs = _filterJobs(allJobs, searchQuery);
-
-              if (jobs.isEmpty) {
-                return Center(
-                  child: CustomText(
-                    text:
-                        searchQuery.isNotEmpty
-                            ? AppTexts.noServicesFound
-                            : AppTexts.noBookingsFound,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                );
-              }
-
-              return CustomRefreshIndicator(
-                onRefresh: () async {
-                  ref.read(allBookingsProvider(apiType).notifier).refresh();
-                },
-                child: ListView.separated(
-                  controller: scrollController,
-                  itemCount: jobs.length + (notifier.hasMore ? 1 : 0),
-                  itemBuilder: (c, i) {
-                    if (i == jobs.length) {
-                      // Show loading indicator for pagination
-                      return Padding(
-                        padding: EdgeInsets.all(16.w),
-                        child: Center(child: CustomDotsLoader(size: 40)),
-                      );
-                    }
-
-                    return RichBookingCard(
-                      job: jobs[i],
-                      showStatus: selectedIndex == 0,
-                      //  index: i,
-                      onTap: () {
-                        // _navigateToPaymentScreen(context, jobs, i);
-                        _navigateToJobDetailPage(context, jobs, i);
+                        return FadeScaleTransitionWidget(
+                          child: WalletCard(
+                            balance: balance,
+                            payment: payment,
+                            isMerchant: false,
+                            name:
+                                "${loginState.userEntity?.firstName ?? ""} ${loginState.userEntity?.lastName ?? ""}",
+                            userId: loginState.userEntity?.id ?? "",
+                          ),
+                        );
                       },
                     );
                   },
-                  separatorBuilder: (context, index) => 10.verticalSpace,
                 ),
-              );
-            },
-            loading: () => Center(child: CustomDotsLoader()),
-            error:
-                (e, st) => Center(
-                  child: CustomText(
-                    text: e.toString(),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+              ),
+            ),
+
+            // Sticky search + filter
+            SliverPersistentHeader(
+              floating: true,
+              pinned: true,
+              delegate: _StickyHeaderDelegate(
+                minHeight: 80, // enough for search + filter
+                maxHeight: 140,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      _searchField(),
+                      10.verticalSpace,
+                      _buildFilterButton(context),
+                    ],
                   ),
                 ),
-          ),
+              ),
+            ),
+
+            // Jobs list
+            jobsAsync.when(
+              data: (response) {
+                final allJobs = response.data.data;
+                final notifier = ref.read(
+                  allBookingsProvider(apiType).notifier,
+                );
+                final jobs = _filterJobs(allJobs, searchQuery);
+
+                if (jobs.isEmpty) {
+                  return SliverFillRemaining(
+                    child: Center(
+                      child: CustomText(
+                        text:
+                            searchQuery.isNotEmpty
+                                ? AppTexts.noServicesFound
+                                : AppTexts.noBookingsFound,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  );
+                }
+
+                return SliverPadding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  sliver: SliverList.separated(
+                    itemCount: jobs.length + (notifier.hasMore ? 1 : 0),
+                    itemBuilder: (c, i) {
+                      if (i == jobs.length) {
+                        return Padding(
+                          padding: EdgeInsets.all(16.w),
+                          child: Center(child: CustomDotsLoader(size: 40)),
+                        );
+                      }
+
+                      return RichBookingCard(
+                        job: jobs[i],
+                        showStatus: selectedIndex == 0,
+                        onTap: () {
+                          _navigateToJobDetailPage(context, jobs, i);
+                        },
+                      );
+                    },
+                    separatorBuilder: (context, index) => 10.verticalSpace,
+                  ),
+                );
+              },
+              loading:
+                  () => SliverFillRemaining(
+                    child: Center(child: CustomDotsLoader()),
+                  ),
+              error:
+                  (e, st) => SliverFillRemaining(
+                    child: Center(
+                      child: CustomText(
+                        text: e.toString(),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -175,31 +243,23 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
   Widget _searchField() {
     return CustomSearchField(
       controller: searchController,
-
-      onChanged: (value) {
-        // Implement search logic here
-        _performSearch(value);
-      },
-      onSearch: () {
-        // Implement search on search button tap
-        _performSearch(searchController.text);
-      },
+      onChanged: (value) => _performSearch(value),
+      onSearch: () => _performSearch(searchController.text),
     );
   }
 
   void _performSearch(String query) {
     if (!mounted) return;
-
     setState(() {
       searchQuery = query.toLowerCase().trim();
     });
   }
 
   Widget _buildFilterButton(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Align(
+        alignment: Alignment.centerLeft,
         child: Row(
           children: [
             Expanded(
@@ -272,10 +332,9 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
   }
 
   void _fetchJobs(int index) {
-    if (!mounted) return; // Check if widget is still mounted
-
+    if (!mounted) return;
     Future.microtask(() {
-      if (!mounted) return; // Check again after async operation
+      if (!mounted) return;
       final newType = filterApiMap[filters[index]] ?? 'all';
       ref.invalidate(allBookingsProvider(newType));
     });
@@ -283,7 +342,6 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
 
   List<JobData> _filterJobs(List<JobData> jobs, String query) {
     if (query.isEmpty) return jobs;
-
     return jobs.where((job) {
       final title = job.title.toLowerCase();
       final description = job.description.toLowerCase();
@@ -301,5 +359,42 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
           merchantName.contains(query) ||
           consumerName.contains(query);
     }).toList();
+  }
+}
+
+class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+  final double minHeight;
+  final double maxHeight;
+
+  _StickyHeaderDelegate({
+    required this.child,
+    required this.minHeight,
+    required this.maxHeight,
+  });
+
+  @override
+  double get minExtent => 110;
+
+  @override
+  double get maxExtent => 120;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: Colors.white, // keep sticky background
+      child: child,
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _StickyHeaderDelegate oldDelegate) {
+    return child != oldDelegate.child ||
+        minHeight != oldDelegate.minHeight ||
+        maxHeight != oldDelegate.maxHeight;
   }
 }

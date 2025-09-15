@@ -7,9 +7,19 @@ import 'package:help_sum/src/widgets/comman_imageview.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
 class WalletCard extends StatelessWidget {
-  const WalletCard({super.key, required this.balance, this.payment});
+  const WalletCard({
+    super.key,
+    required this.balance,
+    this.payment,
+    required this.userId,
+    required this.name,
+    this.isMerchant = false,
+  });
   final double balance;
   final Payment? payment;
+  final String userId;
+  final String name;
+  final bool isMerchant;
 
   @override
   Widget build(BuildContext context) {
@@ -30,24 +40,47 @@ class WalletCard extends StatelessWidget {
 
     return SizedBox(
       width: 1.sw,
-      height: .38.sh,
+      height: 220,
       child: Stack(
         children: [
           /// Background
-          CustomImageView(
-            imageType: ImageType.asset,
-            imagePath: AppAssets.cardBackgroundImage,
-            fit: BoxFit.contain,
+          Positioned.fill(
+            child: CustomImageView(
+              imageType: ImageType.asset,
+              imagePath: AppAssets.cardBackgroundImage,
+              fit: BoxFit.contain,
+            ),
           ),
 
-          /// Balance section
           Positioned(
-            bottom: 120,
+            top: 40,
+            left: 10,
+            child: CustomText(
+              text:
+                  "*****${userId.substring(userId.length - 4, userId.length)}",
+              color: AppPalette.backgroundColor,
+              fontWeight: FontWeight.w400,
+              letterSpacing: 2,
+              fontSize: 14.sp,
+            ),
+          ),
+
+          Positioned(
+            bottom: 20,
             left: 20,
             right: 20,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                CustomText(
+                  text: name,
+                  color: AppPalette.backgroundColor,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 2,
+                  fontSize: 14.sp,
+                ),
+
+                8.verticalSpace,
                 CustomText(
                   text: "Available Balance",
                   color: AppPalette.backgroundColor,
@@ -68,42 +101,36 @@ class WalletCard extends StatelessWidget {
           ),
 
           /// Payment details (only if available)
-          if (payment != null)
-            Positioned(
-              bottom: 20,
-              left: 20,
-              right: 20,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+          // if (payment != null)
+          Positioned(
+            top: 40,
+            right: 30,
+            left: 110,
+            // left: 0,
+            // right: 20,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                CustomText(
+                  text: "Last Job: ${safeDate(payment?.at)}",
+                  color: AppPalette.backgroundColor,
+                  fontSize: 12.sp,
+                ),
+                CustomText(
+                  text: "Amount: ${safeDouble(payment?.amount)}",
+                  color: AppPalette.backgroundColor,
+                  fontSize: 12.sp,
+                ),
+
+                if (isMerchant)
                   CustomText(
-                    text: "Title: ${safeText(payment!.title)}",
+                    text: "With: ${safeText(payment?.withUser)}",
                     color: AppPalette.backgroundColor,
                     fontSize: 12.sp,
                   ),
-                  CustomText(
-                    text: "Amount: ${safeDouble(payment!.amount)}",
-                    color: AppPalette.backgroundColor,
-                    fontSize: 12.sp,
-                  ),
-                  CustomText(
-                    text: "Status: ${safeText(payment!.status)}",
-                    color: AppPalette.backgroundColor,
-                    fontSize: 12.sp,
-                  ),
-                  CustomText(
-                    text: "With: ${safeText(payment!.withUser)}",
-                    color: AppPalette.backgroundColor,
-                    fontSize: 12.sp,
-                  ),
-                  CustomText(
-                    text: "Date: ${safeDate(payment!.at)}",
-                    color: AppPalette.backgroundColor,
-                    fontSize: 12.sp,
-                  ),
-                ],
-              ),
+              ],
             ),
+          ),
         ],
       ),
     );

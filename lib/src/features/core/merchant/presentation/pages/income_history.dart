@@ -47,6 +47,8 @@ class _IncomeScreenState extends State<IncomeScreen> {
                 builder: (context, state) {
                   return FadeScaleTransitionWidget(
                     child: WalletCard(
+                      userId: "",
+                      name: "",
                       balance: 0,
                       // userName:
                       //     "${state.userEntity?.firstName ?? ""} ${state.userEntity?.lastName ?? ""}",
