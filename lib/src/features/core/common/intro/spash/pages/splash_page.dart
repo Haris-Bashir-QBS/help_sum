@@ -36,7 +36,8 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   late Animation<double> _finalExpandAnimation;
   late Animation<double> _sizeDuringRotation;
 
-  var animationDuration = 700;
+  // Faster animation duration
+  var animationDuration = 350;
 
   @override
   void initState() {
@@ -45,7 +46,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
     // Rotation
     _rotationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 400),
       vsync: this,
     );
     _rotationAnimation = Tween<double>(begin: 0, end: 45).animate(
@@ -58,7 +59,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
     // Shrink
     _sizeController = AnimationController(
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 250),
       vsync: this,
     );
     _sizeAnimation = Tween<double>(begin: 1.0, end: 0.2).animate(
@@ -67,7 +68,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
     // Position
     _positionController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 200),
       vsync: this,
     );
     _positionAnimation = Tween<Offset>(
@@ -79,7 +80,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
     // Text
     _textController = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 200),
       vsync: this,
     );
     _textOpacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -88,7 +89,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
     // Final expand
     _finalExpandController = AnimationController(
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 350),
       vsync: this,
     );
     _finalExpandAnimation = Tween<double>(begin: 1.0, end: 70.0).animate(
@@ -107,7 +108,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   }
 
   void _startAnimationSequence() {
-    Future.delayed(const Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 100), () {
       setState(() => _animationStep = 1);
 
       Future.delayed(Duration(milliseconds: animationDuration), () {
@@ -149,7 +150,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Reverted: background is white
+      backgroundColor: Colors.white,
       body: BlocProvider.value(
         value: _loginBloc,
         child: BlocListener<LoginBloc, LoginState>(
@@ -194,7 +195,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
       case 1:
         return TweenAnimationBuilder<double>(
           tween: Tween<double>(begin: 300, end: 0),
-          duration: const Duration(milliseconds: 800),
+          duration: const Duration(milliseconds: 400),
           curve: Curves.easeOutBack,
           builder: (context, value, child) {
             return Transform.translate(
@@ -221,7 +222,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                 width: size,
                 height: size,
                 decoration: BoxDecoration(
-                  color: AppPalette.primaryColor, // Reverted
+                  color: AppPalette.primaryColor,
                   borderRadius: BorderRadius.circular(24),
                 ),
               ),
@@ -239,7 +240,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                 width: size,
                 height: size,
                 decoration: BoxDecoration(
-                  color: AppPalette.primaryColor, // Reverted
+                  color: AppPalette.primaryColor,
                   borderRadius: BorderRadius.circular(24),
                 ),
               ),
@@ -256,7 +257,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: AppPalette.primaryColor, // Reverted
+                  color: AppPalette.primaryColor,
                   borderRadius: BorderRadius.circular(40),
                 ),
               ),
@@ -279,7 +280,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                       style: TextStyle(
                         fontSize: 32.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppPalette.primaryColor, // Reverted
+                        color: AppPalette.primaryColor,
                       ),
                     ),
                   ),
@@ -300,7 +301,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                           width: 16,
                           height: 16,
                           decoration: const BoxDecoration(
-                            color: AppPalette.primaryColor, // Reverted
+                            color: AppPalette.primaryColor,
                             shape: BoxShape.circle,
                           ),
                         ),

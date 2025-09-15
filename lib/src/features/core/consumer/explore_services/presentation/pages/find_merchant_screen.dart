@@ -641,6 +641,9 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
   }
 
   void _openFilterSheet() {
+    // Clear services state first to avoid showing old services from previous sessions
+    ref.read(servicesNotifierProvider.notifier).clearServices();
+
     // Trigger data loads outside widget build to avoid provider modification during build
     Future.microtask(() {
       ref
@@ -1067,7 +1070,23 @@ class _FilterContentState extends ConsumerState<_FilterContent> {
             state.categories
                 .map(
                   (c) => ChoiceChip(
-                    label: Text(c.name),
+                    showCheckmark: false,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        24,
+                      ), // ✅ bigger radius
+                    ),
+                    selectedColor: AppPalette.primaryColor,
+                    label: Text(
+                      c.name,
+                      style: TextStyle(
+                        color:
+                            _categoryId == c.id
+                                ? Colors.white
+                                : Colors.black, // ✅ text color
+                      ),
+                    ),
+                    // label: Text(c.name),
                     selected: _categoryId == c.id,
                     onSelected: (_) {
                       setState(() {
@@ -1077,7 +1096,9 @@ class _FilterContentState extends ConsumerState<_FilterContent> {
                         _serviceName = null;
                       });
                       // Clear services state first to avoid showing old services
-                      ref.read(servicesNotifierProvider.notifier).clearServices();
+                      ref
+                          .read(servicesNotifierProvider.notifier)
+                          .clearServices();
                       ref
                           .read(servicesNotifierProvider.notifier)
                           .getServicesByCategory(
@@ -1106,11 +1127,11 @@ class _FilterContentState extends ConsumerState<_FilterContent> {
 
   Widget _buildShimmerChip(int index) {
     return Container(
-      height: 32.h,
+      height: 42.h,
       width: 80.w + (index % 3) * 20.w, // Vary width
       decoration: BoxDecoration(
         color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(20.r),
       ),
     );
   }
@@ -1133,7 +1154,19 @@ class _FilterContentState extends ConsumerState<_FilterContent> {
             state.services
                 .map(
                   (s) => ChoiceChip(
-                    label: Text(s.name),
+                    showCheckmark: false,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        24,
+                      ), // ✅ bigger radius
+                    ),
+                    selectedColor: AppPalette.primaryColor,
+                    label: Text(
+                      s.name,
+                      style: TextStyle(
+                        color: _serviceId == s.id ? Colors.white : Colors.black,
+                      ),
+                    ),
                     selected: _serviceId == s.id,
                     onSelected: (_) {
                       setState(() {
