@@ -54,10 +54,10 @@ class WalletCard extends StatelessWidget {
 
           Positioned(
             top: 40,
-            left: 10,
+            left: 30.w,
             child: CustomText(
               text:
-                  "*****${userId.substring(userId.length - 4, userId.length)}",
+                  "***** **** **** ${userId.substring(userId.length - 4, userId.length)}",
               color: AppPalette.backgroundColor,
               fontWeight: FontWeight.w400,
               letterSpacing: 2,
@@ -67,7 +67,7 @@ class WalletCard extends StatelessWidget {
 
           Positioned(
             bottom: 20,
-            left: 20,
+            left: 30.w,
             right: 20,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
