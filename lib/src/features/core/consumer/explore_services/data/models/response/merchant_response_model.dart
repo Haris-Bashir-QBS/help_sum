@@ -43,6 +43,8 @@ class MerchantModel {
   final String firstName;
   final String lastName;
   final String? image;
+  final String? rating;
+  final String? distance;
   final String? email;
   final String phone;
   final String description;
@@ -56,12 +58,14 @@ class MerchantModel {
     required this.firstName,
     required this.lastName,
     this.image,
+    this.rating,
     this.email,
     required this.phone,
     required this.description,
     required this.hourlyRate,
     required this.services,
     required this.media,
+    this.distance,
     required this.location,
   });
 
@@ -81,6 +85,11 @@ class MerchantModel {
               .toList(),
       media: (json['Media'] as List<dynamic>? ?? []).cast<String>(),
       location: LocationModel.fromJson(json['location'] ?? {}),
+      rating: json['rating'] != null ? (json['rating'])?.toString() : null,
+      distance:
+          json['distance'] != null
+              ? (json['distance'] as num).toStringAsFixed(3)
+              : null,
     );
   }
 }

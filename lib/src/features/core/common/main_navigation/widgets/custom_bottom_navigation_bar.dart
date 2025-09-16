@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/constants/app_role.dart';
 import 'package:help_sum/src/core/utils/app_static_data.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class AppBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
@@ -59,15 +60,15 @@ class AppBottomNavigationBar extends StatelessWidget {
         items:
             destinations.map((dest) {
               return BottomNavigationBarItem(
-                icon: Icon(
-                  dest.iconPath,
+                icon: HugeIcon(
+                  icon: dest.iconPath,
                   size: 30,
                   // width: 24.w,
                   // height: 24.w,
                   color: Colors.grey.withAlpha(200), // unselected color
                 ),
-                activeIcon: Icon(
-                  dest.iconPath,
+                activeIcon: HugeIcon(
+                  icon: dest.iconPath,
                   size: 30,
                   // width: 24.w,
                   // height: 24.w,

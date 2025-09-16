@@ -769,7 +769,7 @@ class RecommendedMerchantsHorizontalList extends ConsumerWidget {
         left: 0,
         right: 0,
         child: SizedBox(
-          height: 150.h,
+          height: 120.h,
           width: 100.sw,
           child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -779,9 +779,8 @@ class RecommendedMerchantsHorizontalList extends ConsumerWidget {
               final merchant = state.merchants[index];
               return RecommendedServiceProviderCard(
                 name: '${merchant.firstName} ${merchant.lastName}',
-                rating: null, // You might want to fetch/display actual ratings
-                distance:
-                    'N/A', // You might want to calculate/display actual distance
+                rating: merchant.rating,
+                distance: "${merchant.distance ?? ""}m away",
                 pricePerHour: '\$ ${merchant.hourlyRate} per hour',
                 imageUrl:
                     merchant.image ??

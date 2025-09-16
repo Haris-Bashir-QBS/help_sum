@@ -5,6 +5,7 @@ import 'package:help_sum/src/core/enums/job_status.dart';
 import 'package:help_sum/src/core/models/common/category_model.dart';
 import 'package:help_sum/src/core/models/common/onboarding_slider_model.dart';
 import 'package:help_sum/src/features/core/common/main_navigation/domain/model/job_model.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class AppStaticData {
   const AppStaticData._();
@@ -224,54 +225,32 @@ class AppStaticData {
     ),
   ];
 
-  // static final List<AppDestination> consumerDestinations = [
-  //   AppDestination(
-  //     iconPath: AppAssets.consumerHistoryUnfocused,
-  //     label: "History",
-  //   ),
-  //   AppDestination(
-  //     iconPath: AppAssets.consumerDashboardUnfocused,
-  //     label: "Dashboard",
-  //   ),
-  //   AppDestination(
-  //     iconPath: AppAssets.consumerProfileUnfocused,
-  //     label: "Profile",
-  //   ),
-  // ];
-  //
-  // static final List<AppDestination> merchantDestinations = [
-  //   AppDestination(iconPath: AppAssets.merchantJobsUnfocused, label: "Jobs"),
-  //   AppDestination(
-  //     iconPath: AppAssets.merchantDashboardUnfocused,
-  //     label: "Dashboard",
-  //   ),
-  //   AppDestination(
-  //     iconPath: AppAssets.merchantHistoryUnfocused,
-  //     label: "History",
-  //   ),
-  //   AppDestination(
-  //     iconPath: AppAssets.merchantProfileUnfocused,
-  //     label: "Profile",
-  //   ),
-  // ];
-
   static final List<AppDestination> consumerDestinations = [
-    AppDestination(iconPath: Icons.home, label: AppTexts.home),
-    AppDestination(iconPath: Icons.work, label: AppTexts.jobs),
-    AppDestination(iconPath: Icons.messenger, label: "Activity"),
-    AppDestination(iconPath: Icons.person, label: "Profile"),
+    AppDestination(
+      iconPath: HugeIcons.strokeRoundedHome01,
+      label: AppTexts.home,
+    ),
+    AppDestination(iconPath: HugeIcons.strokeRoundedWork, label: AppTexts.jobs),
+    AppDestination(
+      iconPath: HugeIcons.strokeRoundedNotification01,
+      label: "Activity",
+    ),
+    AppDestination(iconPath: HugeIcons.strokeRoundedUser, label: "Profile"),
   ];
 
   static final List<AppDestination> merchantDestinations = [
-    AppDestination(iconPath: Icons.work, label: "Jobs"),
-    AppDestination(iconPath: Icons.dashboard, label: "Dashboard"),
-    AppDestination(iconPath: Icons.messenger, label: "Activity"),
-    AppDestination(iconPath: Icons.person, label: "Profile"),
+    AppDestination(iconPath: HugeIcons.strokeRoundedHome01, label: "Home"),
+    AppDestination(iconPath: HugeIcons.strokeRoundedWork, label: "Jobs"),
+    AppDestination(
+      iconPath: HugeIcons.strokeRoundedNotification01,
+      label: "Activity",
+    ),
+    AppDestination(iconPath: HugeIcons.strokeRoundedUser, label: "Profile"),
   ];
 }
 
 class AppDestination {
-  final IconData iconPath;
+  final List<List<dynamic>> iconPath;
   final String label;
 
   const AppDestination({required this.iconPath, required this.label});

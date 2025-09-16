@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/models/response/merchant_response_model.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/detailed_merchant_card.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/widgets/recommended_service_provider_card.dart';
 import 'package:help_sum/src/widgets/custom_refresh_indicator.dart';
 
@@ -69,14 +70,16 @@ class MerchantTabView extends StatelessWidget {
               );
             }
             final merchant = merchants[index];
-            return RecommendedServiceProviderCard(
+            return DetailedMerchantCard(
               name: '${merchant.firstName} ${merchant.lastName}',
-              rating: 'N/A',
-              distance: 'N/A',
+              rating: merchant.rating,
+              distance: "${merchant.distance ?? ""}m away",
               pricePerHour: '\$ ${merchant.hourlyRate} per hour',
               imageUrl:
                   merchant.image ??
                   (merchant.media.isNotEmpty ? merchant.media.first : ''),
+              description: merchant.description,
+              services: merchant.services.map((s) => s.name).toList(),
               onTap: () {
                 onMerchantTap(merchant);
               },

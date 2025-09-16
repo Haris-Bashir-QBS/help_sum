@@ -12,6 +12,7 @@ import 'package:help_sum/src/widgets/custom_refresh_indicator.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class InboxPage extends StatefulWidget {
   const InboxPage({super.key});
@@ -78,30 +79,7 @@ class _InboxPageState extends State<InboxPage> {
           }
 
           if (state.inboxChats.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.chat_bubble_outline,
-                    size: 64.sp,
-                    color: Colors.grey[400],
-                  ),
-                  SizedBox(height: 16.h),
-                  CustomText(
-                    text: 'No conversations yet',
-                    fontSize: 16.sp,
-                    color: Colors.grey[600],
-                  ),
-                  SizedBox(height: 8.h),
-                  CustomText(
-                    text: 'Start a conversation with someone',
-                    fontSize: 14.sp,
-                    color: Colors.grey[500],
-                  ),
-                ],
-              ),
-            );
+            return _noConversationWidget();
           }
 
           return Expanded(
@@ -123,6 +101,36 @@ class _InboxPageState extends State<InboxPage> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _noConversationWidget() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.only(top: 250.h),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            HugeIcon(
+              icon: HugeIcons.strokeRoundedBubbleChat,
+              size: 64.sp,
+              color: AppPalette.primaryColor,
+            ),
+            SizedBox(height: 16.h),
+            CustomText(
+              text: 'No conversations yet',
+              fontSize: 16.sp,
+              color: AppPalette.primaryColor,
+            ),
+            SizedBox(height: 8.h),
+            CustomText(
+              text: 'Start a conversation with someone',
+              fontSize: 14.sp,
+              color: AppPalette.primaryColor,
+            ),
+          ],
+        ),
       ),
     );
   }

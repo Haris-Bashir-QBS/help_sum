@@ -17,6 +17,7 @@ import 'package:help_sum/src/features/core/consumer/explore_services/data/models
 import 'package:help_sum/src/features/core/merchant/presentation/pages/all_jobs_screen.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/pages/merchant_home.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 class MainNavigationPage extends ConsumerStatefulWidget {
   const MainNavigationPage({super.key});
@@ -43,7 +44,7 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
     userRole = loginBloc.state.userEntity?.role;
     debugPrint("User Role is $userRole");
     if (userRole == AppRole.consumer.name) {
-      _selectedIndex = 0;
+      //_selectedIndex = 0;
       _pages.addAll([
         FindMerchantScreen(
           bookingRouteParams: BookingRouteParams(
@@ -58,10 +59,10 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
         ProfileDetailsPage(),
       ]);
     } else if (userRole == AppRole.merchant.name) {
-      _selectedIndex = 1;
+      //_selectedIndex = 0;
       _pages.addAll([
-        const AllJobsScreen(),
         MerchantMapScreen(),
+        const AllJobsScreen(),
         InboxAndNotificationsView(),
         ProfileDetailsPage(),
       ]);
@@ -95,8 +96,8 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: IconButton(
-                icon: Icon(
-                  Icons.logout_rounded,
+                icon: HugeIcon(
+                  icon: HugeIcons.strokeRoundedLogout01,
                   color: AppPalette.errorColor.withAlpha(150),
                 ),
                 onPressed: () {

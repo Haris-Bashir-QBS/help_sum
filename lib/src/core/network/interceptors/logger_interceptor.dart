@@ -19,6 +19,7 @@ class LoggerInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
+    log(response.data.toString());
     logger.i('''
      ""
     ✅ RESPONSE: ${response.requestOptions.uri}
@@ -27,7 +28,7 @@ class LoggerInterceptor extends Interceptor {
    
     Data: ${response.data}
     ''');
-    log(response.data.toString());
+
     handler.next(response);
   }
 
