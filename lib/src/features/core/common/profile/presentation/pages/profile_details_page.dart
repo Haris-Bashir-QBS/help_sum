@@ -211,6 +211,15 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                   context.pushNamed(AppRoutes.changeDescriptipon, extra: user),
         ),
         8.verticalSpace,
+        _buildMerchantInfoTile(
+          context,
+          icon: Icons.credit_card_outlined,
+          title: 'Manage Payment Methods',
+          subtitle: 'Add or update your payment cards',
+          onTap: () {
+            context.pushNamed(AppRoutes.addCard);
+          },
+        ),
 
         // _buildMerchantInfoTile(
         //   context,

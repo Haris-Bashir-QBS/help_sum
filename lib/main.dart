@@ -29,13 +29,13 @@ void main() async {
   await initializeDI();
   try {
     await PushNotificationsService.instance.init();
+    final String? token = await PushNotificationsService.instance.getFcmToken();
+    log("FCM $token");
   } catch (e) {
     debugPrint('PushNotificationsService init failed: $e');
   }
   // Optionally fetch token for logging or backend registration
   // ignore: unused_local_variable
-  final String? token = await PushNotificationsService.instance.getFcmToken();
-  log("FCM $token");
 
   runApp(ProviderScope(child: const MyApp()));
 }

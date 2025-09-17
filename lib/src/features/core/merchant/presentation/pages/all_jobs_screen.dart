@@ -43,6 +43,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   String selectedFilter = AppTexts.all; // Default filter
   final List<String> filters = [
     AppTexts.all,
+    AppTexts.pending,
     AppTexts.onGoing,
     AppTexts.waitingConfirmation,
     AppTexts.waitingPayment,
