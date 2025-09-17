@@ -18,6 +18,7 @@ class NotificationsPage extends StatefulWidget {
 
 class _NotificationsPageState extends State<NotificationsPage> {
   bool _isLoading = true;
+  
 
   @override
   void initState() {

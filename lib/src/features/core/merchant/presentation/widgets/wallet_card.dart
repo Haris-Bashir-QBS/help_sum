@@ -125,7 +125,7 @@ class WalletCard extends StatelessWidget {
                 if (isMerchant)
                   CustomText(
                     text:
-                        "With: ${safeText("${payment?.withUser.firstName} ${payment?.withUser.lastName}")}",
+                        "With: ${safeText("${payment?.withUser.firstName ?? ""} ${payment?.withUser.lastName ?? ""}")}",
                     color: AppPalette.backgroundColor,
                     fontSize: 12.sp,
                   ),
