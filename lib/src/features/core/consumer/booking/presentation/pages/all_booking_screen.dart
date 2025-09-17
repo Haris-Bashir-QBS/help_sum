@@ -60,6 +60,8 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
   void initState() {
     _walletBloc = sl();
     _loginBloc = sl();
+    _walletBloc.add(LoadWallet());
+
     super.initState();
     scrollController.addListener(_onScroll);
   }

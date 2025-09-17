@@ -1,10 +1,37 @@
+class UserSummary {
+  final String id;
+  final String? image;
+  final String? firstName;
+  final String? lastName;
+
+  UserSummary({required this.id, this.image, this.firstName, this.lastName});
+
+  factory UserSummary.fromJson(Map<String, dynamic> json) {
+    return UserSummary(
+      id: json['_id'] as String,
+      image: json['image'] ?? "",
+      firstName: json['firstName'] ?? "",
+      lastName: json['lastName'] ?? "",
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'image': image,
+      'firstName': firstName,
+      'lastName': lastName,
+    };
+  }
+}
+
 class Payment {
   final String jobId;
   final String title;
   final double amount;
   final String status;
   final DateTime at;
-  final String withUser;
+  final UserSummary withUser;
 
   Payment({
     required this.jobId,
@@ -22,7 +49,7 @@ class Payment {
       amount: (json['amount'] as num).toDouble(),
       status: json['status'] as String,
       at: DateTime.parse(json['at']),
-      withUser: json['withUser'] as String,
+      withUser: UserSummary.fromJson(json['withUser'] as Map<String, dynamic>),
     );
   }
 
@@ -33,7 +60,7 @@ class Payment {
       'amount': amount,
       'status': status,
       'at': at.toIso8601String(),
-      'withUser': withUser,
+      'withUser': withUser.toJson(),
     };
   }
 }

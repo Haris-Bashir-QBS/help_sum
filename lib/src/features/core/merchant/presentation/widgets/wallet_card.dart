@@ -112,7 +112,7 @@ class WalletCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 CustomText(
-                  text: "Last Job: ${safeDate(payment?.at)}",
+                  text: "Last Job: ${safeText(payment?.withUser.firstName)}",
                   color: AppPalette.backgroundColor,
                   fontSize: 12.sp,
                 ),
@@ -124,7 +124,8 @@ class WalletCard extends StatelessWidget {
 
                 if (isMerchant)
                   CustomText(
-                    text: "With: ${safeText(payment?.withUser)}",
+                    text:
+                        "With: ${safeText("${payment?.withUser.firstName} ${payment?.withUser.lastName}")}",
                     color: AppPalette.backgroundColor,
                     fontSize: 12.sp,
                   ),

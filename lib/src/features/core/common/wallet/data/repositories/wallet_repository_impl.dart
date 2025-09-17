@@ -8,8 +8,11 @@ class WalletRepositoryImpl {
 
   Future<WalletEntity> getWallet() async {
     final map = await remote.fetchWallet();
-    final double balance = (map['wallet'] as num).toDouble();
-    final paymentsJson = Payment.fromJson(map['lastPayment']);
+    print("MAAP ${map}");
+
+    final double balance = (map['data']['wallet'] as num).toDouble();
+    final paymentsJson = Payment.fromJson(map['data']['lastPayment']);
+
     return WalletEntity(
       availableBalance: balance,
       recentPayments: paymentsJson,
