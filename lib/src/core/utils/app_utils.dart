@@ -273,7 +273,7 @@ class AppUtils {
     switch (status.toLowerCase()) {
       case 'completed':
         return JobStatus.completed;
-      case 'inprogress':
+      case 'in_progress':
         return JobStatus.in_progress;
       case 'pending':
         return JobStatus.pending;

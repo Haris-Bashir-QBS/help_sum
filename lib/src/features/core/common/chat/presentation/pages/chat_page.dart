@@ -80,6 +80,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   text: (widget.user.firstName + widget.user.lastName),
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
               ),
             ],

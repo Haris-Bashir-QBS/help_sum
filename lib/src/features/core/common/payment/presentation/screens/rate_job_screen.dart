@@ -27,16 +27,16 @@ import 'package:help_sum/src/widgets/custom_text_formfield.dart';
 import 'package:help_sum/src/widgets/custom_toast.dart';
 import 'package:logger/logger.dart';
 
-class RateJobScreen extends ConsumerStatefulWidget {
+class RatingPage extends ConsumerStatefulWidget {
   final bool isEdit;
   final JobData job;
-  const RateJobScreen({super.key, this.isEdit = false, required this.job});
+  const RatingPage({super.key, this.isEdit = false, required this.job});
 
   @override
-  ConsumerState<RateJobScreen> createState() => _RateJobScreenState();
+  ConsumerState<RatingPage> createState() => _RateJobScreenState();
 }
 
-class _RateJobScreenState extends ConsumerState<RateJobScreen> {
+class _RateJobScreenState extends ConsumerState<RatingPage> {
   double _rating = 0.0;
   final TextEditingController _reviewController = TextEditingController();
   final List<String> _selectedTags = [];

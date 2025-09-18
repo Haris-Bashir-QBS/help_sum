@@ -6,7 +6,7 @@ import 'package:help_sum/src/core/constants/app_dimensions.dart';
 import 'package:help_sum/src/core/constants/app_texts.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
 import 'package:help_sum/src/features/core/common/general/presentation/bloc/activity_bloc.dart';
-import 'package:help_sum/src/features/core/common/general/presentation/pages/notifications_page.dart';
+import 'package:help_sum/src/features/core/common/notifications/presentation/pages/notifications_page.dart';
 import 'package:help_sum/src/features/core/common/general/presentation/widgets/filled_tabbar.dart';
 import 'package:help_sum/src/widgets/app_background.dart';
 

@@ -51,6 +51,7 @@ class MerchantModel {
   final double hourlyRate;
   final List<ServiceModel> services;
   final List<String> media;
+  final List<ReviewModel> reviews;
   final LocationModel location;
 
   MerchantModel({
@@ -66,6 +67,7 @@ class MerchantModel {
     required this.services,
     required this.media,
     this.distance,
+    required this.reviews,
     required this.location,
   });
 
@@ -85,11 +87,42 @@ class MerchantModel {
               .toList(),
       media: (json['Media'] as List<dynamic>? ?? []).cast<String>(),
       location: LocationModel.fromJson(json['location'] ?? {}),
-      rating: json['rating'] != null ? (json['rating'])?.toString() : null,
+      rating:
+          json['avgRating'] != null ? (json['avgRating'])?.toString() : null,
       distance:
           json['distance'] != null
               ? (json['distance'] as num).toStringAsFixed(3)
               : null,
+      reviews:
+          (json['reviews'] as List<dynamic>? ?? [])
+              .map((item) => ReviewModel.fromJson(item))
+              .toList(),
+    );
+  }
+}
+
+class ReviewModel {
+  final String consumerId;
+  final int rating;
+  final String review;
+  final String byRole;
+  final DateTime createdAt;
+
+  ReviewModel({
+    required this.consumerId,
+    required this.rating,
+    required this.review,
+    required this.byRole,
+    required this.createdAt,
+  });
+
+  factory ReviewModel.fromJson(Map<String, dynamic> json) {
+    return ReviewModel(
+      consumerId: json['consumerId'] ?? '',
+      rating: json['rating'] ?? 0,
+      review: json['review'] ?? '',
+      byRole: json['byRole'] ?? '',
+      createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
     );
   }
 }

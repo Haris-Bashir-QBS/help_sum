@@ -60,7 +60,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: AppTexts.bookingDetail,
+        title: AppTexts.JobDetail,
         onBackButtonPressed: () {
           context.pop(true);
         },
@@ -80,11 +80,11 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (widget.job.status == JobStatus.in_progress.name &&
-                      widget.job.jobStartTime != null) ...[
-                    const BookingTimer(),
-                    20.verticalSpace,
-                  ],
+                  // if (widget.job.status == JobStatus.in_progress.name &&
+                  //     widget.job.jobStartTime != null) ...[
+                  //   const BookingTimer(),
+                  //   20.verticalSpace,
+                  // ],
                   Visibility(
                     visible:
                         widget.job.status == JobStatus.pending.name ||
@@ -225,9 +225,9 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                       child: Divider(),
                     ),
                   ],
-                  if (widget.job.status == JobStatus.in_progress.name) ...[
-                    _chatAndTrackConsumerButtons(context),
-                  ],
+                  // if (widget.job.status == JobStatus.in_progress.name) ...[
+                  //   _chatAndTrackConsumerButtons(context),
+                  // ],
                   if (widget.job.status == JobStatus.cancelled.name ||
                       widget.job.status == JobStatus.rejected.name)
                     _serviceProviderCard(),
@@ -256,6 +256,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                       child: CustomButton(
                         text: AppTexts.rate,
                         color: context.primaryColor,
+                        radius: 10,
                         onPressed: () {
                           context.pushNamed(
                             AppRoutes.rateScreen,
@@ -344,6 +345,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
       padding: EdgeInsets.symmetric(horizontal: 12.h),
       child: CustomButton(
         text: "Payment Received",
+        radius: 10,
         color: AppPalette.primaryColor,
         onPressed: () {},
       ),
@@ -458,6 +460,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                       : AppTexts.endJob,
               color: AppPalette.primaryColor.withAlpha(220),
               textColor: Colors.white,
+              radius: 10,
               onPressed: () {
                 if (widget.job.status == JobStatus.accepted.name) {
                   // Call start job API without awaiting
@@ -477,6 +480,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
               text: AppTexts.cancelJob,
               textColor: Colors.white,
               color: AppPalette.redColor,
+              radius: 10,
               onPressed: () {
                 ref
                     .read(merchantJobsNotifierProvider.notifier)

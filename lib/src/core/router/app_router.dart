@@ -10,7 +10,7 @@ import 'package:help_sum/src/features/auth/presentation/screens/login_page.dart'
 import 'package:help_sum/src/features/auth/presentation/screens/role_selection_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/signup_page.dart';
 import 'package:help_sum/src/features/core/common/chat/domain/entities/inbox_chat_entity.dart';
-import 'package:help_sum/src/features/core/common/general/presentation/view/inbox_and_notifications_view.dart';
+import 'package:help_sum/src/features/core/common/general/presentation/pages/inbox_and_notifications_page.dart';
 import 'package:help_sum/src/features/core/common/intro/spash/pages/splash_page.dart';
 import 'package:help_sum/src/features/auth/presentation/screens/otp_verification_page.dart';
 import 'package:help_sum/src/features/core/common/intro/onboarding/pages/onboarding_page.dart';
@@ -450,7 +450,7 @@ GoRoute _rateScreen() {
     name: AppRoutes.rateScreen,
     builder: (context, state) {
       final JobData job = state.extra as JobData;
-      return RateJobScreen(job: job);
+      return RatingPage(job: job);
     },
   );
 }

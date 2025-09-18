@@ -13,6 +13,7 @@ Future<void> initializeDI() async {
   await _initMerchantViewProfileDependencies();
   await _initProfileDependencies();
   await _initChatDependencies();
+  await _initNotificationDependencies();
 }
 
 /// ------------------------
@@ -240,18 +241,13 @@ void _registerChatServices() {
 
 void _registerChatRemoteDatasources() {
   sl.registerLazySingleton<ChatRemoteDataSource>(
-    () => ChatRemoteDataSourceImpl(
-      client: sl(),
-      socketService: sl(),
-    ),
+    () => ChatRemoteDataSourceImpl(client: sl(), socketService: sl()),
   );
 }
 
 void _registerChatRepositories() {
   sl.registerLazySingleton<ChatRepository>(
-    () => ChatRepositoryImpl(
-      remoteDataSource: sl(),
-    ),
+    () => ChatRepositoryImpl(remoteDataSource: sl()),
   );
 }
 
@@ -280,4 +276,37 @@ Future<void> _initChatDependencies() async {
   _registerChatRepositories();
   _registerChatUsecases();
   _registerChatBloc();
+}
+
+/// ------------------------
+/// NOTIFICATION DEPENDENCIES
+/// ------------------------
+
+Future<void> _initNotificationDependencies() async {
+  _registerNotificationRemoteDatasources();
+  _registerNotificationRepositories();
+  _registerNotificationUsecases();
+  _registerNotificationCubit();
+}
+
+void _registerNotificationRemoteDatasources() {
+  sl.registerLazySingleton<NotificationRemoteDataSource>(
+    () => NotificationRemoteDataSourceImpl(sl()),
+  );
+}
+
+void _registerNotificationRepositories() {
+  sl.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(remoteDataSource: sl()),
+  );
+}
+
+void _registerNotificationUsecases() {
+  sl.registerLazySingleton<GetNotificationsUseCase>(
+    () => GetNotificationsUseCase(sl()),
+  );
+}
+
+void _registerNotificationCubit() {
+  sl.registerFactory<NotificationCubit>(() => NotificationCubit(sl()));
 }

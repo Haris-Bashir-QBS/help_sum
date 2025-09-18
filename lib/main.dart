@@ -34,9 +34,6 @@ void main() async {
   } catch (e) {
     debugPrint('PushNotificationsService init failed: $e');
   }
-  // Optionally fetch token for logging or backend registration
-  // ignore: unused_local_variable
-
   runApp(ProviderScope(child: const MyApp()));
 }
 

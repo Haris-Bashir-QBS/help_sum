@@ -239,6 +239,7 @@ class AppTexts {
   static const String serviceEndsOn = 'Service Ends on:';
   static const String confirmationRequestedAt = 'Confirmation Requested At:';
   static const String bookingDetail = 'Booking Detail';
+  static const String JobDetail = 'Job Detail';
   static const String contract = 'Contract';
   static const String jobDetailsUpdates = 'Job details:';
   static const String reason = 'Reason:';

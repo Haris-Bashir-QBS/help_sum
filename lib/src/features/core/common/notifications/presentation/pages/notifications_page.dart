@@ -1,7 +1,10 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:help_sum/src/features/core/common/general/presentation/widgets/message_card.dart';
+import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
+import 'package:help_sum/src/features/core/common/general/presentation/widgets/notification_list_tile.dart';
+import 'package:help_sum/src/features/core/common/notifications/domain/entities/notification_entity.dart';
+import 'package:help_sum/src/features/core/common/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:help_sum/src/widgets/custom_refresh_indicator.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -17,29 +20,64 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  bool _isLoading = true;
-  
+  late final NotificationCubit _cubit;
 
   @override
   void initState() {
     super.initState();
-    // Simulate shimmer for 1 second
-    Timer(const Duration(seconds: 1), () {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    });
+    _cubit = sl<NotificationCubit>();
+    _cubit.fetchNotifications();
+  }
+
+  @override
+  void dispose() {
+    _cubit.close(); // 👈 close properly
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return _buildShimmer();
-    } else {
-      return _noConversationWidget();
-    }
+    return BlocProvider.value(
+      value: _cubit, // 👈 provide cubit
+      child: BlocBuilder<NotificationCubit, NotificationState>(
+        builder: (context, state) {
+          if (state is NotificationLoading) {
+            return _buildShimmer();
+          } else if (state is NotificationError) {
+            return Center(
+              child: CustomText(
+                text: state.message,
+                fontSize: 14.sp,
+                color: Colors.red,
+              ),
+            );
+          } else if (state is NotificationLoaded) {
+            if (state.notifications.isEmpty) {
+              return _noConversationWidget();
+            }
+
+            return Expanded(
+              child: CustomRefreshIndicator(
+                onRefresh: () async {
+                  await _cubit.fetchNotifications(); // 👈 direct use
+                },
+                child: ListView.separated(
+                  padding: EdgeInsets.all(16.w),
+                  itemCount: state.notifications.length,
+                  separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                  itemBuilder: (_, index) {
+                    final NotificationEntity n = state.notifications[index];
+                    return NotificationListTile(notification: n);
+                  },
+                ),
+              ),
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
+      ),
+    );
   }
 
   Widget _buildShimmer() {
@@ -77,7 +115,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Title line
                       Shimmer.fromColors(
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
@@ -88,7 +125,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         ),
                       ),
                       SizedBox(height: 8.h),
-                      // Message line
                       Shimmer.fromColors(
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
@@ -102,7 +138,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   ),
                 ),
                 SizedBox(width: 8.w),
-                // Timestamp
                 Shimmer.fromColors(
                   baseColor: Colors.grey[300]!,
                   highlightColor: Colors.grey[100]!,

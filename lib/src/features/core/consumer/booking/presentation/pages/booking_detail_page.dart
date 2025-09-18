@@ -56,8 +56,8 @@ class BookingDetailPage extends StatelessWidget {
                 children: [
                   if (job.status == JobStatus.in_progress.name &&
                       job.jobStartTime != null) ...[
-                    const BookingTimer(),
-                    20.verticalSpace,
+                    //   const BookingTimer(),
+                    //20.verticalSpace,
                   ],
                   Visibility(
                     visible:
@@ -187,7 +187,7 @@ class BookingDetailPage extends StatelessWidget {
                       child: CustomButton(
                         text: AppTexts.rate,
                         color: context.primaryColor,
-                        radius: 12,
+                        radius: 10,
                         onPressed: () {
                           context.pushNamed(AppRoutes.rateScreen, extra: job);
                         },

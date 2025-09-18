@@ -10,6 +10,7 @@ enum ApiEndpoints {
   uploadFile,
   serviceGrouped,
   deleteAccount,
+  notifications,
 
   /// ================= Categories =======================
   categories,
@@ -101,6 +102,10 @@ enum ApiEndpoints {
       /// ================= Chat =======================
       case ApiEndpoints.inboxChats:
         return "/chat/list";
+
+      /// =================== Notifications ==============
+      case ApiEndpoints.notifications:
+        return "/notification";
     }
   }
 }

@@ -779,7 +779,10 @@ class RecommendedMerchantsHorizontalList extends ConsumerWidget {
               final merchant = state.merchants[index];
               return RecommendedServiceProviderCard(
                 name: '${merchant.firstName} ${merchant.lastName}',
-                rating: merchant.rating,
+                rating:
+                    merchant.rating != null
+                        ? "${merchant.rating} (${merchant.reviews.length})"
+                        : null,
                 distance: "${merchant.distance ?? ""}m away",
                 pricePerHour: '\$ ${merchant.hourlyRate} per hour',
                 imageUrl:

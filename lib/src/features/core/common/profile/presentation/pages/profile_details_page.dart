@@ -375,11 +375,20 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                     icon: Icons.diamond_outlined,
                     title: 'Skill',
                     subtitle:
-                        user.services != null && user.services!.isNotEmpty
+                        (user.services != null &&
+                                user.services!.any(
+                                  (e) =>
+                                      e['name'] != null &&
+                                      (e['name'] as String).trim().isNotEmpty,
+                                ))
                             ? user.services!
-                                .map((e) => e['name'])
+                                .where(
+                                  (e) =>
+                                      e['name'] != null &&
+                                      (e['name'] as String).trim().isNotEmpty,
+                                )
+                                .map((e) => e['name'] as String)
                                 .join(', ')
-                                .toString()
                             : 'No Services Added',
                     onTap:
                         () => context.pushNamed(

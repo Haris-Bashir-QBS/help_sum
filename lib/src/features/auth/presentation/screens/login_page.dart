@@ -215,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _fillMockDetails() {
     if (kDebugMode) {
-      _phoneController.text = '03188912020';
+      _phoneController.text = '03223423300';
       _passwordController.text = 'Abcd@1234';
     }
   }

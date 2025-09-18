@@ -13,6 +13,7 @@ import 'package:help_sum/src/features/auth/presentation/bloc/schedule/schedule_b
 import 'package:help_sum/src/features/auth/presentation/bloc/signup/signup_bloc.dart';
 import 'package:help_sum/src/features/auth/presentation/bloc/skill/skill_bloc.dart';
 import 'package:help_sum/src/features/auth/presentation/bloc/verify_otp/verify_otp_bloc.dart';
+import 'package:help_sum/src/features/core/common/notifications/domain/usecases/notification_usecase.dart';
 import 'package:help_sum/src/features/core/common/payment/presentation/bloc/rating_bloc.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/bloc/bloc/profile_bloc.dart';
 import 'package:help_sum/src/features/core/common/profile/data/datasources/remote/profile_remote_datasource.dart';
@@ -51,6 +52,11 @@ import '../../features/auth/data/datasources/remote/auth_remote_datasource_impl.
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/signup_usecase.dart';
+import '../../features/core/common/notifications/data/data_sources/notification_remote_data_source.dart';
+import '../../features/core/common/notifications/data/data_sources/notification_remote_datasource_impl.dart';
+import '../../features/core/common/notifications/data/repositories/notification_repository_impl.dart';
+import '../../features/core/common/notifications/domain/repositories/notification_repository.dart';
+import '../../features/core/common/notifications/presentation/cubit/notification_cubit.dart';
 import '../../features/core/consumer/explore_services/data/datasources/remote/category_remote_datasource.dart';
 import '../../features/core/consumer/explore_services/data/datasources/remote/category_remote_datasource_impl.dart';
 import '../../features/core/consumer/explore_services/data/repositories/category_repository_impl.dart';
