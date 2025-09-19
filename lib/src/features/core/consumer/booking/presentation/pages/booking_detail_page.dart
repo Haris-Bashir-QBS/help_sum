@@ -102,15 +102,9 @@ class BookingDetailPage extends StatelessWidget {
                   ),
 
                   10.verticalSpace,
-                  // if (job.status != JobStatus.waitingPayment.name &&
-                  // //    job.status != JobStatus.cancelled.name
-                  // //    && job.status != JobStatus.rejected.name
-                  // ) ...[
+                  _imagesWidget(),
                   OfferDetailsCard(job: job),
                   20.verticalSpace,
-                  //],
-                  //_imagesWidget(),
-                  // 20.verticalSpace,
                   Divider(),
                   LocationMapView(
                     latitude: job.location.coordinates[1], // Latitude
@@ -204,15 +198,10 @@ class BookingDetailPage extends StatelessWidget {
     );
   }
 
-  JobImageSlider _imagesWidget() {
-    return JobImageSlider(
-      imageUrls: [
-        'https://picsum.photos/id/237/200/300',
-        'https://picsum.photos/id/238/200/300',
-        'https://picsum.photos/id/239/200/300',
-        'https://picsum.photos/id/240/200/300',
-      ],
-    );
+  Widget _imagesWidget() {
+    return job.media.isNotEmpty == true
+        ? JobImageSlider(imageUrls: job.media.map((e) => e).toList())
+        : SizedBox.shrink();
   }
 
   Padding _bookingConfirmAndCancelButtons(BuildContext context) {

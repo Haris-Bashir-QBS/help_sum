@@ -19,6 +19,7 @@ import 'package:help_sum/src/features/core/consumer/booking/data/models/job_resp
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_status_header.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/booking_timer.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_details_update_card.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/job_image_slider.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/offer_details_card.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/service_location_map.dart';
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/service_time_card.dart';
@@ -128,13 +129,10 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                     ),
                   ),
 
-                  10.verticalSpace,
-                  // if (job.status != JobStatus.waitingPayment.name &&
-                  // //    job.status != JobStatus.cancelled.name
-                  // //    && job.status != JobStatus.rejected.name
-                  // ) ...[
+                  _imageSlider(),
                   OfferDetailsCard(job: widget.job),
                   20.verticalSpace,
+
                   //],
                   //_imagesWidget(),
                   // 20.verticalSpace,
@@ -194,31 +192,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                     ),
                     20.verticalSpace,
                   ],
-                  // if (widget.job.status ==
-                  //     JobStatus.waitingConfirmation.name) ...[
-                  //   Padding(
-                  //     padding: EdgeInsets.symmetric(horizontal: 14.w),
-                  //     child: CustomButton(
-                  //       text: "Chat with",
-                  //       textColor: Colors.black,
-                  //       color: Color(0xFF04DB00).withAlpha(40),
-                  //       iconWidget: Image.asset(
-                  //         AppAssets.chatIcon,
-                  //         width: 25.w,
-                  //         height: 25.h,
-                  //         //color: Colors.white,
-                  //       ),
-                  //       onPressed: () {
-                  //         context.pushNamed(AppRoutes.chatScreen);
-                  //       },
-                  //     ),
-                  //   ),
-                  //   10.verticalSpace,
-                  // ],
-                  // if (widget.job.status == JobStatus.rejected.name) ...[
-                  //   _imageSlider(),
-                  //   20.verticalSpace,
-                  // ],
+
                   if (widget.job.status != JobStatus.waitingPayment.name) ...[
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 14.w),
@@ -287,16 +261,11 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
     );
   }
 
-  // JobImageSlider _imageSlider() {
-  //   return JobImageSlider(
-  //                   imageUrls: [
-  //                     'https://picsum.photos/id/237/200/300',
-  //                     'https://picsum.photos/id/238/200/300',
-  //                     'https://picsum.photos/id/239/200/300',
-  //                     'https://picsum.photos/id/240/200/300',
-  //                   ],
-  //                 );
-  // }
+  Widget _imageSlider() {
+    return widget.job.media.isNotEmpty == true
+        ? JobImageSlider(imageUrls: widget.job.media.map((e) => e).toList())
+        : SizedBox.shrink();
+  }
 
   void _listener(BuildContext context) {
     ref.listen<MerchantJobsState>(merchantJobsNotifierProvider, (
