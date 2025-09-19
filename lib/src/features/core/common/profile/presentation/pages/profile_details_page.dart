@@ -433,16 +433,16 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
                         _loginBloc.add(FetchMerchantAccount(context: context));
                       },
                     ),
-                    8.verticalSpace,
-                    _buildMerchantInfoTile(
-                      context,
-                      icon: Icons.credit_card_outlined,
-                      title: 'Manage Payment Methods',
-                      subtitle: 'Add or update your payment cards',
-                      onTap: () {
-                        context.pushNamed(AppRoutes.addCard);
-                      },
-                    ),
+                    4.verticalSpace,
+                    // _buildMerchantInfoTile(
+                    //   context,
+                    //   icon: Icons.credit_card_outlined,
+                    //   title: 'Manage Payment Methods',
+                    //   subtitle: 'Add or update your payment cards',
+                    //   onTap: () {
+                    //     context.pushNamed(AppRoutes.addCard);
+                    //   },
+                    // ),
                   ],
                   8.verticalSpace,
 

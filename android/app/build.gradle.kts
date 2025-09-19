@@ -50,7 +50,7 @@ android {
     buildTypes {
         release {
             // Use debug signing if no release keys available
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = false
             isShrinkResources = false
             isDebuggable = false
