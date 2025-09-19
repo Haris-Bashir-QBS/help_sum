@@ -25,7 +25,8 @@ class ChatBubble extends StatelessWidget {
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
-        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment:
+            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Bubble(
             color: isMe ? AppPalette.orangeColor : AppPalette.primaryColor,
@@ -40,7 +41,10 @@ class ChatBubble extends StatelessWidget {
               top: 10.h,
               bottom: 10.h,
             ),
-            margin: BubbleEdges.only(left: isMe ? 40.w : 0, right: isMe ? 0 : 40.w),
+            margin: BubbleEdges.only(
+              left: isMe ? 40.w : 0,
+              right: isMe ? 0 : 40.w,
+            ),
             child: _buildMessageContent(),
           ),
           if (time != null) ...[
@@ -76,10 +80,7 @@ class ChatBubble extends StatelessWidget {
                   width: 200.w,
                   height: 150.h,
                   color: Colors.grey[300],
-                  child: Icon(
-                    Icons.broken_image,
-                    color: Colors.grey[600],
-                  ),
+                  child: Icon(Icons.broken_image, color: Colors.grey[600]),
                 );
               },
             ),
@@ -90,6 +91,7 @@ class ChatBubble extends StatelessWidget {
               text: text,
               color: Colors.white,
               fontSize: 14.sp,
+              maxLines: 10000000,
             ),
           ],
         ],
@@ -99,6 +101,7 @@ class ChatBubble extends StatelessWidget {
         text: text,
         color: Colors.white,
         fontSize: 14.sp,
+        maxLines: 10000,
       );
     }
   }

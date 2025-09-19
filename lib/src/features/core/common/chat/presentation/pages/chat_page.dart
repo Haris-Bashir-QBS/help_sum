@@ -61,6 +61,13 @@ class _ChatScreenState extends State<ChatScreen> {
       ],
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, size: 24.sp),
+            color: Colors.white,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
           title: Row(
             children: [
               CircleAvatar(

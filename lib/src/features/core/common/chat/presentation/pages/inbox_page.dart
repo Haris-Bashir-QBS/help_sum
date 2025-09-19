@@ -34,8 +34,10 @@ class _InboxPageState extends State<InboxPage> {
       getInboxChatsUseCase: sl(),
       sendMessageUseCase: sl(),
     );
+    _loadInboxMessages();
+  }
 
-    // Load inbox chats when entering inbox (no socket connection needed here)
+  void _loadInboxMessages() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _chatBloc.add(const LoadInboxChats());
     });
@@ -44,7 +46,6 @@ class _InboxPageState extends State<InboxPage> {
   @override
   void dispose() {
     _isDisposed = true;
-    // Close the bloc when leaving inbox (no socket to disconnect)
     _chatBloc.close();
     super.dispose();
   }
@@ -140,9 +141,10 @@ class _InboxPageState extends State<InboxPage> {
     final time = lastMessage?.createdAt ?? DateTime.now();
 
     return GestureDetector(
-      onTap: () {
-        // Navigate to chat screen
-        context.pushNamed(AppRoutes.chatScreen, extra: chat);
+      onTap: () async {
+        await context.pushNamed(AppRoutes.chatScreen, extra: chat).then((val) {
+          _loadInboxMessages();
+        });
       },
       child: Container(
         padding: EdgeInsets.all(12.w),
