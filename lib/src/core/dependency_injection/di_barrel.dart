@@ -32,7 +32,9 @@ import 'package:help_sum/src/features/core/common/chat/domain/usecases/send_mess
 import 'package:help_sum/src/features/core/common/chat/presentation/bloc/chat_bloc.dart';
 import 'package:help_sum/src/features/core/common/general/presentation/bloc/activity_bloc.dart';
 import 'package:help_sum/src/features/core/consumer/booking/domain/usecases/fetch_jobs_by_type_usecase.dart';
-import 'package:help_sum/src/features/core/consumer/booking/presentation/bloc/create_job_bloc.dart';
+import 'package:help_sum/src/features/core/consumer/booking/domain/usecases/get_job_by_id_usecase.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/bloc/create_job/create_job_bloc.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/bloc/job_detail/job_detail_cubit.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/datasources/remote/merchant_view_profile_remote_datasource.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/datasources/remote/merchant_view_profile_remote_datasource_impl.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/data/repositories/merchant_view_profile_repository_impl.dart';
@@ -76,7 +78,7 @@ import '../../features/core/common/payment/domain/usecases/pay_for_job_usecase.d
 import '../network/client/dio_client.dart';
 import '../../features/core/consumer/booking/data/datasources/booking_remote_datasource.dart';
 import '../../features/core/consumer/booking/data/datasources/booking_remote_datasource_impl.dart';
-import '../../features/core/consumer/booking/data/repositories/booking_repository.dart';
+import '../../features/core/consumer/booking/domain/repositories/booking_repository.dart';
 import '../../features/core/consumer/booking/data/repositories/booking_repository_impl.dart';
 import '../../features/core/consumer/booking/domain/usecases/create_job_usecase.dart';
 import 'package:help_sum/src/features/core/common/wallet/data/datasources/wallet_remote_datasource.dart';

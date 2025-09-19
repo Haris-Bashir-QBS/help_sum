@@ -10,4 +10,5 @@ abstract class BookingRepository {
     int? page,
     int? limit,
   });
+  Future<Either<Failure, JobData>> getJobById(String id);
 }

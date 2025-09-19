@@ -55,4 +55,22 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
       }
     });
   }
+
+  @override
+  Future<JobData> getJobById(String jobId) async {
+    return await ApiErrorHandler.executeGuarded(() async {
+      final response = await client.get(
+        endpoint: "${ApiEndpoints.job.value}/$jobId",
+      );
+
+      if (response.isOk) {
+        return JobData.fromJson(response.data['data']);
+      } else {
+        throw ServerException(
+          statusCode: response.statusCode,
+          message: response.data['message'] ?? AppErrors.somethingWentWrong,
+        );
+      }
+    });
+  }
 }

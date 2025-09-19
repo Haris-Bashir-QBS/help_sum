@@ -3,7 +3,7 @@ import 'package:help_sum/src/core/errors/api_exceptions.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/datasources/booking_remote_datasource.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_request_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
-import 'package:help_sum/src/features/core/consumer/booking/data/repositories/booking_repository.dart';
+import 'package:help_sum/src/features/core/consumer/booking/domain/repositories/booking_repository.dart';
 
 class BookingRepositoryImpl implements BookingRepository {
   final BookingRemoteDataSource remoteDataSource;
@@ -36,6 +36,16 @@ class BookingRepositoryImpl implements BookingRepository {
       return right(response);
     } on Failure catch (e) {
       return left(Failure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, JobData>> getJobById(String id) async {
+    try {
+      final model = await remoteDataSource.getJobById(id);
+      return right(model);
+    } on Failure catch (e) {
+      return left(Failure(message: e.toString()));
     }
   }
 }

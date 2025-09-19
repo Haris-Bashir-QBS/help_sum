@@ -25,6 +25,7 @@ enum ApiEndpoints {
   jobMerchantByType,
   jobPayment,
   rateJob,
+  job,
 
   /// ================= Services =======================
   getServicesByCategory,
@@ -91,9 +92,10 @@ enum ApiEndpoints {
       case ApiEndpoints.jobMerchantByType:
         return '/job/merchant';
       case ApiEndpoints.jobPayment:
-        return "/job"; // Will be appended with /:id/payment
+      case ApiEndpoints.job:
+        return "/job";
       case ApiEndpoints.rateJob:
-        return "/rating"; // Will be appended with /:id/rate
+        return "/rating";
 
       /// ================= Profile =======================
       case ApiEndpoints.merchantRatings:

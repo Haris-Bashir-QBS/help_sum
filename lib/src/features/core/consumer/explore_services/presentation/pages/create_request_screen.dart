@@ -14,7 +14,7 @@ import 'package:help_sum/src/core/constants/app_palette.dart';
 import 'package:help_sum/src/features/auth/data/models/request/upload_file_request_model.dart';
 import 'package:help_sum/src/features/core/common/profile/presentation/widgets/custom_overlay_loader.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/media_file.dart';
-import 'package:help_sum/src/features/core/consumer/booking/presentation/bloc/create_job_bloc.dart';
+import 'package:help_sum/src/features/core/consumer/booking/presentation/bloc/create_job/create_job_bloc.dart';
 import 'package:help_sum/src/widgets/animated_dialog.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
 import 'package:help_sum/src/widgets/custom_text_formfield.dart';
@@ -700,8 +700,6 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
         )
         : SizedBox.shrink();
   }
-
-
 }
 
 class AttachmentCard extends StatelessWidget {

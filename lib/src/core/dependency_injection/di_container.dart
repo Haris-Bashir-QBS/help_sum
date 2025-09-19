@@ -178,9 +178,13 @@ Future<void> _initBookingDependencies() async {
   sl.registerLazySingleton(() => CreateJobUseCase(sl()));
   sl.registerLazySingleton(() => FetchJobsByTypeUseCase(sl()));
   sl.registerLazySingleton(() => GetAllJobsByTypeUseCase(sl()));
+  sl.registerLazySingleton(() => GetJobByIdUseCase(sl()));
   sl.registerLazySingleton(() => UpdateJobStatusMerchantUseCase(sl()));
   sl.registerLazySingleton(() => StartJobUseCase(sl()));
   sl.registerLazySingleton(() => CompleteJobUseCase(sl()));
+  sl.registerFactory<JobDetailCubit>(
+    () => JobDetailCubit(sl<GetJobByIdUseCase>()),
+  );
 }
 
 Future<void> _initMerchantViewProfileDependencies() async {
