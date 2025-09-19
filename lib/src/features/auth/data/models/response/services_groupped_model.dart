@@ -1,6 +1,7 @@
 // lib/data/models/grouped_category_model.dart
 
 import 'package:help_sum/src/features/auth/domain/entities/grouped_category_entity.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/response/services_response_model.dart';
 
 class GroupedCategoryModel extends GroupedCategoryEntity {
   const GroupedCategoryModel({
@@ -38,6 +39,7 @@ class ServiceModel extends ServiceEntity {
     super.photo,
     required super.approved,
     required super.addedBy,
+    required super.icon,
   });
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
@@ -47,6 +49,7 @@ class ServiceModel extends ServiceEntity {
       photo: json['photo'],
       approved: json['approved'],
       addedBy: json['addedBy'],
+      icon: json['icon'] != null ? IconInfo.fromJson(json['icon']) : null,
     );
   }
 

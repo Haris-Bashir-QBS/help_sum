@@ -92,13 +92,13 @@ class CategoryInfo {
 }
 
 class IconInfo {
-  final int codePoint;
+  final int? codePoint;
   final String fontFamily;
 
-  IconInfo({required this.codePoint, required this.fontFamily});
+  IconInfo({this.codePoint, required this.fontFamily});
 
   factory IconInfo.fromJson(Map<String, dynamic> json) {
-    int parsedCodePoint = 0;
+    int? parsedCodePoint;
 
     final raw = json['codePoint'];
 
@@ -106,9 +106,9 @@ class IconInfo {
       parsedCodePoint = raw;
     } else if (raw is String) {
       if (raw.startsWith("0x")) {
-        parsedCodePoint = int.tryParse(raw.substring(2), radix: 16) ?? 0;
+        parsedCodePoint = int.tryParse(raw.substring(2), radix: 16);
       } else {
-        parsedCodePoint = int.tryParse(raw) ?? 0;
+        parsedCodePoint = int.tryParse(raw);
       }
     }
 
@@ -120,7 +120,10 @@ class IconInfo {
 
   IconData toIconData() {
     try {
-      return IconData(codePoint, fontFamily: fontFamily);
+      if (codePoint == null) {
+        return Icons.photo; // fallback if null
+      }
+      return IconData(codePoint!, fontFamily: fontFamily);
     } catch (_) {
       return Icons.photo; // fallback if corrupt
     }

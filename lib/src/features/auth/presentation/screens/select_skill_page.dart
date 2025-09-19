@@ -284,6 +284,22 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                                           child: Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
+                                              if (skill.icon != null &&
+                                                  skill.icon?.codePoint != null)
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    right: 6.w,
+                                                  ),
+                                                  child: Icon(
+                                                    skill.icon!.toIconData(),
+                                                    size: 22.sp,
+                                                    color:
+                                                        isSelected
+                                                            ? Colors.white
+                                                            : AppPalette
+                                                                .blackColor,
+                                                  ),
+                                                ),
                                               Text(
                                                 skill.name,
                                                 style: TextStyle(

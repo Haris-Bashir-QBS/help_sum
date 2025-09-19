@@ -1,6 +1,7 @@
 // lib/domain/entities/grouped_category_entity.dart
 
 import 'package:equatable/equatable.dart';
+import 'package:help_sum/src/features/core/consumer/explore_services/data/models/response/services_response_model.dart';
 
 class GroupedCategoryEntity extends Equatable {
   final String id;
@@ -24,6 +25,7 @@ class ServiceEntity extends Equatable {
   final String? photo;
   final bool approved;
   final String addedBy;
+  final IconInfo? icon;
 
   const ServiceEntity({
     required this.id,
@@ -31,8 +33,9 @@ class ServiceEntity extends Equatable {
     required this.photo,
     required this.approved,
     required this.addedBy,
+    required this.icon,
   });
 
   @override
-  List<Object?> get props => [id, name, photo, approved, addedBy];
+  List<Object?> get props => [id, name, photo, approved, addedBy, icon];
 }
