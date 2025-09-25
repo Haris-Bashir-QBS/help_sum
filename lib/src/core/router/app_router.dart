@@ -209,26 +209,25 @@ GoRoute _login() {
   return GoRoute(
     path: '/login',
     name: AppRoutes.login,
-    pageBuilder:
-        (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child: LoginPage(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(0.0, 1.0);
-            const end = Offset.zero;
-            const curve = Curves.easeOutCubic;
+    pageBuilder: (context, state) => CustomTransitionPage(
+      key: state.pageKey,
+      child: LoginPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.easeOutCubic;
 
-            var tween = Tween(
-              begin: begin,
-              end: end,
-            ).chain(CurveTween(curve: curve));
+        var tween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
 
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
-        ),
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    ),
   );
 }
 
@@ -236,26 +235,25 @@ GoRoute _signUp() {
   return GoRoute(
     path: '/signup',
     name: AppRoutes.signUp,
-    pageBuilder:
-        (context, state) => CustomTransitionPage(
-          key: state.pageKey,
-          child: const SignupPage(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(0.0, 1.0);
-            const end = Offset.zero;
-            const curve = Curves.easeOutCubic;
+    pageBuilder: (context, state) => CustomTransitionPage(
+      key: state.pageKey,
+      child: const SignupPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.easeOutCubic;
 
-            var tween = Tween(
-              begin: begin,
-              end: end,
-            ).chain(CurveTween(curve: curve));
+        var tween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
 
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
-        ),
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    ),
   );
 }
 
@@ -396,9 +394,9 @@ GoRoute _bookingTracker() {
     name: AppRoutes.bookingTracker,
     builder: (context, state) {
       final Map<String, dynamic> extras = state.extra as Map<String, dynamic>;
-      final JobData job = extras['job'];
+      final String job = extras['job'];
       final String? tabName = extras['tabName'];
-      return BookingTrackerPage(job: job, tabName: tabName);
+      return BookingTrackerPage(jobId: job, tabName: tabName);
     },
   );
 }
@@ -407,7 +405,6 @@ GoRoute _paymentMethod() {
   return GoRoute(
     path: '/payment-method',
     name: AppRoutes.paymentMethod,
-
     builder: (context, state) {
       final JobData job = state.extra as JobData;
       return PaymentMethodScreen(job: job);

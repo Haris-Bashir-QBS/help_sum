@@ -22,8 +22,8 @@ Future<void> initializeDI() async {
 
 Future<void> _initCoreDependencies() async {
   sl
-  // ..registerFactory(() => ThemeCubit())
-  .registerLazySingleton(() => DioClient());
+      // ..registerFactory(() => ThemeCubit())
+      .registerLazySingleton(() => DioClient());
 }
 
 /// ------------------------
@@ -184,6 +184,22 @@ Future<void> _initBookingDependencies() async {
   sl.registerLazySingleton(() => CompleteJobUseCase(sl()));
   sl.registerFactory<JobDetailCubit>(
     () => JobDetailCubit(sl<GetJobByIdUseCase>()),
+  );
+
+  ///BLOCS
+  // JobDetailsBloc(
+  //       startJobUseCase: context.read<StartJobUseCase>(),
+  //       completeJobUseCase: context.read<CompleteJobUseCase>(),
+  //       updateJobStatusMerchantUseCase:
+  //           context.read<UpdateJobStatusMerchantUseCase>(),
+  //     )
+
+  sl.registerFactory<JobDetailsBloc>(
+    () => JobDetailsBloc(
+      startJobUseCase: sl(),
+      completeJobUseCase: sl(),
+      updateJobStatusMerchantUseCase: sl(),
+    ),
   );
 }
 

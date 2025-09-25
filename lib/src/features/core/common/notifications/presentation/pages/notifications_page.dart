@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/dependency_injection/di_barrel.dart';
+import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/features/core/common/general/presentation/widgets/notification_list_tile.dart';
 import 'package:help_sum/src/features/core/common/notifications/domain/entities/notification_entity.dart';
 import 'package:help_sum/src/features/core/common/notifications/presentation/cubit/notification_cubit.dart';
@@ -21,6 +25,22 @@ class NotificationsPage extends StatefulWidget {
 
 class _NotificationsPageState extends State<NotificationsPage> {
   late final NotificationCubit _cubit;
+
+  final jobStatus = [
+    'job_created',
+    'job_accepted',
+    'job_rejected',
+    'job_reschedule_request',
+    'job_reschedule_response',
+    'job_update_request',
+    'job_update_response',
+    'job_payment',
+    'job_cancelled',
+    'job_request_extension',
+    'job_respond_extension',
+    'job_completed',
+    'job_cancelled',
+  ];
 
   @override
   void initState() {
@@ -67,7 +87,25 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   separatorBuilder: (_, __) => SizedBox(height: 10.h),
                   itemBuilder: (_, index) {
                     final NotificationEntity n = state.notifications[index];
-                    return NotificationListTile(notification: n);
+                    return NotificationListTile(
+                      notification: n,
+                      onTap: () {
+                        log("Type ${n.type}");
+
+                        if (jobStatus.contains(n.type.toLowerCase())) {
+                          //Navigate to Job
+
+                          if (n.jobId != null) {
+                            context.pushNamed(
+                              AppRoutes.bookingTracker,
+                              extra: {
+                                'job': n.jobId,
+                              },
+                            );
+                          }
+                        }
+                      },
+                    );
                   },
                 ),
               ),

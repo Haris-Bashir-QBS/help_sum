@@ -15,15 +15,15 @@ import '../../../../../../core/dependency_injection/di_barrel.dart';
 import '../../../../../../widgets/custom_app_bar.dart';
 
 class BookingTrackerPage extends StatelessWidget {
-  final JobData job;
+  final String jobId;
   final String? tabName;
 
-  const BookingTrackerPage({super.key, required this.job, this.tabName});
+  const BookingTrackerPage({super.key, required this.jobId, this.tabName});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<JobDetailCubit>()..fetchJobDetail(job.id),
+      create: (_) => sl<JobDetailCubit>()..fetchJobDetail(jobId),
       child: BlocBuilder<JobDetailCubit, JobDetailState>(
         builder: (context, state) {
           return Scaffold(
@@ -59,7 +59,6 @@ class BookingTrackerPage extends StatelessWidget {
         },
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -110,11 +109,10 @@ class BookingTrackerPage extends StatelessWidget {
 
     final route = isMerchant ? AppRoutes.jobDetail : AppRoutes.bookingDetail;
 
-    context
-        .pushNamed(route, extra: {'job': jobDetail, 'tabName': tabName})
-        .then((_) {
-          // Refresh job when user comes back
-          cubit.fetchJobDetail(jobDetail.id);
-        });
+    context.pushNamed(route,
+        extra: {'job': jobDetail, 'tabName': tabName}).then((_) {
+      // Refresh job when user comes back
+      cubit.fetchJobDetail(jobDetail.id);
+    });
   }
 }

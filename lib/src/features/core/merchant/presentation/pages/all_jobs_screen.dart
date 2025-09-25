@@ -97,6 +97,8 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
           ref
               .read(merchantJobsNotifierProvider.notifier)
               .getAllJobsByType(jobType: apiType, refresh: true);
+
+          _walletBloc.add(LoadWallet());
         },
         child: CustomScrollView(
           slivers: [
@@ -107,14 +109,12 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
                   builder: (context, loginState) {
                     return BlocBuilder<WalletBloc, WalletState>(
                       builder: (context, walletState) {
-                        final balance =
-                            walletState is WalletLoaded
-                                ? walletState.wallet.availableBalance
-                                : 0.0;
-                        final payment =
-                            walletState is WalletLoaded
-                                ? walletState.wallet.recentPayments
-                                : null;
+                        final balance = walletState is WalletLoaded
+                            ? walletState.wallet.availableBalance
+                            : 0.0;
+                        final payment = walletState is WalletLoaded
+                            ? walletState.wallet.recentPayments
+                            : null;
 
                         return FadeScaleTransitionWidget(
                           child: WalletCard(
@@ -176,10 +176,9 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
         return SliverFillRemaining(
           child: Center(
             child: CustomText(
-              text:
-                  searchQuery.isNotEmpty
-                      ? AppTexts.noServicesFound
-                      : "No Jobs Found",
+              text: searchQuery.isNotEmpty
+                  ? AppTexts.noServicesFound
+                  : "No Jobs Found",
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -213,7 +212,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
     bool? isRefresh = await context.pushNamed(
       AppRoutes.bookingTracker,
       extra: {
-        'job': job,
+        'job': job?.id,
         'tabName': AppStaticData.jobStatusTabs[selectedIndex],
       },
     );
@@ -347,25 +346,22 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children:
-            filters.map((filter) {
-              return ListTile(
-                title: CustomText(
-                  text: filter,
-                  fontSize: 16.sp,
-                  color:
-                      filter == selectedFilter
-                          ? AppPalette.primaryColor
-                          : Colors.black,
-                  fontWeight:
-                      filter == selectedFilter
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                ),
-                onTap: () => Navigator.pop(context, filter),
-                selected: filter == selectedFilter,
-              );
-            }).toList(),
+        children: filters.map((filter) {
+          return ListTile(
+            title: CustomText(
+              text: filter,
+              fontSize: 16.sp,
+              color: filter == selectedFilter
+                  ? AppPalette.primaryColor
+                  : Colors.black,
+              fontWeight: filter == selectedFilter
+                  ? FontWeight.bold
+                  : FontWeight.normal,
+            ),
+            onTap: () => Navigator.pop(context, filter),
+            selected: filter == selectedFilter,
+          );
+        }).toList(),
       ),
     );
   }

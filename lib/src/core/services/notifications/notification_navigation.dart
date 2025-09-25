@@ -40,38 +40,31 @@ class NotificationNavigation {
   ///   id: resource id
   ///   tabName: optional tab selector
   static Future<void> _navigateFromData(Map<String, dynamic> data) async {
-    final String? type = data['type'] as String?;
-    final String? id = data['id']?.toString();
-    final String? tabName = data['tabName'] as String?;
+    final String? jobId = data['jobId'] as String?;
 
-    final GoRouter router = GoRouter.of(
+    final GoRouter _router = GoRouter.of(
       SessionManager.navigatorKey.currentContext!,
     );
     final isLogin = LocalStorageService().getAccessToken();
     final context = SessionManager.navigatorKey.currentContext;
 
     if (isLogin != null && isLogin.isNotEmpty) {
-      switch (type) {
-        // case 'chat':
-        //   // You may need to fetch an InboxChatEntity by id before navigate.
-        //   // For now navigate to inbox/notifications hub.
-        //   router.pushNamed(AppRoutes.inboxAndNotifcations);
-        //   break;
-        // case 'booking':
-        //   // Navigate to booking detail/tracker depending on tabName
-        //   router.pushNamed(
-        //     AppRoutes.bookingDetail,
-        //     extra: {'job': _buildJobDataPlaceholder(id), 'tabName': tabName},
-        //   );
-        //   break;
-        // case 'job':
-        //   router.pushNamed(
-        //     AppRoutes.jobDetail,
-        //     extra: {'job': _buildJobDataPlaceholder(id), 'tabName': tabName},
-        //   );
-        //   break;
-        default:
-          context?.goNamed(AppRoutes.mainNavigation);
+      if (jobId != null) {
+        if (_router.state.name == AppRoutes.bookingTracker) {
+          context?.pushReplacementNamed(
+            AppRoutes.bookingTracker,
+            extra: {
+              'job': jobId,
+            },
+          );
+        } else {
+          context?.pushNamed(
+            AppRoutes.bookingTracker,
+            extra: {
+              'job': jobId,
+            },
+          );
+        }
       }
     } else {
       context?.goNamed(AppRoutes.roleSelection);

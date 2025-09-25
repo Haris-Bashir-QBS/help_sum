@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../../../core/enums/content_type.dart';
+import 'package:help_sum/src/widgets/custom_loading_widget.dart';
 
-class ContentScreen extends StatelessWidget {
+class ContentScreen extends StatefulWidget {
   final AppContentType contentType;
 
   const ContentScreen({super.key, required this.contentType});
 
+  @override
+  State<ContentScreen> createState() => _ContentScreenState();
+}
+
+class _ContentScreenState extends State<ContentScreen> {
+  late WebViewController webViewController;
+  bool _isLoading = true;
+
   String _getTitle() {
-    switch (contentType) {
+    switch (widget.contentType) {
       case AppContentType.termsAndConditions:
         return "Terms & Conditions";
       case AppContentType.privacyPolicy:
@@ -17,7 +27,7 @@ class ContentScreen extends StatelessWidget {
   }
 
   String _getBody() {
-    switch (contentType) {
+    switch (widget.contentType) {
       case AppContentType.termsAndConditions:
         return """
 Dummy Terms & Conditions:
@@ -40,14 +50,64 @@ Dummy Privacy Policy:
   }
 
   @override
+  void initState() {
+    webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {},
+          onPageStarted: (String url) {
+            setState(() {
+              _isLoading = true;
+            });
+          },
+          onPageFinished: (String url) {
+            setState(() {
+              _isLoading = false;
+            });
+          },
+          onHttpError: (HttpResponseError error) {
+            setState(() {
+              _isLoading = false;
+            });
+          },
+          onWebResourceError: (WebResourceError error) {
+            setState(() {
+              _isLoading = false;
+            });
+          },
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith('https://www.youtube.com/')) {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.contentType == AppContentType.privacyPolicy
+          ? "https://helpsum.stiinnovation.com/privacy_policy"
+          : "https://helpsum.stiinnovation.com/terms_and_conditions"));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(_getTitle())),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Text(_getBody(), style: const TextStyle(fontSize: 16)),
-        ),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: WebViewWidget(controller: webViewController),
+          ),
+          if (_isLoading)
+            Container(
+              color: Colors.white,
+              child: const Center(
+                child: CustomDotsLoader(),
+              ),
+            ),
+        ],
       ),
     );
   }

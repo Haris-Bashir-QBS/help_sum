@@ -60,8 +60,7 @@ class BookingDetailPage extends StatelessWidget {
                     //20.verticalSpace,
                   ],
                   Visibility(
-                    visible:
-                        job.status == JobStatus.pending.name ||
+                    visible: job.status == JobStatus.pending.name ||
                         job.status == JobStatus.waitingConfirmation.name ||
                         job.status == JobStatus.in_progress.name &&
                             job.jobStartTime == null,
@@ -72,7 +71,6 @@ class BookingDetailPage extends StatelessWidget {
                       time: AppUtils.formatReadableTime(job.time),
                     ),
                   ),
-
                   Visibility(
                     visible: job.jobStartTime != null,
                     child: ServiceTimeCard(
@@ -100,9 +98,9 @@ class BookingDetailPage extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   10.verticalSpace,
                   _imagesWidget(),
+                  10.verticalSpace,
                   OfferDetailsCard(job: job),
                   20.verticalSpace,
                   Divider(),
@@ -144,10 +142,9 @@ class BookingDetailPage extends StatelessWidget {
                         horizontal: AppDimensions.paddingAllSides,
                       ),
                       child: CustomButton(
-                        text:
-                            job.paymentStatus == PaymentStatus.escrowed.name
-                                ? "Pay now"
-                                : "Paid",
+                        text: job.paymentStatus == PaymentStatus.escrowed.name
+                            ? "Pay now"
+                            : "Paid",
                         radius: 12,
                         onPressed: () {
                           if (job.paymentStatus ==
@@ -158,10 +155,9 @@ class BookingDetailPage extends StatelessWidget {
                             );
                           }
                         },
-                        color:
-                            job.paymentStatus == PaymentStatus.escrowed.name
-                                ? context.primaryColor
-                                : null,
+                        color: job.paymentStatus == PaymentStatus.escrowed.name
+                            ? context.primaryColor
+                            : null,
                       ),
                     ),
                   ],

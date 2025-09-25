@@ -15,7 +15,6 @@ import 'package:help_sum/src/features/core/consumer/booking/data/models/job_resp
 import 'package:help_sum/src/features/core/consumer/booking/presentation/widgets/rich_booking_card.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/widgets/wallet_card.dart';
 import 'package:help_sum/src/widgets/custom_loading_widget.dart';
-import 'package:help_sum/src/widgets/custom_refresh_indicator.dart';
 import 'package:help_sum/src/widgets/custom_search_field.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 
@@ -101,6 +100,7 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
       child: RefreshIndicator(
         onRefresh: () async {
           ref.read(allBookingsProvider(apiType).notifier).refresh();
+          _walletBloc.add(LoadWallet());
         },
         child: CustomScrollView(
           controller: scrollController,
@@ -113,14 +113,12 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
                   builder: (context, loginState) {
                     return BlocBuilder<WalletBloc, WalletState>(
                       builder: (context, walletState) {
-                        final balance =
-                            walletState is WalletLoaded
-                                ? walletState.wallet.availableBalance
-                                : 0.0;
-                        final payment =
-                            walletState is WalletLoaded
-                                ? walletState.wallet.recentPayments
-                                : null;
+                        final balance = walletState is WalletLoaded
+                            ? walletState.wallet.availableBalance
+                            : 0.0;
+                        final payment = walletState is WalletLoaded
+                            ? walletState.wallet.recentPayments
+                            : null;
 
                         return FadeScaleTransitionWidget(
                           child: WalletCard(
@@ -172,10 +170,9 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
                   return SliverFillRemaining(
                     child: Center(
                       child: CustomText(
-                        text:
-                            searchQuery.isNotEmpty
-                                ? AppTexts.noServicesFound
-                                : AppTexts.noBookingsFound,
+                        text: searchQuery.isNotEmpty
+                            ? AppTexts.noServicesFound
+                            : AppTexts.noBookingsFound,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -207,20 +204,18 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
                   ),
                 );
               },
-              loading:
-                  () => SliverFillRemaining(
-                    child: Center(child: CustomDotsLoader()),
+              loading: () => SliverFillRemaining(
+                child: Center(child: CustomDotsLoader()),
+              ),
+              error: (e, st) => SliverFillRemaining(
+                child: Center(
+                  child: CustomText(
+                    text: e.toString(),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
-              error:
-                  (e, st) => SliverFillRemaining(
-                    child: Center(
-                      child: CustomText(
-                        text: e.toString(),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -235,7 +230,7 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
   ) async {
     bool? isRefresh = await context.pushNamed(
       AppRoutes.bookingTracker,
-      extra: {'job': jobs[i], 'tabName': jobTypes[selectedIndex]},
+      extra: {'job': jobs[i].id, 'tabName': jobTypes[selectedIndex]},
     );
     if (isRefresh == true && mounted) {
       _fetchJobs(selectedIndex);
@@ -310,25 +305,22 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children:
-            filters.map((filter) {
-              return ListTile(
-                title: CustomText(
-                  text: filter,
-                  fontSize: 16.sp,
-                  color:
-                      filter == selectedFilter
-                          ? AppPalette.primaryColor
-                          : Colors.black,
-                  fontWeight:
-                      filter == selectedFilter
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                ),
-                onTap: () => Navigator.pop(context, filter),
-                selected: filter == selectedFilter,
-              );
-            }).toList(),
+        children: filters.map((filter) {
+          return ListTile(
+            title: CustomText(
+              text: filter,
+              fontSize: 16.sp,
+              color: filter == selectedFilter
+                  ? AppPalette.primaryColor
+                  : Colors.black,
+              fontWeight: filter == selectedFilter
+                  ? FontWeight.bold
+                  : FontWeight.normal,
+            ),
+            onTap: () => Navigator.pop(context, filter),
+            selected: filter == selectedFilter,
+          );
+        }).toList(),
       ),
     );
   }
