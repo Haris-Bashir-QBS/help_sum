@@ -15,6 +15,7 @@ import 'package:help_sum/src/core/utils/app_static_data.dart';
 import 'package:help_sum/src/features/auth/data/models/request/schdule_request_model.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/media_file.dart';
 import 'package:help_sum/src/features/core/consumer/explore_services/presentation/pages/create_request_screen.dart';
+import 'package:help_sum/src/widgets/custom_loading_widget.dart';
 import 'package:help_sum/src/widgets/custom_text.dart';
 import 'package:help_sum/src/widgets/modal_progress_hud.dart';
 import 'package:intl/intl.dart';
@@ -51,9 +52,7 @@ class AppUtils {
       builder: (context) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          child: Center(
-            child: CircularProgressIndicator(color: AppPalette.primaryColor),
-          ),
+          child: Center(child: CustomDotsLoader()),
         );
       },
     );

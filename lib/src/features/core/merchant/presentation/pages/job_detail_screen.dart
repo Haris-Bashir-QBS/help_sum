@@ -28,6 +28,7 @@ import 'package:help_sum/src/features/core/merchant/presentation/controller/job_
 import 'package:help_sum/src/widgets/animated_dialog.dart';
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:help_sum/src/widgets/custom_button.dart';
+import 'package:help_sum/src/widgets/custom_loading_widget.dart';
 import 'package:help_sum/src/widgets/custom_toast.dart';
 import 'package:logger/logger.dart';
 
@@ -100,7 +101,6 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
                       time: AppUtils.formatReadableTime(widget.job.time),
                     ),
                   ),
-
                   Visibility(
                     visible: widget.job.jobStartTime != null,
                     child: ServiceTimeCard(
@@ -274,10 +274,13 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
     ) {
       // Handle loading state
       if (current is JobActionLoading) {
+        AppUtils.showProgressLoader(context: context);
         // Show loading indicator if needed
       }
       // Handle success states
       else if (current is JobActionSuccess) {
+        Navigator.pop(context);
+
         if (current.action == 'start') {
           // Job started successfully
           Navigator.pop(context);
@@ -304,6 +307,7 @@ class _JobDetailPageState extends ConsumerState<JobDetailPage> {
       }
       // Handle error states
       else if (current is JobActionError) {
+        Navigator.pop(context);
         CustomToast.errorToast(context: context, message: current.message);
       }
     });
