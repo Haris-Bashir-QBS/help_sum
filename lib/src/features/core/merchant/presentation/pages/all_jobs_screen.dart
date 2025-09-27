@@ -39,8 +39,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
   late final WalletBloc _walletBloc;
   final TextEditingController searchController = TextEditingController();
 
-  // Add filter state
-  String selectedFilter = AppTexts.all; // Default filter
+  String selectedFilter = AppTexts.all;
   final List<String> filters = [
     AppTexts.all,
     AppTexts.pending,
@@ -51,10 +50,8 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
     AppTexts.cancelled,
   ];
 
-  // Add search state
   String searchQuery = '';
 
-  // API mapping for filter values - using merchant-specific statuses
   final Map<String, String> filterApiMap = {
     AppTexts.all: 'all',
     AppTexts.onGoing: 'on going',
@@ -74,13 +71,27 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
     ref
         .read(merchantJobsNotifierProvider.notifier)
         .getAllJobsByType(jobType: AppStaticData.jobStatusTabs.first);
+
+    scrollController.addListener(_onScroll);
     super.initState();
   }
 
   @override
   void dispose() {
     searchController.dispose();
+    scrollController.removeListener(_onScroll);
+    scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      final apiType = filterApiMap[selectedFilter] ?? 'all';
+      ref
+          .read(merchantJobsNotifierProvider.notifier)
+          .loadMore(jobType: apiType);
+    }
   }
 
   @override
@@ -101,6 +112,7 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
           _walletBloc.add(LoadWallet());
         },
         child: CustomScrollView(
+          controller: scrollController,
           slivers: [
             SliverToBoxAdapter(
               child: Padding(
@@ -109,12 +121,14 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
                   builder: (context, loginState) {
                     return BlocBuilder<WalletBloc, WalletState>(
                       builder: (context, walletState) {
-                        final balance = walletState is WalletLoaded
-                            ? walletState.wallet.availableBalance
-                            : 0.0;
-                        final payment = walletState is WalletLoaded
-                            ? walletState.wallet.recentPayments
-                            : null;
+                        final balance =
+                            walletState is WalletLoaded
+                                ? walletState.wallet.availableBalance
+                                : 0.0;
+                        final payment =
+                            walletState is WalletLoaded
+                                ? walletState.wallet.recentPayments
+                                : null;
 
                         return FadeScaleTransitionWidget(
                           child: WalletCard(
@@ -167,18 +181,21 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
         child: Center(child: CustomText(text: state.message)),
       );
     } else if (state is MerchantJobsLoaded) {
-      final allJobs = state.response.data;
+      // Use the accumulated jobs from the notifier instead of just the current response
+      final notifier = ref.read(merchantJobsNotifierProvider.notifier);
+      final allJobs = notifier.jobs;
 
       // Filter jobs based on search query
-      final jobs = _filterJobs(allJobs.data, searchQuery);
+      final jobs = _filterJobs(allJobs, searchQuery);
 
       if (jobs.isEmpty) {
         return SliverFillRemaining(
           child: Center(
             child: CustomText(
-              text: searchQuery.isNotEmpty
-                  ? AppTexts.noServicesFound
-                  : "No Jobs Found",
+              text:
+                  searchQuery.isNotEmpty
+                      ? AppTexts.noServicesFound
+                      : "No Jobs Found",
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -190,17 +207,26 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         sliver: SliverList(
           delegate: SliverChildBuilderDelegate((context, index) {
-            final job = jobs[index];
-            return Padding(
-              padding: EdgeInsets.only(bottom: 10.h),
-              child: RichBookingCard(
-                job: job,
-                isMerchant: true,
-                showStatus: selectedIndex == 0,
-                onTap: () => _navigateToJobDetailScreen(job),
-              ),
-            );
-          }, childCount: jobs.length),
+            if (index < jobs.length) {
+              final job = jobs[index];
+              return Padding(
+                padding: EdgeInsets.only(bottom: 10.h),
+                child: RichBookingCard(
+                  job: job,
+                  isMerchant: true,
+                  showStatus: selectedIndex == 0,
+                  onTap: () => _navigateToJobDetailScreen(job),
+                ),
+              );
+            } else if (index == jobs.length && state.hasMore) {
+              // Show loading indicator at the bottom
+              return Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Center(child: CustomDotsLoader()),
+              );
+            }
+            return null;
+          }, childCount: jobs.length + (state.hasMore ? 1 : 0)),
         ),
       );
     }
@@ -346,22 +372,25 @@ class _AllJobsScreenState extends ConsumerState<AllJobsScreen> {
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: filters.map((filter) {
-          return ListTile(
-            title: CustomText(
-              text: filter,
-              fontSize: 16.sp,
-              color: filter == selectedFilter
-                  ? AppPalette.primaryColor
-                  : Colors.black,
-              fontWeight: filter == selectedFilter
-                  ? FontWeight.bold
-                  : FontWeight.normal,
-            ),
-            onTap: () => Navigator.pop(context, filter),
-            selected: filter == selectedFilter,
-          );
-        }).toList(),
+        children:
+            filters.map((filter) {
+              return ListTile(
+                title: CustomText(
+                  text: filter,
+                  fontSize: 16.sp,
+                  color:
+                      filter == selectedFilter
+                          ? AppPalette.primaryColor
+                          : Colors.black,
+                  fontWeight:
+                      filter == selectedFilter
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                ),
+                onTap: () => Navigator.pop(context, filter),
+                selected: filter == selectedFilter,
+              );
+            }).toList(),
       ),
     );
   }
@@ -424,10 +453,7 @@ class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return Container(
-      color: Colors.white, // keep sticky background
-      child: child,
-    );
+    return Container(color: Colors.white, child: child);
   }
 
   @override

@@ -160,6 +160,7 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
             // Jobs list
             jobsAsync.when(
               data: (response) {
+                // Use the accumulated jobs from the response (which contains all loaded pages)
                 final allJobs = response.data.data;
                 final notifier = ref.read(
                   allBookingsProvider(apiType).notifier,
@@ -185,10 +186,14 @@ class _AllBookingsPageState extends ConsumerState<AllBookingsPage> {
                   sliver: SliverList.separated(
                     itemCount: jobs.length + (notifier.hasMore ? 1 : 0),
                     itemBuilder: (c, i) {
-                      if (i == jobs.length) {
+                      if (i == jobs.length && notifier.hasMore) {
                         return Padding(
                           padding: EdgeInsets.all(16.w),
-                          child: Center(child: CustomDotsLoader(size: 40)),
+                          child: Center(
+                            child: notifier.isLoadingMore 
+                                ? CustomDotsLoader(size: 40)
+                                : SizedBox.shrink(),
+                          ),
                         );
                       }
 

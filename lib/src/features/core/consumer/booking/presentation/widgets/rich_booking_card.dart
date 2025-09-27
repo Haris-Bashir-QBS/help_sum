@@ -245,7 +245,7 @@ class ProfileAvatarWithName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Image URL: $imageUrl");
+    //  print("Image URL: $imageUrl");
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start, // 👈 keep text top aligned

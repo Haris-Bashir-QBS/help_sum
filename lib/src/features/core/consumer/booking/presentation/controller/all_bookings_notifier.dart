@@ -22,7 +22,9 @@ class AllBookingsNotifier extends StateNotifier<AsyncValue<JobResponseModel>> {
       _currentPage = 1;
       _allJobs.clear();
       _hasMore = true;
-      state = const AsyncLoading();
+      if (mounted) {
+        state = const AsyncLoading();
+      }
     } else if (_isLoadingMore) {
       return; // Don't fetch if already loading more
     }
@@ -34,6 +36,9 @@ class AllBookingsNotifier extends StateNotifier<AsyncValue<JobResponseModel>> {
         limit: 10,
       );
       final result = await fetchJobsByTypeUseCase(params);
+      
+      if (!mounted) return; // Check if still mounted after async operation
+      
       result.fold(
         (failure) => state = AsyncError(failure, StackTrace.current),
         (data) {
@@ -59,11 +64,15 @@ class AllBookingsNotifier extends StateNotifier<AsyncValue<JobResponseModel>> {
             ),
           );
 
-          state = AsyncData(updatedData);
+          if (mounted) {
+            state = AsyncData(updatedData);
+          }
         },
       );
     } catch (e, stackTrace) {
-      state = AsyncError(e, stackTrace);
+      if (mounted) {
+        state = AsyncError(e, stackTrace);
+      }
     }
   }
 
@@ -72,7 +81,9 @@ class AllBookingsNotifier extends StateNotifier<AsyncValue<JobResponseModel>> {
 
     _isLoadingMore = true;
     await fetchJobs();
-    _isLoadingMore = false;
+    if (mounted) {
+      _isLoadingMore = false;
+    }
   }
 
   void refresh() {

@@ -16,10 +16,14 @@ class NotificationCubit extends Cubit<NotificationState> {
     : super(NotificationInitial());
 
   Future<void> fetchNotifications() async {
+    if (isClosed) return; // Check if cubit is closed before emitting
+    
     emit(NotificationLoading());
 
     final Either<Failure, List<NotificationEntity>> result =
         await _getNotificationsUseCase(NoParams());
+
+    if (isClosed) return; // Check again after async operation
 
     result.fold(
       (failure) => emit(NotificationError(failure.message)),

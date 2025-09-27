@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:help_sum/src/features/core/consumer/booking/data/models/job_response_model.dart';
 import 'package:help_sum/src/features/core/merchant/domain/params/merchant_by_type_param.dart';
@@ -10,7 +9,6 @@ import 'package:help_sum/src/features/core/merchant/domain/usecases/fetch_jobs_b
 import 'package:help_sum/src/features/core/merchant/domain/usecases/start_job_usecase.dart';
 import 'package:help_sum/src/features/core/merchant/domain/usecases/update_job_status_merchant.dart';
 import 'package:help_sum/src/features/core/merchant/presentation/controller/job_request_states.dart';
-import 'package:help_sum/src/widgets/custom_toast.dart';
 
 class MerchantJobsNotifier extends StateNotifier<MerchantJobsState> {
   final GetAllJobsByTypeUseCase _getServicesByCategoryUseCase;
@@ -27,6 +25,9 @@ class MerchantJobsNotifier extends StateNotifier<MerchantJobsState> {
 
   int _currentPage = 1;
   List<JobData> allJobs = [];
+  
+  // Getter to access allJobs from outside
+  List<JobData> get jobs => allJobs;
 
   /// Update startJob method
   Future<void> startJob({required String jobId}) async {
@@ -90,7 +91,6 @@ class MerchantJobsNotifier extends StateNotifier<MerchantJobsState> {
   }
 
   Future<void> getAllJobsByType({
-    // required String categoryId,
     required String jobType,
     bool refresh = false,
     int? page,
@@ -106,6 +106,7 @@ class MerchantJobsNotifier extends StateNotifier<MerchantJobsState> {
     if (refresh) {
       _currentPage = 1;
       allJobs.clear();
+      if (!mounted) return;
       state = MerchantJobsLoading();
     }
 
@@ -119,30 +120,48 @@ class MerchantJobsNotifier extends StateNotifier<MerchantJobsState> {
 
     final params = MerchantByTypeParam(
       jobType,
-      // categoryId: categoryId,
-      // page: page ?? _currentPage,
-      // limit: limit ?? 10,
+      page: page ?? _currentPage,
+      limit: limit ?? 10,
     );
 
     final result = await _getServicesByCategoryUseCase(params);
 
+    if (!mounted) return; // Check if notifier is still mounted
+
     result.match(
       (failure) {
+        if (!mounted) return;
         state = MerchantJobsError(failure.message);
       },
       (response) {
-        allJobs.addAll(response.data.data ?? []);
+        allJobs.addAll(response.data.data);
         final pagination = response.data.pagination;
-        final hasMore = (pagination.page ?? 0) < (pagination.totalPages ?? 0);
-        _currentPage = (pagination.page ?? 0) + 1;
+        final hasMore = pagination.page < pagination.totalPages;
+        _currentPage = pagination.page + 1;
 
+        if (!mounted) return;
         state = MerchantJobsLoaded(
           response: response,
           hasMore: hasMore,
-          totalCount: pagination.total ?? 0,
+          totalCount: pagination.total,
         );
       },
     );
+  }
+
+  Future<void> loadMore({required String jobType}) async {
+    if (!mounted) return; // Check if notifier is still mounted
+    
+    final currentState = state;
+    
+    // Don't load more if already loading or no more data
+    if (currentState is MerchantJobsLoading || 
+        (currentState is MerchantJobsLoaded && !currentState.hasMore)) {
+      return;
+    }
+
+    // Load next page
+    await getAllJobsByType(jobType: jobType);
   }
 
   void reset() {

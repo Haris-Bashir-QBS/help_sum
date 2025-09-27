@@ -17,9 +17,13 @@ class MerchantJobsRemoteSourceImpl implements MerchantJobsRemoteSource {
   @override
   Future<JobResponseModel> getAllJobsByType(MerchantByTypeParam params) async {
     return await ApiErrorHandler.executeGuarded(() async {
+      final queryParams = <String, dynamic>{};
+      if (params.page != null) queryParams['page'] = params.page;
+      if (params.limit != null) queryParams['limit'] = params.limit;
+      
       final response = await client.get(
         endpoint: "${ApiEndpoints.jobMerchantByType.value}/${params.jobType}",
-        // queryParams: {'page': params.page, 'limit': params.limit},
+        queryParams: queryParams,
       );
 
       if (response.isOk) {
