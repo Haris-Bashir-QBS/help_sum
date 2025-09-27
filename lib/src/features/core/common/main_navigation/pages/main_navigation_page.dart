@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -18,8 +20,12 @@ import 'package:help_sum/src/features/core/merchant/presentation/pages/merchant_
 import 'package:help_sum/src/widgets/custom_app_bar.dart';
 import 'package:hugeicons/hugeicons.dart';
 
+final GlobalKey<_MainNavigationPageState> mainNavKey =
+    GlobalKey<_MainNavigationPageState>();
+
 class MainNavigationPage extends ConsumerStatefulWidget {
-  const MainNavigationPage({super.key});
+  const MainNavigationPage({super.key, this.index});
+  final int? index;
 
   @override
   ConsumerState<MainNavigationPage> createState() => _MainNavigationPageState();
@@ -35,6 +41,15 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  // Expose a method to set the index from outside
+  void setIndex(int idx) {
+    if (_selectedIndex != idx) {
+      setState(() {
+        _selectedIndex = idx;
+      });
+    }
   }
 
   @override
@@ -66,6 +81,14 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
         ProfileDetailsPage(),
       ]);
     }
+
+    if (widget.index != null) {
+      log("Setting Index As ${widget.index}");
+      _selectedIndex = widget.index!;
+    } else {
+      log("Setting IndexNull");
+    }
+
     super.initState();
   }
 

@@ -133,10 +133,10 @@ class _FindMerchantScreenState extends ConsumerState<FindMerchantScreen>
         setState(() {
           _isInitializing = false;
         });
-        CherryToast.error(
-          title: const Text("Error"),
-          description: const Text("Failed to load location data."),
-        ).show(context);
+        // CherryToast.error(
+        //   title: const Text("Error"),
+        //   description: const Text("Failed to load location data."),
+        // ).show(context);
       }
     }
   }

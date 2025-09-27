@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:go_router/go_router.dart';
+import 'package:help_sum/src/core/router/app_router.dart';
 import 'package:help_sum/src/core/router/app_routes.dart';
 import 'package:help_sum/src/core/services/local_storage_service.dart';
-import 'package:help_sum/src/core/services/session_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:help_sum/src/features/core/common/main_navigation/pages/main_navigation_page.dart';
 
 /// Centralized navigation logic for notification taps from any app state.
 class NotificationNavigation {
@@ -41,33 +41,27 @@ class NotificationNavigation {
   ///   tabName: optional tab selector
   static Future<void> _navigateFromData(Map<String, dynamic> data) async {
     final String? jobId = data['jobId'] as String?;
-
-    final GoRouter _router = GoRouter.of(
-      SessionManager.navigatorKey.currentContext!,
-    );
     final isLogin = LocalStorageService().getAccessToken();
-    final context = SessionManager.navigatorKey.currentContext;
 
     if (isLogin != null && isLogin.isNotEmpty) {
       if (jobId != null) {
-        if (_router.state.name == AppRoutes.bookingTracker) {
-          context?.pushReplacementNamed(
+        if (appRouter.state.name == AppRoutes.bookingTracker) {
+          appRouter.pushReplacementNamed(
             AppRoutes.bookingTracker,
-            extra: {
-              'job': jobId,
-            },
+            extra: {'job': jobId},
           );
         } else {
-          context?.pushNamed(
-            AppRoutes.bookingTracker,
-            extra: {
-              'job': jobId,
-            },
-          );
+          appRouter.goNamed(AppRoutes.bookingTracker, extra: {'job': jobId});
+        }
+      } else {
+        // Always set the main navigation index directly
+        mainNavKey.currentState?.setIndex(2); // or whatever index you want
+        if (appRouter.state.name != AppRoutes.mainNavigation) {
+          appRouter.replaceNamed(AppRoutes.mainNavigation, extra: {"index": 2});
         }
       }
     } else {
-      context?.goNamed(AppRoutes.roleSelection);
+      appRouter.goNamed(AppRoutes.roleSelection);
     }
   }
 

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:help_sum/src/core/enums/content_type.dart';
@@ -209,25 +211,26 @@ GoRoute _login() {
   return GoRoute(
     path: '/login',
     name: AppRoutes.login,
-    pageBuilder: (context, state) => CustomTransitionPage(
-      key: state.pageKey,
-      child: LoginPage(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(0.0, 1.0);
-        const end = Offset.zero;
-        const curve = Curves.easeOutCubic;
+    pageBuilder:
+        (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: LoginPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            const curve = Curves.easeOutCubic;
 
-        var tween = Tween(
-          begin: begin,
-          end: end,
-        ).chain(CurveTween(curve: curve));
+            var tween = Tween(
+              begin: begin,
+              end: end,
+            ).chain(CurveTween(curve: curve));
 
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    ),
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
   );
 }
 
@@ -235,25 +238,26 @@ GoRoute _signUp() {
   return GoRoute(
     path: '/signup',
     name: AppRoutes.signUp,
-    pageBuilder: (context, state) => CustomTransitionPage(
-      key: state.pageKey,
-      child: const SignupPage(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(0.0, 1.0);
-        const end = Offset.zero;
-        const curve = Curves.easeOutCubic;
+    pageBuilder:
+        (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const SignupPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            const curve = Curves.easeOutCubic;
 
-        var tween = Tween(
-          begin: begin,
-          end: end,
-        ).chain(CurveTween(curve: curve));
+            var tween = Tween(
+              begin: begin,
+              end: end,
+            ).chain(CurveTween(curve: curve));
 
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    ),
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
   );
 }
 
@@ -326,7 +330,11 @@ GoRoute _mainNavigation() {
   return GoRoute(
     path: '/main_navigation',
     name: AppRoutes.mainNavigation,
-    builder: (context, state) => const MainNavigationPage(),
+    builder: (context, state) {
+      final Map<String, dynamic>? extras = state.extra as Map<String, dynamic>?;
+      final index = extras?['index'] as int?;
+      return MainNavigationPage(key: mainNavKey, index: index);
+    },
   );
 }
 

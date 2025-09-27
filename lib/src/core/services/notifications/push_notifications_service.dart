@@ -207,10 +207,17 @@ class PushNotificationsService {
     await _localNotifications.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) async {
-        await NotificationNavigation.handlePayloadTap(response.payload);
+        if (response.payload != null && response.payload!.isNotEmpty) {
+          await NotificationNavigation.handlePayloadTap(response.payload);
+        }
       },
-      onDidReceiveBackgroundNotificationResponse:
-          localNotificationBackgroundHandler,
+      onDidReceiveBackgroundNotificationResponse: (
+        NotificationResponse response,
+      ) async {
+        if (response.payload != null && response.payload!.isNotEmpty) {
+          await localNotificationBackgroundHandler(response);
+        }
+      },
     );
 
     _androidChannel ??= const AndroidNotificationChannel(
@@ -238,7 +245,9 @@ class PushNotificationsService {
 
     // 🔑 Prevent duplicates:
     // If notification exists (system shows it automatically) AND there's no data payload → skip
-    if (notification != null && message.data.isEmpty) {
+    // If notification exists AND app is not in foreground, skip local notification (system will show it)
+    if (notification != null &&
+        (message.data.isEmpty || (android != null && !kIsWeb && !kDebugMode))) {
       if (kDebugMode) {
         debugPrint('[FCM][LOCAL] Skipping duplicate system notification');
       }
